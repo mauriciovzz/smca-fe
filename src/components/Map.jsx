@@ -1,6 +1,17 @@
 import { useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import marker from "../assets/marker-icon.png";
+import markerShadow from "../assets/marker-shadow.png";
 import Modal from "./Modal";
+import L from 'leaflet';
+
+const icon = new L.Icon({
+  iconSize: [25, 41],
+  iconAnchor: [10, 41],
+  popupAnchor: [2, -40],
+  iconUrl: marker,
+  shadowUrl: markerShadow
+});
 
 const mapCenter = [8.32263, -62.69119];
 
@@ -25,6 +36,7 @@ const Map = ({ nodeList }) => {
         {nodeList.map((node) => (
           <Marker
             key={node.type + node.id}
+            icon={icon}
             position={[node.lat, node.long]}
             eventHandlers={{
               click: () => {
