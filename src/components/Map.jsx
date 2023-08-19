@@ -6,11 +6,11 @@ import Modal from "./Modal";
 import L from 'leaflet';
 
 const icon = new L.Icon({
+  iconUrl: marker,
+  shadowUrl: markerShadow,
   iconSize: [25, 41],
   iconAnchor: [10, 41],
-  popupAnchor: [2, -40],
-  iconUrl: marker,
-  shadowUrl: markerShadow
+  popupAnchor: [2, -40]
 });
 
 const mapCenter = [8.32263, -62.69119];
@@ -33,15 +33,15 @@ const Map = ({ nodeList }) => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {nodeList.map((node) => (
+        {nodeList.map((nodeLocation) => (
           <Marker
-            key={node.type + node.id}
+            key={nodeLocation.node_type + nodeLocation.node_id}
             icon={icon}
-            position={[node.lat, node.long]}
+            position={[nodeLocation.lat, nodeLocation.long]}
             eventHandlers={{
               click: () => {
                 setIsOpen(true);
-                setSelectedNode(node);
+                setSelectedNode(nodeLocation);
               },
               mouseover: (event) => event.target.openPopup(),
               mouseout: (event) => event.target.closePopup(),
@@ -52,7 +52,7 @@ const Map = ({ nodeList }) => {
         ))}
       </MapContainer>
 
-      {isOpen && <Modal node={selectedNode} setIsOpen={setIsOpen} />}
+      {isOpen && <Modal nodeLocation={selectedNode} setIsOpen={setIsOpen} />}
     </div>
   );
 };

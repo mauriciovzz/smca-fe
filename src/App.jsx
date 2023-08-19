@@ -2,16 +2,16 @@ import { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import Map from "./components/Map";
 import Footer from "./components/Footer";
-import nodeService from "./services/nodes";
+import nodeLocationService from "./services/nodeLocations";
 
 const App = () => {
-  const [nodes, setNodes] = useState([]);
+  const [nodeList, setNodeList] = useState([]);
 
   useEffect(() => {
-    nodeService
+    nodeLocationService
       .getAll()
       .then((initialNodes) =>
-        setNodes(initialNodes));
+      setNodeList(initialNodes));
   }, []);
 
   return (
@@ -22,7 +22,7 @@ const App = () => {
         </div>
       </div>
 
-      <Map nodeList={nodes} />
+      <Map nodeList={nodeList} />
 
       <div className="flex items-start justify-center px-6 sm:px-16">
         <div className="w-full xl:max-w-[1280px]">

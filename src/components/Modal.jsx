@@ -1,7 +1,7 @@
 import InfoView from "./InfoView";
 import VariableView from "./VariableView";
 
-const Modal = ({ node, setIsOpen }) => {
+const Modal = ({ nodeLocation, setIsOpen }) => {
   return (
     <div
       className="absolute z-40 h-full w-full bg-white bg-opacity-25 p-4 backdrop-blur-sm"
@@ -12,7 +12,7 @@ const Modal = ({ node, setIsOpen }) => {
         <div className="grid h-full w-full grid-cols-6 gap-4">
           {/* Info */}
           <div className="relative col-span-1 box-border bg-bluey ">
-            <InfoView node={node} />
+            <InfoView nodeLocation={nodeLocation} />
           </div>
 
           {/* Camera */}
@@ -20,12 +20,12 @@ const Modal = ({ node, setIsOpen }) => {
 
           {/* Variables Meteorologicas */}
           <div className="relative col-span-3 col-start-1 bg-bluey">
-            <VariableView typeOfView={true} node={node} />
+            <VariableView typeOfView={true} node={nodeLocation} />
           </div>
 
           {/* Variables Ambientales*/}
           <div className="relative col-span-3 bg-bluey">
-            <VariableView typeOfView={false} node={node} />
+            <VariableView typeOfView={false} node={nodeLocation} />
           </div>
         </div>
       </div>
@@ -35,7 +35,7 @@ const Modal = ({ node, setIsOpen }) => {
         <div className="grid h-full w-full grid-cols-1 gap-4 overflow-auto">
           {/* Info */}
           <div className="relative box-border bg-bluey ">
-            <InfoView node={node} />
+            <InfoView nodeLocation={nodeLocation} />
           </div>
 
           {/* Camera */}
@@ -43,12 +43,12 @@ const Modal = ({ node, setIsOpen }) => {
 
           {/* Variables Meteorologicas */}
           <div className="relative bg-bluey">
-            <VariableView typeOfView={true} node={node} />
+            <VariableView typeOfView={true} node={nodeLocation} />
           </div>
 
           {/* Variables Ambientales*/}
           <div className="relative bg-bluey">
-            <VariableView typeOfView={false} node={node} />
+            <VariableView typeOfView={false} node={nodeLocation} />
           </div>
         </div>
       </div>
