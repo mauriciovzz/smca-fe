@@ -20,12 +20,12 @@ const Modal = ({ nodeLocation, setIsOpen }) => {
 
           {/* Variables Meteorologicas */}
           <div className="relative col-span-3 col-start-1 bg-bluey">
-            <VariableView typeOfView={true} node={nodeLocation} />
+            <VariableView typeOfView={"METEOROLOGICAL"} nodeLocation={nodeLocation} />
           </div>
 
           {/* Variables Ambientales*/}
           <div className="relative col-span-3 bg-bluey">
-            <VariableView typeOfView={false} node={nodeLocation} />
+            <VariableView typeOfView={"ENVIROMENTAL"} nodeLocation={nodeLocation} />
           </div>
         </div>
       </div>
@@ -43,12 +43,12 @@ const Modal = ({ nodeLocation, setIsOpen }) => {
 
           {/* Variables Meteorologicas */}
           <div className="relative bg-bluey">
-            <VariableView typeOfView={true} node={nodeLocation} />
+            <VariableView typeOfView={"METEOROLOGICAL"} nodeLocation={nodeLocation} />
           </div>
 
           {/* Variables Ambientales*/}
           <div className="relative bg-bluey">
-            <VariableView typeOfView={false} node={nodeLocation} />
+            <VariableView typeOfView={"ENVIROMENTAL"} nodeLocation={nodeLocation} />
           </div>
         </div>
       </div>

@@ -1,8 +1,8 @@
 import axios from "axios";
-const baseUrl = "/api/values";
+const baseUrl = "/api/average_readings";
 
-const getAll = (node, variable) => {
-  const request = axios.get(baseUrl);
+const getAll = (nodeLocation, variable, date) => {
+  const request = axios.get(`${baseUrl}/${nodeLocation.node_type}/${nodeLocation.node_id}/${variable.variable_id}/${date}`);
   return request.then((response) => response.data);
 };
 
