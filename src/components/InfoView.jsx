@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import locationService from "../services/locations";
+import { React, useState, useEffect } from 'react';
+import locationService from '../services/locations';
 
 const InfoView = ({ nodeLocation }) => {
   const [location, setLocation] = useState({});
@@ -16,7 +16,9 @@ const InfoView = ({ nodeLocation }) => {
 
       {/* title */}
       <div className="bg-white px-4 py-2 font-semibold text-bluey">
-        {nodeLocation.node_type}-{nodeLocation.node_id}
+        {nodeLocation.node_type}
+        -
+        {nodeLocation.node_id}
       </div>
 
       {/* body */}
@@ -27,21 +29,27 @@ const InfoView = ({ nodeLocation }) => {
           <div className="text-[16px] font-normal text-white">
             {location.location_name}
           </div>
-          {(location.location_address) &&
+          {(location.location_address) && (
             <div className="text-[12px] font-normal text-white">
               {location.location_address}
             </div>
-          }
+          )}
         </div>
 
         {/* coord */}
         <div className="text-[12px] font-normal text-white flex justify-between">
-          Coord: {location.lat},{location.long}
+          Coord:
+          {location.lat}
+          ,
+          {location.long}
         </div>
 
         {/* date */}
         <div className="text-[12px] font-normal text-white flex justify-between">
-          Inicio: {nodeLocation.start_date}, {nodeLocation.start_time}
+          Inicio:
+          {nodeLocation.start_date}
+          ,
+          {nodeLocation.start_time}
         </div>
       </div>
     </div>

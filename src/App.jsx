@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
-import Navbar from "./components/Navbar";
-import Map from "./components/Map";
-import Footer from "./components/Footer";
-import nodeLocationService from "./services/nodeLocations";
+import { React, useState, useEffect } from 'react';
+import Navbar from './components/Navbar';
+import Map from './components/Map';
+import Footer from './components/Footer';
+import nodeLocationService from './services/nodeLocations';
 
 const App = () => {
   const [nodeList, setNodeList] = useState([]);
@@ -11,7 +11,7 @@ const App = () => {
     nodeLocationService
       .getAll()
       .then((initialNodes) =>
-      setNodeList(initialNodes));
+        setNodeList(initialNodes));
   }, []);
 
   return (
