@@ -1,9 +1,14 @@
-import { React, useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import L from "leaflet";
-import marker from "../assets/marker-icon.png";
-import markerShadow from "../assets/marker-shadow.png";
-import Modal from "./Modal";
+import { React, useState } from 'react';
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+} from 'react-leaflet';
+import L from 'leaflet';
+import marker from '../assets/marker-icon.png';
+import markerShadow from '../assets/marker-shadow.png';
+import Modal from './Modal';
 
 const icon = new L.Icon({
   iconUrl: marker,
@@ -33,23 +38,26 @@ const Map = ({ nodeList }) => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {nodeList.map((nodeLocation) => (
-          <Marker
-            key={nodeLocation.node_type + nodeLocation.node_id}
-            icon={icon}
-            position={[nodeLocation.lat, nodeLocation.long]}
-            eventHandlers={{
-              click: () => {
-                setIsOpen(true);
-                setSelectedNode(nodeLocation);
-              },
-              mouseover: (event) => event.target.openPopup(),
-              mouseout: (event) => event.target.closePopup(),
-            }}
-          >
-            <Popup>Node Info</Popup>
-          </Marker>
-        ))}
+        {nodeList.map((nodeLocation) =>
+          (
+            <Marker
+              key={nodeLocation.node_type + nodeLocation.node_id}
+              icon={icon}
+              position={[nodeLocation.lat, nodeLocation.long]}
+              eventHandlers={{
+                click: () => {
+                  setIsOpen(true);
+                  setSelectedNode(nodeLocation);
+                },
+                mouseover: (event) =>
+                  event.target.openPopup(),
+                mouseout: (event) =>
+                  event.target.closePopup(),
+              }}
+            >
+              <Popup>Node Info</Popup>
+            </Marker>
+          ))}
       </MapContainer>
 
       {isOpen && <Modal nodeLocation={selectedNode} setIsOpen={setIsOpen} />}
