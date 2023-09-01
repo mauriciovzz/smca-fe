@@ -1,23 +1,27 @@
-import { React, useState } from 'react';
-import x from '../assets/x.svg';
-import list from '../assets/list.svg';
+import { React, useState } from "react";
+import x from "../assets/x.svg";
+import list from "../assets/list.svg";
 
 const navLinks = [
   {
-    id: 'mapa',
-    title: 'Mapa',
+    id: "mapa",
+    title: "Mapa",
   },
   {
-    id: 'reportes',
-    title: 'Reportes',
+    id: "reportes",
+    title: "Reportes",
   },
   {
-    id: 'informacion',
-    title: 'Informacion',
+    id: "informacion",
+    title: "Informacion",
   },
   {
-    id: 'faq',
-    title: 'FAQ',
+    id: "faq",
+    title: "FAQ",
+  },
+  {
+    id: "log",
+    title: "Log In",
   },
 ];
 
@@ -30,17 +34,18 @@ const Navbar = () => {
 
       {/* On desktop */}
       <ul className="hidden flex-1 list-none items-center justify-end sm:flex">
-        {navLinks.map((nav, index) =>
-          (
-            <li
-              key={nav.id}
-              className={`cursor-pointer font-poppins text-[16px] font-normal ${
-                index === navLinks.length - 1 ? 'mr-0' : 'mr-10'
-              } text-bluey`}
-            >
-              <a href={`#${nav.id}`}>{nav.title}</a>
-            </li>
-          ))}
+        {navLinks.map((nav, index) => (
+          <li
+            key={nav.id}
+            className={`${
+              index === navLinks.length - 1
+                ? "font normal p- mr-0 cursor-pointer rounded-full bg-bluey px-6 text-[16px] text-white"
+                : "mr-10 cursor-pointer font-poppins text-[16px] font-normal text-bluey"
+            }`}
+          >
+            <a href={`#${nav.id}`}>{nav.title}</a>
+          </li>
+        ))}
       </ul>
 
       {/* On mobile */}
@@ -49,28 +54,25 @@ const Navbar = () => {
           src={toggle ? x : list}
           alt="list"
           className="h-[28px] w-[28px] object-contain"
-          onClick={() =>
-            setToggle((prev) =>
-              !prev)}
+          onClick={() => setToggle((prev) => !prev)}
         />
 
         <div
           className={`${
-            toggle ? 'flex' : 'hidden'
+            toggle ? "flex" : "hidden"
           } absolute right-0 top-20 mx-4 my-2 min-w-[140px] bg-primary p-6`}
         >
           <ul className="flex flex-1 list-none flex-col items-center justify-end">
-            {navLinks.map((nav, index) =>
-              (
-                <li
-                  key={nav.id}
-                  className={`cursor-pointer font-poppins text-[16px] font-normal ${
-                    index === navLinks.length - 1 ? 'mr-0' : 'mb-4'
-                  } text-sky-600`}
-                >
-                  <a href={`#${nav.id}`}>{nav.title}</a>
-                </li>
-              ))}
+            {navLinks.map((nav, index) => (
+              <li
+                key={nav.id}
+                className={`cursor-pointer font-poppins text-[16px] font-normal ${
+                  index === navLinks.length - 1 ? "mr-0" : "mb-4"
+                } text-sky-600`}
+              >
+                <a href={`#${nav.id}`}>{nav.title}</a>
+              </li>
+            ))}
           </ul>
         </div>
       </div>
