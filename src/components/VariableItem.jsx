@@ -7,8 +7,8 @@ const VariableItem = ({ nodeLocation, variable }) => {
   const currentDate = new Date();
   const fullDate = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`;
 
-  const valueColor = (value) =>
-    (value ? 'bg-lime-400' : 'bg-red-600');
+  const valueColor = () =>
+    'bg-lime-400';
 
   useEffect(() => {
     averageReadingService
@@ -19,17 +19,17 @@ const VariableItem = ({ nodeLocation, variable }) => {
         for (let i = 0; i < 24; i += 1) {
           const readingMatch = requestedReadings.find(
             (reading) =>
-              reading.end_hour === `${i}:00:00`,
+              reading.end_hour === `${i + 1}:00:00`,
           );
 
           objArray.push({
-            startTime: `${i}:00`,
-            endTime: `${i + 1}:00`,
+            startTime: (i < 10) ? `0${i}:00` : `${i}:00`,
+            endTime: (i + 1 < 10) ? `0${i + 1}:00` : `${i + 1}:00`,
             value: readingMatch
-              ? readingMatch.average_reading
+              ? readingMatch.average_value
               : null,
             color: readingMatch
-              ? valueColor(readingMatch.average_reading)
+              ? valueColor()
               : 'bg-white',
           });
         }
@@ -49,7 +49,7 @@ const VariableItem = ({ nodeLocation, variable }) => {
                 key={variable.variable_name + reading.startTime}
                 className={`w-full flex-1 ${reading.color}`}
                 data-tooltip-id="my-tooltip"
-                data-tooltip-content={`${reading.startTime} - ${reading.endTime} : ${reading.value === null ? 'no reading' : reading.value}`}
+                data-tooltip-content={`${reading.startTime} - ${reading.endTime} : ${reading.value === null ? 'no reading' : `${reading.value} ${variable.variable_unit}`}`}
                 data-tooltip-variant="info"
               />
             ))}
