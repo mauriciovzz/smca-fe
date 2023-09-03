@@ -1,26 +1,27 @@
 import { React, useState } from 'react';
+import { Link } from 'react-router-dom';
 import x from '../assets/x.svg';
 import list from '../assets/list.svg';
 
 const navLinks = [
   {
-    id: 'mapa',
+    route: '/',
     title: 'Mapa',
   },
   {
-    id: 'reportes',
+    route: '/reportes',
     title: 'Reportes',
   },
   {
-    id: 'informacion',
+    route: '/informacion',
     title: 'Informacion',
   },
   {
-    id: 'faq',
+    route: '/faq',
     title: 'FAQ',
   },
   {
-    id: 'log',
+    route: '/login',
     title: 'Log In',
   },
 ];
@@ -33,21 +34,22 @@ const Navbar = () => {
       <h1>LOGO</h1>
 
       {/* On desktop */}
-      <ul className="hidden flex-1 list-none items-center justify-end sm:flex">
+      <div className="hidden flex-1 list-none items-center justify-end sm:flex">
         {navLinks.map((nav, index) =>
           (
-            <li
-              key={nav.id}
+            <Link
+              key={`desktop ${nav.title}`}
               className={`${
                 index === navLinks.length - 1
                   ? 'font normal p- mr-0 cursor-pointer rounded-full bg-bluey px-6 text-[16px] text-white'
                   : 'mr-10 cursor-pointer font-poppins text-[16px] font-normal text-bluey'
               }`}
+              to={nav.route}
             >
-              <a href={`#${nav.id}`}>{nav.title}</a>
-            </li>
+              {nav.title}
+            </Link>
           ))}
-      </ul>
+      </div>
 
       {/* On mobile */}
       <div className="flex flex-1 items-center justify-end sm:hidden">
@@ -65,19 +67,20 @@ const Navbar = () => {
             toggle ? 'flex' : 'hidden'
           } absolute right-0 top-20 mx-4 my-2 min-w-[140px] bg-primary p-6`}
         >
-          <ul className="flex flex-1 list-none flex-col items-center justify-end">
+          <div className="flex flex-1 list-none flex-col items-center justify-end">
             {navLinks.map((nav, index) =>
               (
-                <li
-                  key={nav.id}
+                <Link
+                  key={`mobile ${nav.title}`}
+                  to={nav.route}
                   className={`cursor-pointer font-poppins text-[16px] font-normal ${
                     index === navLinks.length - 1 ? 'mr-0' : 'mb-4'
                   } text-sky-600`}
                 >
-                  <a href={`#${nav.id}`}>{nav.title}</a>
-                </li>
+                  {nav.title}
+                </Link>
               ))}
-          </ul>
+          </div>
         </div>
       </div>
     </nav>

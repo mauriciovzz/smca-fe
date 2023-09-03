@@ -1,6 +1,11 @@
 import { React, useState, useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Map from './components/Map';
+import Report from './components/Report';
+import Information from './components/Information';
+import Faq from './components/Faq';
+import Login from './components/Login';
 import Footer from './components/Footer';
 import nodeLocationService from './services/nodeLocations';
 
@@ -22,7 +27,13 @@ const App = () => {
         </div>
       </div>
 
-      <Map nodeList={nodeList} />
+      <Routes>
+        <Route path="/" element={<Map nodeList={nodeList} />} />
+        <Route path="/reportes" element={<Report />} />
+        <Route path="/informacion" element={<Information />} />
+        <Route path="/faq" element={<Faq />} />
+        <Route path="/login" element={<Login />} />
+      </Routes>
 
       <div className="flex items-start justify-center px-6 sm:px-16">
         <div className="w-full xl:max-w-[1280px]">
