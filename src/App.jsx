@@ -10,7 +10,16 @@ import Footer from './components/Footer';
 import nodeLocationService from './services/nodeLocations';
 
 const App = () => {
+  const [user, setUser] = useState(null);
   const [nodeList, setNodeList] = useState([]);
+
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser');
+    if (loggedUserJSON) {
+      const userInfo = JSON.parse(loggedUserJSON);
+      setUser(userInfo);
+    }
+  }, []);
 
   useEffect(() => {
     nodeLocationService
@@ -32,7 +41,7 @@ const App = () => {
         <Route path="/reportes" element={<Report />} />
         <Route path="/informacion" element={<Information />} />
         <Route path="/faq" element={<Faq />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login setUser={setUser} />} />
       </Routes>
 
       <div className="flex items-start justify-center px-6 sm:px-16">

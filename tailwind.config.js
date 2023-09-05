@@ -1,30 +1,39 @@
 /** @type {import('tailwindcss').Config} */
 
 module.exports = {
-  content: ["./index.html", "./src/**/*.{js,jsx}"],
-  mode: "jit",
+  content: ['./index.html', './src/**/*.{js,jsx}'],
+  mode: 'jit',
   theme: {
     extend: {
       colors: {
-        primary: "#FFFFFF",
-        secondary: "#00f6ff",
-        dimWhite: "rgba(255, 255, 255, 0.7)",
-        dimBlue: "rgba(9, 151, 124, 0.1)",
-        bluey: "#A3CFD9",
-        pinky: "#F2DCEF",
-        greeny: "#B3F2BD",
+        primary: {
+          50: '#f0f9ff',
+          100: '#e0f2fe',
+          200: '#bae6fd',
+          300: '#7dd3fc',
+          400: '#38bdf8',
+          500: '#0ea5e9',
+          600: '#0284c7',
+          700: '#0369a1',
+          800: '#075985',
+          900: '#0c4a6e',
+          950: '#082f49',
+        },
+        bluey: '#A3CFD9',
+        pinky: '#F2DCEF',
+        greeny: '#B3F2BD',
       },
       fontFamily: {
-        poppins: ["Poppins", "sans-serif"],
+        poppins: ['Poppins', 'sans-serif'],
       },
     },
     screens: {
-      ss: "620px",
-      sm: "768px",
-      md: "1060px",
-      lg: "1200px",
-      xl: "1700px",
+      ss: '620px',
+      sm: '768px',
+      md: '1060px',
+      lg: '1200px',
+      xl: '1700px',
     },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/forms")],
 };

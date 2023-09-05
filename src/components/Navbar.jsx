@@ -65,7 +65,7 @@ const Navbar = () => {
         <div
           className={`${
             toggle ? 'flex' : 'hidden'
-          } absolute right-0 top-20 mx-4 my-2 min-w-[140px] bg-primary p-6`}
+          } absolute right-0 top-20 mx-4 my-2 min-w-[140px] bg-white p-6`}
         >
           <div className="flex flex-1 list-none flex-col items-center justify-end">
             {navLinks.map((nav, index) =>
@@ -76,6 +76,9 @@ const Navbar = () => {
                   className={`cursor-pointer font-poppins text-[16px] font-normal ${
                     index === navLinks.length - 1 ? 'mr-0' : 'mb-4'
                   } text-sky-600`}
+                  onClick={() =>
+                    setToggle((prev) =>
+                      !prev)}
                 >
                   {nav.title}
                 </Link>
