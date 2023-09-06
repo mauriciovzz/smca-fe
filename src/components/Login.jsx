@@ -1,6 +1,7 @@
 import { React, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import loginService from '../services/login';
+import Input from './Input';
+import userAccountsService from '../services/userAccountsService';
 
 const Login = ({ setUser }) => {
   const [email, setEmail] = useState('');
@@ -11,7 +12,7 @@ const Login = ({ setUser }) => {
     event.preventDefault();
 
     try {
-      const userInfo = await loginService.login({
+      const userInfo = await userAccountsService.login({
         email, password,
       });
 
@@ -39,39 +40,8 @@ const Login = ({ setUser }) => {
 
               <form onSubmit={handleLogin} className="space-y-4 md:space-y-6">
 
-                <label htmlFor="email" className="block">
-                  <div className="mb-2 text-sm font-medium text-gray-900">
-                    Correo electronico
-                  </div>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={email}
-                    onChange={({ target }) =>
-                      setEmail(target.value)}
-                    placeholder="name@example.com"
-                    required
-                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-1 focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                  />
-                </label>
-
-                <label htmlFor="password" className="block">
-                  <div className="mb-2 text-sm font-medium text-gray-900">
-                    Contraseña
-                  </div>
-                  <input
-                    id="password"
-                    name="password"
-                    type="password"
-                    value={password}
-                    onChange={({ target }) =>
-                      setPassword(target.value)}
-                    placeholder="••••••••"
-                    required
-                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-1 focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                  />
-                </label>
+                <Input id="email" name="email" type="email" labelName="Correo electronico" value={email} setValue={setEmail} placeHolder="name@example.com" />
+                <Input id="password" name="password" type="password" labelName="Contraseña" value={password} setValue={setPassword} placeHolder="••••••••" />
 
                 <div className="flex items-center justify-between">
                   <label htmlFor="remember" className="flex items-start text-gray-500">

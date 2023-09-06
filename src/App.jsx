@@ -6,6 +6,7 @@ import Report from './components/Report';
 import Information from './components/Information';
 import Faq from './components/Faq';
 import Login from './components/Login';
+import Register from './components/Register';
 import Footer from './components/Footer';
 import nodeLocationService from './services/nodeLocations';
 
@@ -42,6 +43,7 @@ const App = () => {
         <Route path="/informacion" element={<Information />} />
         <Route path="/faq" element={<Faq />} />
         <Route path="/login" element={<Login setUser={setUser} />} />
+        <Route path="/registro" element={<Register setUser={setUser} />} />
       </Routes>
 
       <div className="flex items-start justify-center px-6 sm:px-16">

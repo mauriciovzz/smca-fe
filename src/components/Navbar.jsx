@@ -31,8 +31,9 @@ const Navbar = () => {
 
   return (
     <nav className="flex w-full items-center justify-between py-6">
-      <h1>LOGO</h1>
-
+      <h1 className="text-lg font-bold leading-tight tracking-tight text-gray-900">
+        smca
+      </h1>
       {/* On desktop */}
       <div className="hidden flex-1 list-none items-center justify-end sm:flex">
         {navLinks.map((nav, index) =>
@@ -65,7 +66,7 @@ const Navbar = () => {
         <div
           className={`${
             toggle ? 'flex' : 'hidden'
-          } absolute right-0 top-20 mx-4 my-2 min-w-[140px] bg-white p-6`}
+          } absolute right-0 top-20 mx-4 my-2 min-w-[140px] bg-white rounded-lg shadow p-6`}
         >
           <div className="flex flex-1 list-none flex-col items-center justify-end">
             {navLinks.map((nav, index) =>
