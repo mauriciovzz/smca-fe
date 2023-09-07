@@ -20,13 +20,9 @@ const navLinks = [
     route: '/faq',
     title: 'FAQ',
   },
-  {
-    route: '/login',
-    title: 'Log In',
-  },
 ];
 
-const Navbar = () => {
+const Navbar = ({ user }) => {
   const [toggle, setToggle] = useState(false);
 
   return (
@@ -35,26 +31,30 @@ const Navbar = () => {
         smca
       </h1>
       {/* On desktop */}
-      <div className="hidden flex-1 list-none items-center justify-end sm:flex">
-        {navLinks.map((nav, index) =>
-          (
-            <Link
-              key={`desktop ${nav.title}`}
-              className={`${
-                index === navLinks.length - 1
-                  ? 'font normal p- mr-0 cursor-pointer rounded-full bg-bluey px-6 text-[16px] text-white'
-                  : 'mr-10 cursor-pointer font-poppins text-[16px] font-normal text-bluey'
-              }`}
-              to={nav.route}
-            >
-              {nav.title}
-            </Link>
-          ))}
+      <div className="hidden flex-1 items-center justify-end sm:flex">
+        {
+          navLinks.map((nav) =>
+            (
+              <Link
+                key={`desktop ${nav.title}`}
+                className="mr-10 cursor-pointer text-base font-medium leading-tight tracking-tight text-primary-600 no-underline hover:underline"
+                to={nav.route}
+              >
+                {nav.title}
+              </Link>
+            ))
+        }
+        {
+        user
+          ? <Link key="desktop account" className="mr-0 cursor-pointer rounded-full bg-primary-600 px-6 py-0.5 text-white text-base font-medium leading-tight tracking-tight" to="/cuenta">Cuenta</Link>
+          : <Link key="desktop account" className="mr-0 cursor-pointer rounded-full bg-primary-600 px-6 py-0.5 text-white text-base font-medium leading-tight tracking-tight" to="/login">Log in</Link>
+        }
       </div>
 
       {/* On mobile */}
       <div className="flex flex-1 items-center justify-end sm:hidden">
         <img
+          role="presentation"
           src={toggle ? x : list}
           alt="list"
           className="h-[28px] w-[28px] object-contain"
@@ -69,21 +69,26 @@ const Navbar = () => {
           } absolute right-0 top-20 mx-4 my-2 min-w-[140px] bg-white rounded-lg shadow p-6`}
         >
           <div className="flex flex-1 list-none flex-col items-center justify-end">
-            {navLinks.map((nav, index) =>
-              (
-                <Link
-                  key={`mobile ${nav.title}`}
-                  to={nav.route}
-                  className={`cursor-pointer font-poppins text-[16px] font-normal ${
-                    index === navLinks.length - 1 ? 'mr-0' : 'mb-4'
-                  } text-sky-600`}
-                  onClick={() =>
-                    setToggle((prev) =>
-                      !prev)}
-                >
-                  {nav.title}
-                </Link>
-              ))}
+            {
+              navLinks.map((nav) =>
+                (
+                  <Link
+                    key={`mobile ${nav.title}`}
+                    to={nav.route}
+                    className="mb-4 cursor-pointer text-base font-medium leading-tight tracking-tight text-primary-600"
+                    onClick={() =>
+                      setToggle((prev) =>
+                        !prev)}
+                  >
+                    {nav.title}
+                  </Link>
+                ))
+            }
+            {
+            user
+              ? <Link key="mobile account" className="mr-0 cursor-pointer rounded-full bg-primary-600 px-6 py-0.5 text-white text-base font-medium leading-tight tracking-tight" to="/cuenta">Cuenta</Link>
+              : <Link key="mobile account" className="mr-0 cursor-pointer rounded-full bg-primary-600 px-6 py-0.5 text-white text-base font-medium leading-tight tracking-tight" to="/login">Log in</Link>
+            }
           </div>
         </div>
       </div>

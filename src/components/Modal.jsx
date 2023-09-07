@@ -4,13 +4,14 @@ import VariableView from './VariableView';
 
 const Modal = ({ nodeLocation, setIsOpen }) =>
   (
-    <div
-      className="absolute z-40 h-full w-full bg-white bg-opacity-25 p-4 backdrop-blur-sm"
-      onClick={() =>
-        setIsOpen(false)}
-    >
+    <div className="absolute z-40 h-full w-full bg-white bg-opacity-25 p-4 backdrop-blur-sm">
       {/* On Desktop */}
-      <div className="hidden h-full w-full sm:flex">
+      <div
+        role="presentation"
+        className="hidden h-full w-full sm:flex"
+        onClick={() =>
+          setIsOpen(false)}
+      >
         <div className="grid h-full w-full grid-cols-6 gap-4">
           {/* Info */}
           <div className="relative col-span-1 box-border bg-bluey ">

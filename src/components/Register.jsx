@@ -16,7 +16,6 @@ const Register = ({ setUser }) => {
     event.preventDefault();
 
     try {
-      console.log(firstName, lastName, email, password, confirmPassword)
       if (password === confirmPassword) {
         await userAccountsService.create({
           firstName, lastName, email, password,
@@ -25,8 +24,6 @@ const Register = ({ setUser }) => {
         const userInfo = await userAccountsService.login({
           email, password,
         });
-
-        console.log(userInfo)
         window.localStorage.setItem('loggedSmcaUser', JSON.stringify(userInfo));
         setUser(userInfo);
         setFirstName('');
