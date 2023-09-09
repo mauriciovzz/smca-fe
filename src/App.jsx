@@ -47,7 +47,7 @@ const App = () => {
         <Route path="/registro" element={<Register setUser={setUser} />} />
         {
           user
-            ? [<Route path="/cuenta" element={<Account user={user} setUser={setUser} />} />]
+            ? [<Route path="/cuenta/*" element={<Account user={user} setUser={setUser} />} />]
             : null
         }
         <Route path="*" element={<Navigate replace to="/" />} />
