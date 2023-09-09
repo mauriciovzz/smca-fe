@@ -54,16 +54,16 @@ const NodeView = ({ nodeList }) => {
           </MapContainer>
         </div>
 
-        <div className="flex w-full flex-grow grid grid-rows-5 gap-5">
+        <div className="flex w-full flex-grow grid grid-rows-6 gap-5">
 
-          <div className="row-span-4 not-prose relative bg-slate-100 rounded-xl overflow-hidden">
+          <div className="row-span-5 not-prose relative bg-slate-100 rounded-xl overflow-hidden">
             <div className="relative rounded-xl overflow-auto ">
               <div className="shadow-sm overflow-hidden my-8">
                 <table className="border-collapse table-auto w-full text-sm">
                   <thead>
                     <tr>
-                      <th className="border-b font-medium p-4 pl-8 pt-0 pb-3 text-slate-400 text-left">node type</th>
-                      <th className="border-b font-medium p-4 pt-0      pb-3 text-slate-400 text-left">node id</th>
+                      <th className="border-b font-medium p-4 pl-8 pt-0 pb-3 text-slate-400 text-left">Tipo</th>
+                      <th className="border-b font-medium p-4 pt-0      pb-3 text-slate-400 text-left">id</th>
                       <th className="border-b font-medium p-4 pt-0      pb-3 text-slate-400 text-left">lat</th>
                       <th className="border-b font-medium p-4 pr-8 pt-0 pb-3 text-slate-400 text-left">long</th>
                     </tr>
