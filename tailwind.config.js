@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+const tailwindcssForms = require('@tailwindcss/forms');
 
 module.exports = {
   content: ['./index.html', './src/**/*.{js,jsx}'],
@@ -35,5 +36,5 @@ module.exports = {
       xl: '1700px',
     },
   },
-  plugins: [require('@tailwindcss/forms')],
+  plugins: [tailwindcssForms],
 };

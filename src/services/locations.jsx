@@ -2,10 +2,14 @@ import axios from 'axios';
 
 const baseUrl = '/api/locations';
 
-const getLocation = (node) => {
-  const request = axios.get(`${baseUrl}/${node.lat}/${node.long}`);
-  return request.then((response) =>
-    response.data[0]);
+const getLocation = async (node) => {
+  const request = await axios.get(`${baseUrl}/${node.lat}/${node.long}`);
+  return request.data[0];
 };
 
-export default { getLocation };
+const getAll = async () => {
+  const request = await axios.get(baseUrl);
+  return request.data;
+};
+
+export default { getAll, getLocation };
