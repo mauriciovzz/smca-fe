@@ -8,7 +8,7 @@ import LocationView from './accountViews/locations/LocationView';
 import LocationCreation from './accountViews/locations/LocationCreation';
 import LocationManagement from './accountViews/locations/LocationManagement';
 
-const Account = ({ setUser }) => {
+const Account = ({ user, setUser }) => {
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [selectedNode, setSelectedNode] = useState(null);
 
@@ -23,7 +23,7 @@ const Account = ({ setUser }) => {
           <Route path="/nodos/:node_type/:node_id" element={<NodeManagement node={selectedNode} />} />
 
           <Route path="/ubicaciones" element={<LocationView setSelectedLocation={setSelectedLocation} />} />
-          <Route path="/ubicaciones/crear" element={<LocationCreation />} />
+          <Route path="/ubicaciones/crear" element={<LocationCreation user={user} />} />
           <Route path="/ubicaciones/:lat/:long" element={<LocationManagement location={selectedLocation} />} />
         </Routes>
       </div>

@@ -6,7 +6,7 @@ const NodeInformationWidget = ({ selectedNode }) => {
 
   useEffect(() => {
     locationService
-      .getLocation(selectedNode)
+      .getOne(selectedNode)
       .then((requestedLocation) => setLocation(requestedLocation));
   }, []);
 

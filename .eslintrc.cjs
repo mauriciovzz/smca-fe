@@ -27,6 +27,7 @@ module.exports = {
     'react/prop-types': [0],
     'implicit-arrow-linebreak': [2, 'beside'],
     'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
+    'react/jsx-boolean-value': ['never', { always: ['draggable'] }],
   },
   plugins: ['tailwindcss'],
   settings: {

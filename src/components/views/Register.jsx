@@ -1,7 +1,7 @@
 import { React, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import FormImout from '../FormInput';
-import userAccountsService from '../../services/userAccounts';
+import FormInput from 'src/components/FormInput';
+import userAccountService from 'src/services/userAccounts';
 
 const Register = ({ setUser }) => {
   const [firstName, setFirstName] = useState('');
@@ -10,14 +10,14 @@ const Register = ({ setUser }) => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleRegister = async (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      await userAccountsService.create({
+      await userAccountService.create({
         firstName, lastName, email, password,
       });
-      const userInfo = await userAccountsService.login({ email, password });
+      const userInfo = await userAccountService.login({ email, password });
 
       window.localStorage.setItem('loggedSmcaUser', JSON.stringify(userInfo));
       setUser(userInfo);
@@ -44,16 +44,16 @@ const Register = ({ setUser }) => {
                 Registro
               </h1>
 
-              <form onSubmit={handleRegister} className="space-y-4 md:space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
 
                 <div className="flex items-center justify-between space-x-4 ">
-                  <FormImout id="firstName" type="text" labelName="Nombre" value={firstName} setValue={setFirstName} />
-                  <FormImout id="lastName" type="text" labelName="Apellido" value={lastName} setValue={setLastName} />
+                  <FormInput id="firstName" type="text" labelName="Nombre" value={firstName} setValue={setFirstName} />
+                  <FormInput id="lastName" type="text" labelName="Apellido" value={lastName} setValue={setLastName} />
                 </div>
 
                 <div className="flex flex-col items-center justify-between space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
-                  <FormImout id="email" type="email" labelName="Correo electronico" value={email} setValue={setEmail} />
-                  <FormImout id="password" type="text" labelName="Contraseña" value={password} setValue={setPassword} />
+                  <FormInput id="email" type="email" labelName="Correo electronico" value={email} setValue={setEmail} />
+                  <FormInput id="password" type="text" labelName="Contraseña" value={password} setValue={setPassword} />
                 </div>
 
                 <button

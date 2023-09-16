@@ -1,18 +1,18 @@
 import { React, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import FormImout from '../FormInput';
-import userAccountsService from '../../services/userAccounts';
+import FormInput from '../FormInput';
+import userAccountService from '../../services/userAccounts';
 
 const Login = ({ setUser }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = async (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      const userInfo = await userAccountsService.login({ email, password });
+      const userInfo = await userAccountService.login({ email, password });
 
       window.localStorage.setItem('loggedSmcaUser', JSON.stringify(userInfo));
       setUser(userInfo);
@@ -37,9 +37,9 @@ const Login = ({ setUser }) => {
                 Iniciar sesion
               </h1>
 
-              <form onSubmit={handleLogin} className="space-y-4 md:space-y-6">
-                <FormImout id="email" type="email" labelName="Correo electronico" value={email} setValue={setEmail} />
-                <FormImout id="password" type="password" labelName="Contraseña" value={password} setValue={setPassword} />
+              <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
+                <FormInput id="email" type="email" labelName="Correo electronico" value={email} setValue={setEmail} />
+                <FormInput id="password" type="password" labelName="Contraseña" value={password} setValue={setPassword} />
 
                 <div className="flex items-center justify-between">
                   <label
