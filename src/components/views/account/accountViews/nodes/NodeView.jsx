@@ -29,49 +29,56 @@ const NodeView = ({ setSelectedNode }) => {
   }, []);
 
   return (
-    <div className="flex w-full rounded-lg bg-white p-5 shadow">
+    <div className="grid w-full grid-cols-2 gap-5">
 
-      <div className="grid w-full grid-cols-2 gap-5">
-
-        <div className="relative flex w-full grow rounded-lg shadow">
+      {/* Map */}
+      <div className="flex w-full rounded-lg bg-white p-5 shadow">
+        <div className="flex w-full overflow-hidden rounded-lg shadow">
           <MapContainer
-            center={mapCenter}
-            zoom={13}
-            scrollWheelZoom={false}
-            attributionControl={false}
-            className="grow"
-          >
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            {
-              nodeList.map((node) => (
-                <Marker
-                  key={`${node.node_type}${node.node_id}`}
-                  icon={icon}
-                  position={[node.lat, node.long]}
-                  eventHandlers={{
-                    click: () => {
-                      setSelectedNode(node);
-                      navigate(`/cuenta/nodos/${node.node_type}/${node.node_id}`);
-                    },
-                    mouseover: (event) => event.target.openPopup(),
-                    mouseout: (event) => event.target.closePopup(),
-                  }}
-                >
-                  <Popup>{node.lat}</Popup>
-                </Marker>
-              ))
-            }
-          </MapContainer>
+              center={mapCenter}
+              zoom={13}
+              scrollWheelZoom={false}
+              attributionControl={false}
+              className="grow"
+            >
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              {
+                nodeList.map((node) => (
+                  <Marker
+                    key={`${node.node_type}${node.node_id}`}
+                    icon={icon}
+                    position={[node.lat, node.long]}
+                    eventHandlers={{
+                      click: () => {
+                        setSelectedNode(node);
+                        navigate(`/cuenta/nodos/${node.node_type}/${node.node_id}`);
+                      },
+                      mouseover: (event) => event.target.openPopup(),
+                      mouseout: (event) => event.target.closePopup(),
+                    }}
+                  >
+                    <Popup>{node.lat}</Popup>
+                  </Marker>
+                ))
+              }
+            </MapContainer>
+          </div>
         </div>
 
-        <div className="flex flex-col space-y-5">
+      {/* Info */}      
+      <div className="flex flex-col space-y-5 overflow-hidden rounded-lg bg-white p-5 shadow">  
+        
+        {/* Title */}
+        <h1 className="font-bold leading-tight tracking-tight text-gray-900 text-2xl">
+            Nodos
+        </h1>
 
+        {/* Table */}
           <div className="relative basis-11/12 overflow-hidden rounded-xl bg-slate-100 shadow">
             <div className="absolute flex h-full w-full flex-col text-sm">
-
               <div className="flex w-full">
                 <div className="flex-1 border-b p-4 pl-8  font-medium text-slate-400">tipo</div>
                 <div className="flex-1 border-b p-4       font-medium text-slate-400">id</div>
@@ -99,6 +106,7 @@ const NodeView = ({ setSelectedNode }) => {
             </div>
           </div>
 
+          {/* Button */}
           <Link
             className="flex basis-1/12 items-center justify-center rounded-lg bg-primary-600 font-medium text-white shadow hover:bg-primary-700"
             to="/cuenta/nodos/crear"
@@ -109,8 +117,6 @@ const NodeView = ({ setSelectedNode }) => {
         </div>
 
       </div>
-
-    </div>
   );
 };
 

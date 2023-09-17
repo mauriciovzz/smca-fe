@@ -1,5 +1,12 @@
 import { React, useState } from 'react';
 import { Link } from 'react-router-dom';
+import control from 'src/assets/control.svg'
+import cloud from 'src/assets/cloud.svg';
+import location from 'src/assets/location.svg';
+import developer_board from 'src/assets/developer_board.svg';
+import airwave from 'src/assets/airwave.svg';
+import account_circle from 'src/assets/account_circle.svg';
+import logout from 'src/assets/logout.svg';
 
 const SideBar = ({ setUser }) => {
   const [open, setOpen] = useState(false);
@@ -8,31 +15,31 @@ const SideBar = ({ setUser }) => {
     {
       route: '/cuenta/nodos',
       title: 'Nodos',
-      src: 'cloud',
+      src: cloud,
       alt: 'cloud',
     },
     {
       title: 'Ubicaciones',
       route: '/cuenta/ubicaciones',
-      src: 'location',
+      src: location,
       alt: 'location marker',
     },
     {
       title: 'Componentes',
       route: '/cuenta/componentes',
-      src: 'developer_board',
+      src: developer_board,
       alt: 'developer board',
     },
     {
       title: 'Variables',
       route: '/cuenta/variable',
-      src: 'airwave',
+      src: airwave,
       alt: 'airwave',
     },
     {
       title: 'Usuario',
       route: '/cuenta/usuario',
-      src: 'account_circle',
+      src: account_circle,
       alt: 'account circle',
       gap: true,
     },
@@ -45,7 +52,7 @@ const SideBar = ({ setUser }) => {
 
         <button type="button" onClick={() => setOpen(!open)}>
           <img
-            src="src/assets/control.svg"
+            src={control}
             alt="control arrow"
             className={`absolute -right-3 top-9 w-7 cursor-pointer rounded-full border-2 border-slate-500  ${!open && 'rotate-180'}`}
           />
@@ -64,7 +71,7 @@ const SideBar = ({ setUser }) => {
                 to={link.route}
               >
                 <img
-                  src={`src/assets/${link.src}.svg`}
+                  src={link.src}
                   alt={`${link.alt}`}
                 />
                 <span className={`${!open && 'hidden'} origin-left text-slate-500 duration-200`}>
@@ -77,10 +84,13 @@ const SideBar = ({ setUser }) => {
           <button
             type="button"
             className="mt-2 flex cursor-pointer items-center gap-x-4 rounded-md p-2 text-sm text-gray-300 hover:bg-slate-100"
-            onClick={() => setUser(null)}
+            onClick={() => {
+              window.localStorage.removeItem('loggedSmcaUser');
+              setUser(null);
+            }}
           >
             <img
-              src="src/assets/logout.svg"
+              src={logout}
               alt="logout"
             />
             <span className={`${!open && 'hidden'} origin-left text-slate-500 duration-200`}>

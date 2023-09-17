@@ -21,4 +21,28 @@ const create = async (user, locationInfo) => {
   return request.data;
 };
 
-export default { getAll, getOne, create };
+const update = async (user, updatedLocation) => {
+  const request = await axios.put(baseUrl, updatedLocation, {
+    headers: {
+      'Authorization': `Bearer ${user.token}`
+    }
+  });
+  return request.data;
+};
+
+const remove = async (user, location) => {
+  const request = await axios.delete(`${baseUrl}/${location.lat}/${location.long}`, {
+    headers: {
+      'Authorization': `Bearer ${user.token}`
+    }
+  });
+  return request.data;
+};
+
+export default {
+  getAll,
+  getOne,
+  create,
+  update,
+  remove
+};

@@ -1,4 +1,5 @@
 import { React, useState, useEffect } from 'react';
+import { Tooltip } from 'react-tooltip';
 import nodeService from 'src/services/nodes';
 import VariableItem from './VariableItem';
 
@@ -35,7 +36,8 @@ const VariableWidget = ({ type, selectedNode }) => {
           ))
         }
       </ul>
-
+      
+      <Tooltip id="my-tooltip" place="top-start" />
     </div>
   );
 };

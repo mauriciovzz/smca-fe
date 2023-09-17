@@ -24,7 +24,7 @@ const Account = ({ user, setUser }) => {
 
           <Route path="/ubicaciones" element={<LocationView setSelectedLocation={setSelectedLocation} />} />
           <Route path="/ubicaciones/crear" element={<LocationCreation user={user} />} />
-          <Route path="/ubicaciones/:lat/:long" element={<LocationManagement location={selectedLocation} />} />
+          <Route path="/ubicaciones/:lat/:long" element={<LocationManagement user={user} location={selectedLocation} />} />
         </Routes>
       </div>
     </div>

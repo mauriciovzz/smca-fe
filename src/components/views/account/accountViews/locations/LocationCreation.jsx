@@ -1,6 +1,7 @@
 import {
   React, useState, useRef, useMemo,
 } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import L from 'leaflet';
 import marker from 'src/assets/marker-icon.png';
@@ -16,13 +17,14 @@ const icon = new L.Icon({
   popupAnchor: [2, -40],
 });
 
-const mapCenter = [8.32263, -62.69119];
+const mapCenter = [8.322376, -62.689662];
 
 const LocationCreation = ({ user }) => {
   const [locationName, setLocationName] = useState('');
   const [locationAddress, setLocationAddress] = useState('');
   const [lat, setLat] = useState(mapCenter[0]);
   const [long, setLong] = useState(mapCenter[1]);
+  const navigation = useNavigate();
   const markerRef = useRef(null);
 
   const eventHandlers = useMemo(
@@ -30,8 +32,8 @@ const LocationCreation = ({ user }) => {
       dragend() {
         const mmarker = markerRef.current;
         if (mmarker != null) {
-          setLat(mmarker.getLatLng().lat);
-          setLong(mmarker.getLatLng().lng);
+          setLat(mmarker.getLatLng().lat.toFixed(6));
+          setLong(mmarker.getLatLng().lng.toFixed(6));
         }
       },
     }),
@@ -58,12 +60,13 @@ const LocationCreation = ({ user }) => {
   return (
     <div className="grid w-full grid-cols-2 gap-5">
 
+      {/* Map */}
       <div className="flex w-full rounded-lg bg-white p-5 shadow">
         <div className="flex w-full overflow-hidden rounded-lg shadow">
           <MapContainer
             center={mapCenter}
             zoom={13}
-            scrollWheelZoom={false}
+            scrollWheelZoom={true}
             attributionControl={false}
             className="grow"
           >
@@ -83,19 +86,20 @@ const LocationCreation = ({ user }) => {
         </div>
       </div>
 
+      {/* Form */}
       <div className="flex w-full flex-col space-y-5 overflow-hidden rounded-lg bg-white p-5 shadow">
         <div className="relative basis-11/12">
           <div className="absolute flex h-full w-full flex-col space-y-4">
 
-            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
+            <h1 className="font-bold leading-tight tracking-tight text-gray-900 text-2xl">
               Registrar Ubicacion
             </h1>
 
             <form id="locationForm" onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
 
               <div className="flex justify-between space-x-4 ">
-                <FormInput id="lat" type="text" labelName="Latitud" value={lat} setValue={setLat} />
-                <FormInput id="long" type="text" labelName="Longitud" value={long} setValue={setLong} />
+                <FormInput id="lat" type="number" labelName="Latitud" value={lat} setValue={setLat} />
+                <FormInput id="long" type="number" labelName="Longitud" value={long} setValue={setLong} />
               </div>
 
               <FormInput id="locationName" type="text" labelName="Nombre" value={locationName} setValue={setLocationName} />

@@ -16,7 +16,7 @@ const icon = new L.Icon({
   popupAnchor: [2, -40],
 });
 
-const mapCenter = [8.32263, -62.69119];
+const mapCenter = [8.322376, -62.689662];
 
 const Map = () => {
   const [nodeList, setNodeList] = useState([]);
@@ -34,7 +34,7 @@ const Map = () => {
       <MapContainer
         center={mapCenter}
         zoom={13}
-        scrollWheelZoom={false}
+        scrollWheelZoom={true}
         attributionControl={false}
         className="z-0 grow"
       >

@@ -1,5 +1,4 @@
 import { React, useState, useEffect } from 'react';
-import { Tooltip } from 'react-tooltip';
 import averageReadingService from 'src/services/averageReadings';
 
 const VariableItem = ({ node, variable }) => {
@@ -17,8 +16,9 @@ const VariableItem = ({ node, variable }) => {
         const objArray = [];
 
         for (let i = 0; i < 24; i += 1) {
+          const end_hour = i < 9 ? `0${i + 1}:00:00` : `${i + 1}:00:00`;
           const readingMatch = requestedReadings.find(
-            (reading) => reading.end_hour === `${i + 1}:00:00`,
+            (reading) => reading.end_hour === end_hour,
           );
 
           objArray.push({
@@ -54,13 +54,10 @@ const VariableItem = ({ node, variable }) => {
                   ? 'no reading'
                   : `${reading.value} ${variable.variable_unit}`
               }`}
-
             />
           ))
         }
-        <Tooltip id="my-tooltip" place="top-start" />
       </div>
-
     </li>
   );
 };
