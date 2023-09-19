@@ -9,6 +9,8 @@ import Login from './components/views/Login';
 import Register from './components/views/Register';
 import Account from './components/views/account/Account';
 import Footer from './components/Footer';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -41,6 +43,8 @@ const App = () => {
       </Routes>
 
       <Footer />
+      
+      <ToastContainer />
     </div>
   );
 };

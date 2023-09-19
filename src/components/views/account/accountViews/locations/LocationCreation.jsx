@@ -1,7 +1,5 @@
-import {
-  React, useState, useRef, useMemo,
-} from 'react';
-import { useNavigate } from 'react-router-dom';
+import { React, useState, useRef, useMemo } from 'react';
+import notifications from 'src/utils/notifications'
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import L from 'leaflet';
 import marker from 'src/assets/marker-icon.png';
@@ -24,7 +22,6 @@ const LocationCreation = ({ user }) => {
   const [locationAddress, setLocationAddress] = useState('');
   const [lat, setLat] = useState(mapCenter[0]);
   const [long, setLong] = useState(mapCenter[1]);
-  const navigation = useNavigate();
   const markerRef = useRef(null);
 
   const eventHandlers = useMemo(
@@ -48,12 +45,14 @@ const LocationCreation = ({ user }) => {
         user, { lat, long, locationName, locationAddress }
       );
 
+      notifications.success(`Ubicacion "${locationName}" creada.`);
       setLat(mapCenter[0]);
       setLong(mapCenter[1]);
       setLocationName('');
       setLocationAddress('');
+      
     } catch (exception) {
-      // console.log(exception);
+      notifications.error(exception, user);
     }
   };
 

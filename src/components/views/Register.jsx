@@ -1,5 +1,6 @@
 import { React, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import notifications from 'src/utils/notifications'
 import FormInput from 'src/components/FormInput';
 import userAccountService from 'src/services/userAccounts';
 
@@ -19,6 +20,7 @@ const Register = ({ setUser }) => {
       });
       const userInfo = await userAccountService.login({ email, password });
 
+      notifications.info(`Bienvenid@, ${firstName} ${lastName}`);
       window.localStorage.setItem('loggedSmcaUser', JSON.stringify(userInfo));
       setUser(userInfo);
       setFirstName('');
@@ -27,7 +29,7 @@ const Register = ({ setUser }) => {
       setPassword('');
       navigate('/');
     } catch (exception) {
-      // console.log(exception);
+      notifications.error(exception);
     }
   };
 

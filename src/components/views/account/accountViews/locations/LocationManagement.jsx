@@ -1,4 +1,5 @@
 import { React, useState } from 'react';
+import notifications from 'src/utils/notifications'
 import { useNavigate } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import L from 'leaflet';
@@ -15,8 +16,6 @@ const icon = new L.Icon({
   popupAnchor: [2, -40],
 });
 
-
-
 const LocationManagement = ({ user, location }) => {
   const [locationName, setLocationName] = useState(location.location_name);
   const [locationAddress, setLocationAddress] = useState(location.location_address);
@@ -31,9 +30,11 @@ const LocationManagement = ({ user, location }) => {
       await locationService.update(
         user, { lat, long, locationName, locationAddress }
       );
+
+      notifications.success(`Ubicacion "${locationName}" modificada.`);
       setEditState(!editState);
     } catch (exception) {
-      // console.log(exception);
+      notifications.error(exception, user);
     }
   };
 
@@ -42,9 +43,11 @@ const LocationManagement = ({ user, location }) => {
       await locationService.remove(
         user, { lat, long }
       );
+
+      notifications.success(`Ubicacion "${locationName}" eliminada`);
       navigate('/cuenta/ubicaciones')
     } catch (exception) {
-      // console.log(exception);
+      notifications.error(exception, user);
     }
   };
 
