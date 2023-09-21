@@ -13,15 +13,7 @@ const login = async (credentials) => {
   return response.data;
 };
 
-const logout = () => {
-  window.localStorage.removeItem('loggedSmcaUser');
-};
-
-const getCurrentUser = () => JSON.parse(window.localStorage.getItem('loggedSmcaUser'));
-
 export default {
   register,
   login,
-  logout,
-  getCurrentUser,
 };

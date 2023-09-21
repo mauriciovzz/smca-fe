@@ -1,16 +1,17 @@
 import { React, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from 'src/contexts/AuthContext';
 import control from 'src/assets/control.svg';
 import cloud from 'src/assets/cloud.svg';
 import location from 'src/assets/location.svg';
 import memory from 'src/assets/memory.svg';
 import airwave from 'src/assets/airwave.svg';
 import accountCircle from 'src/assets/account_circle.svg';
-import logout from 'src/assets/logout.svg';
+import logoutImage from 'src/assets/logout.svg';
 
-const SideBar = ({ setUser }) => {
+const SideBar = () => {
   const [open, setOpen] = useState(false);
-
+  const { logout } = useAuth();
   const navLinks = [
     {
       route: '/cuenta/nodos',
@@ -85,12 +86,11 @@ const SideBar = ({ setUser }) => {
             type="button"
             className="mt-2 flex cursor-pointer items-center gap-x-4 rounded-md p-2 text-sm text-gray-300 hover:bg-slate-100"
             onClick={() => {
-              window.localStorage.removeItem('loggedSmcaUser');
-              setUser(null);
+              logout();
             }}
           >
             <img
-              src={logout}
+              src={logoutImage}
               alt="logout"
             />
             <span className={`${!open && 'hidden'} origin-left text-slate-500 duration-200`}>

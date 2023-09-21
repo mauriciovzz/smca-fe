@@ -1,5 +1,6 @@
 import { React, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from 'src/contexts/AuthContext';
 import close from 'src/assets/close.svg';
 import menu from 'src/assets/menu.svg';
 
@@ -22,8 +23,9 @@ const navLinks = [
   },
 ];
 
-const Navbar = ({ user }) => {
+const Navbar = () => {
   const [toggle, setToggle] = useState(false);
+  const { user } = useAuth();
 
   return (
     <div className="z-50 flex items-center justify-center px-6 shadow sm:px-16">

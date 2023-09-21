@@ -1,9 +1,9 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import userAccountsService from '../services/userAccounts';
+import { useAuth } from '../contexts/AuthContext';
 
 const PrivateRoutes = () => {
-  const user = userAccountsService.getCurrentUser();
+  const { user } = useAuth();
 
   if (user === undefined) {
     return null; // or loading indicator/spinner/etc

@@ -1,26 +1,16 @@
 import { React, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import notifications from 'src/utils/notifications';
+import { Link } from 'react-router-dom';
+import { useAuth } from 'src/contexts/AuthContext';
 import FormInput from '../FormInput';
-import userAccountService from '../../services/userAccounts';
 
-const Login = ({ setUser }) => {
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();
+  const { userLogin } = useAuth();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    try {
-      const userInfo = await userAccountService.login({ email, password });
-
-      notifications.info(`Bienvenid@, ${userInfo.firstName} ${userInfo.lastName}`);
-      setUser(userInfo);
-      navigate('/');
-    } catch (exception) {
-      notifications.error(exception);
-    }
+    userLogin({ email, password });
   };
 
   return (

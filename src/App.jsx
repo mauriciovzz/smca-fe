@@ -1,6 +1,5 @@
-import { React, useState, useEffect } from 'react';
+import { React, useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import userAccountsService from 'src/services/userAccounts';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import Navbar from 'src/components/Navbar';
@@ -12,32 +11,23 @@ import {
 import Footer from 'src/components/Footer';
 
 const App = () => {
-  const [user, setUser] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [selectedNode, setSelectedNode] = useState(null);
 
-  useEffect(() => {
-    const loggedUser = userAccountsService.getCurrentUser();
-    if (loggedUser) {
-      const userInfo = loggedUser;
-      setUser(userInfo);
-    }
-  }, []);
-
   return (
     <div className="flex h-screen flex-col bg-white ">
-      <Navbar user={user} />
+      <Navbar />
 
       <Routes>
         <Route path="/" element={<Map />} />
         <Route path="/reportes" element={<Reports />} />
         <Route path="/informacion" element={<Information />} />
         <Route path="/faq" element={<Faq />} />
-        <Route path="/login" element={<Login setUser={setUser} />} />
-        <Route path="/registro" element={<Register setUser={setUser} />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/registro" element={<Register />} />
 
         <Route path="/cuenta" element={<PrivateRoutes />}>
-          <Route path="" element={<Account user={user} setUser={setUser} />}>
+          <Route path="" element={<Account />}>
 
             <Route path="nodos" element={<NodeView />}>
               <Route path="" element={<NodeList setSelectedNode={setSelectedNode} />} />
