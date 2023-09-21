@@ -1,4 +1,5 @@
 import axios from 'axios';
+import authHeader from '../utils/authHeader';
 
 const baseUrl = '/api/locations';
 
@@ -12,29 +13,23 @@ const getOne = async (node) => {
   return request.data[0];
 };
 
-const create = async (user, locationInfo) => {
+const create = async (locationInfo) => {
   const request = await axios.post(baseUrl, locationInfo, {
-    headers: {
-      'Authorization': `Bearer ${user.token}`
-    }
+    headers: authHeader(),
   });
   return request.data;
 };
 
-const update = async (user, updatedLocation) => {
+const update = async (updatedLocation) => {
   const request = await axios.put(baseUrl, updatedLocation, {
-    headers: {
-      'Authorization': `Bearer ${user.token}`
-    }
+    headers: authHeader(),
   });
   return request.data;
 };
 
-const remove = async (user, location) => {
+const remove = async (location) => {
   const request = await axios.delete(`${baseUrl}/${location.lat}/${location.long}`, {
-    headers: {
-      'Authorization': `Bearer ${user.token}`
-    }
+    headers: authHeader(),
   });
   return request.data;
 };
@@ -44,5 +39,5 @@ export default {
   getOne,
   create,
   update,
-  remove
+  remove,
 };

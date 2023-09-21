@@ -1,6 +1,6 @@
 import { React, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import notifications from 'src/utils/notifications'
+import notifications from 'src/utils/notifications';
 import FormInput from '../FormInput';
 import userAccountService from '../../services/userAccounts';
 
@@ -16,10 +16,7 @@ const Login = ({ setUser }) => {
       const userInfo = await userAccountService.login({ email, password });
 
       notifications.info(`Bienvenid@, ${userInfo.firstName} ${userInfo.lastName}`);
-      window.localStorage.setItem('loggedSmcaUser', JSON.stringify(userInfo));
       setUser(userInfo);
-      setEmail('');
-      setPassword('');
       navigate('/');
     } catch (exception) {
       notifications.error(exception);

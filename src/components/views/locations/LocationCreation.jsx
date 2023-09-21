@@ -1,5 +1,7 @@
-import { React, useState, useRef, useMemo } from 'react';
-import notifications from 'src/utils/notifications'
+import {
+  React, useState, useRef, useMemo,
+} from 'react';
+import notifications from 'src/utils/notifications';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import L from 'leaflet';
 import marker from 'src/assets/marker-icon.png';
@@ -17,7 +19,7 @@ const icon = new L.Icon({
 
 const mapCenter = [8.322376, -62.689662];
 
-const LocationCreation = ({ user }) => {
+const LocationCreation = () => {
   const [locationName, setLocationName] = useState('');
   const [locationAddress, setLocationAddress] = useState('');
   const [lat, setLat] = useState(mapCenter[0]);
@@ -41,18 +43,17 @@ const LocationCreation = ({ user }) => {
     event.preventDefault();
 
     try {
-      await locationService.create(
-        user, { lat, long, locationName, locationAddress }
-      );
+      await locationService.create({
+        lat, long, locationName, locationAddress,
+      });
 
       notifications.success(`Ubicacion "${locationName}" creada.`);
       setLat(mapCenter[0]);
       setLong(mapCenter[1]);
       setLocationName('');
       setLocationAddress('');
-      
     } catch (exception) {
-      notifications.error(exception, user);
+      notifications.error(exception);
     }
   };
 
@@ -65,7 +66,7 @@ const LocationCreation = ({ user }) => {
           <MapContainer
             center={mapCenter}
             zoom={13}
-            scrollWheelZoom={true}
+            scrollWheelZoom
             attributionControl={false}
             className="grow"
           >
@@ -76,7 +77,7 @@ const LocationCreation = ({ user }) => {
 
             <Marker
               icon={icon}
-              draggable={true}
+              draggable
               eventHandlers={eventHandlers}
               position={[lat, long]}
               ref={markerRef}
@@ -90,7 +91,7 @@ const LocationCreation = ({ user }) => {
         <div className="relative basis-11/12">
           <div className="absolute flex h-full w-full flex-col space-y-4">
 
-            <h1 className="font-bold leading-tight tracking-tight text-gray-900 text-2xl">
+            <h1 className="text-2xl font-bold leading-tight tracking-tight text-gray-900">
               Registrar Ubicacion
             </h1>
 

@@ -26,8 +26,7 @@ module.exports = {
     'react/function-component-definition': [2, { namedComponents: 'arrow-function' }],
     'react/prop-types': [0],
     'implicit-arrow-linebreak': [2, 'beside'],
-    'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
-    'react/jsx-boolean-value': ['never', { always: ['draggable'] }],
+    'import/no-extraneous-dependencies': [2, { devDependencies: true }],
   },
   plugins: ['tailwindcss'],
   settings: {

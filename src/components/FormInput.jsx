@@ -1,7 +1,7 @@
 import React from 'react';
 
 const FormInput = ({
-  id, type, labelName, value, setValue, disabled
+  id, type, labelName, value, setValue, disabled,
 }) => (
   <label htmlFor={id} className="block flex-1">
     <div className="mb-2 text-sm font-medium text-gray-900">

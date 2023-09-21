@@ -34,7 +34,7 @@ const Map = () => {
       <MapContainer
         center={mapCenter}
         zoom={13}
-        scrollWheelZoom={true}
+        scrollWheelZoom
         attributionControl={false}
         className="z-0 grow"
       >

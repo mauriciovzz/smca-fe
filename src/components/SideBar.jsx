@@ -1,11 +1,11 @@
 import { React, useState } from 'react';
 import { Link } from 'react-router-dom';
-import control from 'src/assets/control.svg'
+import control from 'src/assets/control.svg';
 import cloud from 'src/assets/cloud.svg';
 import location from 'src/assets/location.svg';
 import memory from 'src/assets/memory.svg';
 import airwave from 'src/assets/airwave.svg';
-import account_circle from 'src/assets/account_circle.svg';
+import accountCircle from 'src/assets/account_circle.svg';
 import logout from 'src/assets/logout.svg';
 
 const SideBar = ({ setUser }) => {
@@ -39,7 +39,7 @@ const SideBar = ({ setUser }) => {
     {
       title: 'Usuario',
       route: '/cuenta/usuario',
-      src: account_circle,
+      src: accountCircle,
       alt: 'account circle',
       gap: true,
     },

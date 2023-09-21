@@ -36,7 +36,7 @@ const VariableWidget = ({ type, selectedNode }) => {
           ))
         }
       </ul>
-      
+
       <Tooltip id="my-tooltip" place="top-start" />
     </div>
   );

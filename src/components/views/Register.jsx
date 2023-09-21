@@ -1,6 +1,6 @@
 import { React, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import notifications from 'src/utils/notifications'
+import notifications from 'src/utils/notifications';
 import FormInput from 'src/components/FormInput';
 import userAccountService from 'src/services/userAccounts';
 
@@ -15,18 +15,13 @@ const Register = ({ setUser }) => {
     event.preventDefault();
 
     try {
-      await userAccountService.create({
+      await userAccountService.register({
         firstName, lastName, email, password,
       });
       const userInfo = await userAccountService.login({ email, password });
 
       notifications.info(`Bienvenid@, ${firstName} ${lastName}`);
-      window.localStorage.setItem('loggedSmcaUser', JSON.stringify(userInfo));
       setUser(userInfo);
-      setFirstName('');
-      setLastName('');
-      setEmail('');
-      setPassword('');
       navigate('/');
     } catch (exception) {
       notifications.error(exception);

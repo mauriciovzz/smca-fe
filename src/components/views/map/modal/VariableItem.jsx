@@ -16,9 +16,9 @@ const VariableItem = ({ node, variable }) => {
         const objArray = [];
 
         for (let i = 0; i < 24; i += 1) {
-          const end_hour = i < 9 ? `0${i + 1}:00:00` : `${i + 1}:00:00`;
+          const endHour = i < 9 ? `0${i + 1}:00:00` : `${i + 1}:00:00`;
           const readingMatch = requestedReadings.find(
-            (reading) => reading.end_hour === end_hour,
+            (reading) => reading.end_hour === endHour,
           );
 
           objArray.push({

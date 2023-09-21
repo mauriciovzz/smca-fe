@@ -1,24 +1,25 @@
 import { React, useState, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import Map from './components/views/map/Map';
-import Reports from './components/views/Reports';
-import Information from './components/views/Information';
-import Faq from './components/views/Faq';
-import Login from './components/views/Login';
-import Register from './components/views/Register';
-import Account from './components/views/account/Account';
-import Footer from './components/Footer';
-import { ToastContainer } from 'react-toastify';
+import userAccountsService from 'src/services/userAccounts';
 import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
+import Navbar from 'src/components/Navbar';
+import PrivateRoutes from 'src/components/PrivateRoutes';
+import {
+  Map, Reports, Information, Faq, Login, Register, Account, NodeView, NodeList,
+  NodeCreation, NodeManagement, LocationView, LocationCreation, LocationManagement,
+} from 'src/components/views';
+import Footer from 'src/components/Footer';
 
 const App = () => {
   const [user, setUser] = useState(null);
+  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [selectedNode, setSelectedNode] = useState(null);
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedSmcaUser');
-    if (loggedUserJSON) {
-      const userInfo = JSON.parse(loggedUserJSON);
+    const loggedUser = userAccountsService.getCurrentUser();
+    if (loggedUser) {
+      const userInfo = loggedUser;
       setUser(userInfo);
     }
   }, []);
@@ -34,16 +35,27 @@ const App = () => {
         <Route path="/faq" element={<Faq />} />
         <Route path="/login" element={<Login setUser={setUser} />} />
         <Route path="/registro" element={<Register setUser={setUser} />} />
-        {
-          user
-            ? <Route path="/cuenta/*" element={<Account user={user} setUser={setUser} />} />
-            : null
-        }
+
+        <Route path="/cuenta" element={<PrivateRoutes />}>
+          <Route path="" element={<Account user={user} setUser={setUser} />}>
+
+            <Route path="nodos" element={<NodeView />}>
+              <Route path="" element={<NodeList setSelectedNode={setSelectedNode} />} />
+              <Route path="crear" element={<NodeCreation />} />
+              <Route path=":node_type/:node_id" element={<NodeManagement node={selectedNode} />} />
+            </Route>
+
+            <Route path="ubicaciones" element={<LocationView setSelectedLocation={setSelectedLocation} />} />
+            <Route path="ubicaciones/crear" element={<LocationCreation />} />
+            <Route path="ubicaciones/:lat/:long" element={<LocationManagement location={selectedLocation} />} />
+          </Route>
+        </Route>
+
         <Route path="*" element={<Navigate replace to="/" />} />
       </Routes>
 
       <Footer />
-      
+
       <ToastContainer />
     </div>
   );

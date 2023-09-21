@@ -36,7 +36,7 @@ const LocationView = ({ setSelectedLocation }) => {
           <MapContainer
             center={mapCenter}
             zoom={13}
-            scrollWheelZoom={true}
+            scrollWheelZoom
             attributionControl={false}
             className="grow"
           >
@@ -67,16 +67,16 @@ const LocationView = ({ setSelectedLocation }) => {
         </div>
       </div>
 
-      {/* Info */}      
-      <div className="flex flex-col space-y-5 overflow-hidden rounded-lg bg-white p-5 shadow">  
-        
+      {/* Info */}
+      <div className="flex flex-col space-y-5 overflow-hidden rounded-lg bg-white p-5 shadow">
+
         {/* Title */}
-        <h1 className="font-bold leading-tight tracking-tight text-gray-900 text-2xl">
-            Ubicaciones
+        <h1 className="text-2xl font-bold leading-tight tracking-tight text-gray-900">
+          Ubicaciones
         </h1>
-        
+
         {/* Table */}
-        <div className="relative basis-11/12 overflow-hidden rounded-xl bg-slate-100 shadow">              
+        <div className="relative basis-11/12 overflow-hidden rounded-xl bg-slate-100 shadow">
           <div className="absolute flex h-full w-full flex-col text-sm">
             <div className="flex w-full">
               <div className="flex-1 border-b p-4 pl-8  font-medium text-slate-400">Coordenadas</div>
