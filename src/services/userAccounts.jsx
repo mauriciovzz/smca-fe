@@ -9,7 +9,6 @@ const register = async (userInfo) => {
 
 const login = async (credentials) => {
   const response = await axios.post(`${baseUrl}/login`, credentials);
-  window.localStorage.setItem('loggedSmcaUser', JSON.stringify(response.data));
   return response.data;
 };
 

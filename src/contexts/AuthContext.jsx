@@ -2,8 +2,6 @@ import {
   React, useState, useMemo, createContext, useContext,
 } from 'react';
 import { useNavigate } from 'react-router-dom';
-import userAccountService from 'src/services/userAccounts';
-import notifications from 'src/utils/notifications';
 
 const AuthContext = createContext();
 
@@ -22,15 +20,10 @@ export const AuthProvider = ({ children }) => {
 
   const navigate = useNavigate();
 
-  const userLogin = async (data) => {
-    try {
-      const userInfo = await userAccountService.login(data);
-      setUser(userInfo);
-      notifications.info(`Bienvenid@, ${userInfo.firstName} ${userInfo.lastName}`);
-      navigate('/');
-    } catch (exception) {
-      notifications.error(exception);
-    }
+  const login = async (userInfo) => {
+    window.localStorage.setItem('loggedSmcaUser', JSON.stringify(userInfo));
+    setUser(userInfo);
+    navigate('/');
   };
 
   const logout = () => {
@@ -42,7 +35,7 @@ export const AuthProvider = ({ children }) => {
   const value = useMemo(
     () => ({
       user,
-      userLogin,
+      login,
       logout,
     }),
     [user],

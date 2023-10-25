@@ -10,7 +10,7 @@ const Register = () => {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { userLogin } = useAuth();
+  const { login } = useAuth();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -19,7 +19,10 @@ const Register = () => {
       await userAccountService.register({
         firstName, lastName, email, password,
       });
-      userLogin({ email, password });
+
+      const userInfo = await userAccountService.login({ email, password });
+      login(userInfo);
+      notifications.info(`Bienvenid@, ${userInfo.firstName} ${userInfo.lastName}`);
     } catch (exception) {
       notifications.error(exception);
     }

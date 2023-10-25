@@ -6,7 +6,7 @@ const PrivateRoutes = () => {
   const { user } = useAuth();
 
   if (user === undefined) {
-    return null; // or loading indicator/spinner/etc
+    return null;
   }
 
   return user

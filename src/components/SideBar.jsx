@@ -8,10 +8,11 @@ import memory from 'src/assets/memory.svg';
 import airwave from 'src/assets/airwave.svg';
 import accountCircle from 'src/assets/account_circle.svg';
 import logoutImage from 'src/assets/logout.svg';
+import notifications from 'src/utils/notifications';
 
 const SideBar = () => {
   const [open, setOpen] = useState(false);
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const navLinks = [
     {
       route: '/cuenta/nodos',
@@ -87,6 +88,7 @@ const SideBar = () => {
             className="mt-2 flex cursor-pointer items-center gap-x-4 rounded-md p-2 text-sm text-gray-300 hover:bg-slate-100"
             onClick={() => {
               logout();
+              notifications.info(`hasta luego, ${user.firstName} ${user.lastName}`);
             }}
           >
             <img

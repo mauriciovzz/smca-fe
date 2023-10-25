@@ -1,4 +1,5 @@
 import { toast, Slide } from 'react-toastify';
+import { useAuth } from '../contexts/AuthContext';
 
 const success = (message) => {
   toast.success(message, {
