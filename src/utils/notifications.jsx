@@ -1,24 +1,22 @@
 import { toast, Slide } from 'react-toastify';
 
+const config = {
+  position: 'top-center',
+  transition: Slide,
+  closeOnClick: true,
+  draggable: false,
+};
+
 const success = (message) => {
-  toast.success(message, {
-    position: toast.POSITION.TOP_CENTER,
-    transition: Slide,
-  });
+  toast.success(message, config);
 };
 
 const info = (message) => {
-  toast.info(message, {
-    position: toast.POSITION.TOP_CENTER,
-    transition: Slide,
-  });
+  toast.info(message, config);
 };
 
 const error = (err) => {
-  toast.error(err.response.data.error, {
-    position: toast.POSITION.TOP_CENTER,
-    transition: Slide,
-  });
+  if (err.response.data.error !== 'TokenExpiredError') toast.error(err.response.data.error, config);
 };
 
 export default {

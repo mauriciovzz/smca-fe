@@ -27,6 +27,29 @@ module.exports = {
     'react/prop-types': [0],
     'implicit-arrow-linebreak': [2, 'beside'],
     'import/no-extraneous-dependencies': [2, { devDependencies: true }],
+    'tailwindcss/no-custom-classname': [1, { whitelist: ['wi', 'wi-na'] }],
+    'react/no-unstable-nested-components': [1, { allowAsProps: true }],
+    'react/jsx-props-no-spreading': [0],
+    'no-param-reassign': [2, { props: false }],
+    'import/order': [
+      2,
+      {
+        groups: ['builtin', 'external', 'internal'],
+        pathGroups: [
+          {
+            pattern: 'react',
+            group: 'external',
+            position: 'before',
+          },
+        ],
+        pathGroupsExcludedImportTypes: ['react'],
+        'newlines-between': 'always',
+        alphabetize: {
+          order: 'asc',
+          caseInsensitive: true,
+        },
+      },
+    ],
   },
   plugins: ['tailwindcss'],
   settings: {
