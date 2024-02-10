@@ -1,18 +1,30 @@
 import React from 'react';
+
 import ReactDOM from 'react-dom/client';
 import { AuthProvider } from 'src/contexts/AuthContext';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+
+import AxiosInterceptor from 'src/services/AxiosInterceptor';
+
 import App from './App';
+import { AuthProvider } from './context/authProvider';
 
+import 'react-toastify/dist/ReactToastify.css';
 import './index.css';
+import 'weather-icons/css/weather-icons.css';
 import 'leaflet/dist/leaflet.css';
-
-import 'react-tooltip/dist/react-tooltip.css';
+import 'regenerator-runtime';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <Router>
-    <AuthProvider>
-      <App />
-    </AuthProvider>
-  </Router>,
+  <React.StrictMode>
+    <Router>
+      <AuthProvider>
+        <AxiosInterceptor>
+          <App />
+          <ToastContainer />
+        </AxiosInterceptor>
+      </AuthProvider>
+    </Router>
+  </React.StrictMode>,
 );
