@@ -1,9 +1,10 @@
 import { React } from 'react';
 
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
 import {
   Account,
+  NotFound,
   Faq,
   Home,
   Information,
@@ -11,7 +12,10 @@ import {
   PasswordRecover,
   PasswordReset,
   Register,
+  ResendVerificationLink,
   Verification,
+  VerifyAccount,
+  VerifyEmail,
   WorkspaceAccounts,
   WorkspaceInstance,
   WorkspaceMap,
@@ -27,15 +31,21 @@ const Routers = () => (
     <Route path="/" element={<Home />} />
 
     <Route path="/informacion" element={<Information />} />
+
     <Route path="/faq" element={<Faq />} />
 
-    <Route path="/iniciar-sesion" element={<Login />} />
     <Route path="/registro" element={<Register />} />
 
-    <Route path="/verificacion/:verificationToken" element={<Verification />} />
-
     <Route path="/recuperar-contraseña" element={<PasswordRecover />} />
-    <Route path="/restablecer-contraseña/:accountId/:resetToken" element={<PasswordReset />} />
+    <Route path="/restablecer-contraseña/:verificationToken" element={<PasswordReset />} />
+
+    <Route path="/verificar" element={<Verification />}>
+      <Route path="cuenta/:verificationToken" element={<VerifyAccount />} />
+      <Route path="cuenta/reenviar-enlace/" element={<ResendVerificationLink />} />
+      <Route path="correo-electronico/:verificationToken" element={<VerifyEmail />} />
+    </Route>
+
+    <Route path="/iniciar-sesion" element={<Login />} />
 
     <Route element={<ProtectedRoute />}>
       <Route path="/cuenta" element={<Account />} />
@@ -75,7 +85,7 @@ const Routers = () => (
       </Route>
     </Route> */}
 
-    <Route path="*" element={<Navigate replace to="/" />} />
+    <Route path="*" element={<NotFound />} />
   </Routes>
 );
 

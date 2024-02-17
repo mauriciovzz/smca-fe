@@ -1,14 +1,13 @@
 import React from 'react';
 
 import ReactDOM from 'react-dom/client';
-import { AuthProvider } from 'src/contexts/AuthContext';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 
+import { AuthProvider } from 'src/context/authProvider';
 import AxiosInterceptor from 'src/services/AxiosInterceptor';
 
 import App from './App';
-import { AuthProvider } from './context/authProvider';
 
 import 'react-toastify/dist/ReactToastify.css';
 import './index.css';

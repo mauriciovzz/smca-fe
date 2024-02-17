@@ -120,9 +120,7 @@ const UpdateEmail = ({ resetView, isScreenSM }) => {
     event.preventDefault();
 
     try {
-      const response = await accountService.updateEmail({
-        newEmail, password,
-      });
+      const response = await accountService.updateEmail({ newEmail, password });
       notifications.success(response);
     } catch (err) {
       notifications.error(err);

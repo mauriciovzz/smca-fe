@@ -1,6 +1,6 @@
 import { React, useState, useContext } from 'react';
 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import {
   BackdropFilter, Button, CheckBoxInput, Heading, Map, TextInput,
@@ -10,10 +10,11 @@ import accountService from 'src/services/accounts';
 import notifications from 'src/utils/notifications';
 
 const Login = () => {
+  const { login } = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
-  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -24,7 +25,11 @@ const Login = () => {
       });
       login(response);
     } catch (err) {
-      notifications.error(err);
+      if (err.response.data.error === 'Su cuenta no se encuentra verificada.') {
+        navigate('/verificar/cuenta/reenviar-enlace/', { state: { email } });
+      } else {
+        notifications.error(err);
+      }
     }
   };
 

@@ -1,6 +1,8 @@
 import React from 'react';
 
-const Button = ({ text, form, color }) => {
+const Button = ({
+  text, typeIsButton, onClick, form, color,
+}) => {
   const selectColor = () => {
     switch (color) {
       case 'blue':
@@ -13,13 +15,25 @@ const Button = ({ text, form, color }) => {
   };
 
   return (
-    <button
-      type="submit"
-      form={form}
-      className={`${selectColor()} flex h-7 w-full items-center justify-center rounded-lg font-medium text-white shadow`}
-    >
-      {text}
-    </button>
+    typeIsButton
+      ? (
+        <button
+          type="button"
+          onClick={() => onClick()}
+          className={`${selectColor()} flex h-7 w-full items-center justify-center rounded-lg font-medium text-white shadow`}
+        >
+          {text}
+        </button>
+      )
+      : (
+        <button
+          type="submit"
+          form={form}
+          className={`${selectColor()} flex h-7 w-full items-center justify-center rounded-lg font-medium text-white shadow`}
+        >
+          {text}
+        </button>
+      )
   );
 };
 

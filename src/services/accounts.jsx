@@ -7,18 +7,28 @@ const register = async (accountInfo) => {
   return response.data;
 };
 
+const resendVerificationLink = async (email) => {
+  const response = await axios.post(`${baseUrl}/resendVerificationLink`, email);
+  return response.data;
+};
+
+const verifyAccount = async (verificationToken) => {
+  const response = await axios.post(`${baseUrl}/verifyAccount`, verificationToken);
+  return response.data;
+};
+
+const recoverPassword = async (email) => {
+  const response = await axios.post(`${baseUrl}/recoverPassword`, email);
+  return response.data;
+};
+
+const resetPassword = async (resetData) => {
+  const response = await axios.post(`${baseUrl}/resetPassword`, resetData);
+  return response.data;
+};
+
 const login = async (credentials) => {
   const response = await axios.post(`${baseUrl}/login`, credentials);
-  return response.data;
-};
-
-const forgotPassword = async (email) => {
-  const response = await axios.post(`${baseUrl}/forgotPassword`, email);
-  return response.data;
-};
-
-const resetPassword = async (accountId, resetToken, newPassword) => {
-  const response = await axios.post(`${baseUrl}/resetPassword/${accountId}/${resetToken}`, { newPassword });
   return response.data;
 };
 
@@ -32,8 +42,8 @@ const updateEmail = async (newEmail) => {
   return response.data;
 };
 
-const confirmEmail = async (verificationToken) => {
-  const response = await axios.post(`${baseUrl}/confirmEmail`, verificationToken);
+const verifyEmail = async (verificationToken) => {
+  const response = await axios.post(`${baseUrl}/verifyEmail`, verificationToken);
   return response.data;
 };
 
@@ -44,11 +54,13 @@ const updatePassword = async (newPassword) => {
 
 export default {
   register,
-  login,
-  forgotPassword,
+  resendVerificationLink,
+  verifyAccount,
+  recoverPassword,
   resetPassword,
+  login,
   updateName,
   updateEmail,
-  confirmEmail,
+  verifyEmail,
   updatePassword,
 };

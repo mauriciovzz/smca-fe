@@ -13,6 +13,7 @@ import info from 'src/assets/icons/info.svg';
 import location from 'src/assets/icons/location.svg';
 import loginIcon from 'src/assets/icons/login.svg';
 import logoutIcon from 'src/assets/icons/logout.svg';
+import mail from 'src/assets/icons/mail.svg'
 import map from 'src/assets/icons/map.svg'
 import markerShadow from 'src/assets/markers/marker-shadow.png';
 import memory from 'src/assets/icons/memory.svg';
@@ -40,6 +41,7 @@ export {
   location,
   loginIcon,
   logoutIcon,
+  mail,
   map,
   markerShadow,
   memory,

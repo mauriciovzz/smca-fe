@@ -1,5 +1,4 @@
 import { toast, Slide } from 'react-toastify';
-import { useAuth } from '../contexts/AuthContext';
 
 const config = {
   position: 'top-center',
