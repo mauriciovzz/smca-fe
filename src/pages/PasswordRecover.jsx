@@ -3,7 +3,7 @@ import { React, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import {
-  BackdropFilter, Button, Heading, Map, TextInput,
+  BackdropFilter, Button, Divider, Heading, Map, TextInput,
 } from 'src/components';
 import { EmailSend } from 'src/layout';
 import accountService from 'src/services/accounts';
@@ -37,10 +37,12 @@ const PasswordRecover = () => {
         {
           !wasSuccessful
             ? (
-              <div className="h-fit w-full divide-y rounded-lg bg-white p-5 shadow sm:h-fit sm:w-fit">
+              <div className="h-fit w-full rounded-lg bg-white p-5 shadow sm:h-fit sm:w-fit">
                 <Heading text="Recuperar Contraseña" />
 
-                <form id="form" onSubmit={handleSubmit} className="space-y-5 pt-5">
+                <Divider />
+
+                <form id="form" onSubmit={handleSubmit} className="space-y-5">
                   <p className="text-justify text-sm font-light">
                     {'Ingrese el correo electrónico de su cuenta y le enviaremos '}
                     <br className="hidden sm:flex" />

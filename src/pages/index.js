@@ -11,7 +11,7 @@ import ResendVerificationLink from './ResendVerificationLink';
 import Verification from './Verification';
 import VerifyAccount from './VerifyAccount';
 import VerifyEmail from './VerifyEmail';
-import WorkspaceAccounts from './WorkspaceAccounts';
+import WorkspaceMembers from './WorkspaceMembers';
 import WorkspaceInstance from './WorkspaceInstance';
 import WorkspaceMap from './WorkspaceMap';
 import WorkspaceReports from './WorkspaceReports';
@@ -32,7 +32,7 @@ export {
   Verification,
   VerifyAccount,
   VerifyEmail,
-  WorkspaceAccounts,
+  WorkspaceMembers,
   WorkspaceInstance,
   WorkspaceMap,
   WorkspaceReports,

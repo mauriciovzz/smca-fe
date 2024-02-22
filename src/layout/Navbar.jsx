@@ -3,7 +3,7 @@ import { React, useState, useContext } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 
 import {
-  accountIcon, close, groups, help, info, loginIcon, logoutIcon, map, menu,
+  accountIcon, close, help, info, loginIcon, logoutIcon, map, menu, workspacesIcon,
 } from 'src/assets';
 import { BackdropFilter } from 'src/components';
 import { AuthContext } from 'src/context/authProvider';
@@ -34,8 +34,8 @@ const navLinks = [
   {
     title: 'Espacios',
     route: '/espacios-de-trabajo',
-    src: groups,
-    alt: 'groups',
+    src: workspacesIcon,
+    alt: 'workspaces',
     needsAuth: true,
   },
   {

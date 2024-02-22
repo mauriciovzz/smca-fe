@@ -3,7 +3,7 @@ import { React, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import {
-  BackdropFilter, Button, Heading, Map, TextInput,
+  BackdropFilter, Button, Divider, Heading, Map, TextInput,
 } from 'src/components';
 import { VerificationError, VerificationSuccess } from 'src/layout';
 import accountService from 'src/services/accounts';
@@ -42,10 +42,12 @@ const PasswordReset = () => {
         {
           !requestMade
             ? (
-              <div className="h-fit w-full divide-y rounded-lg bg-white p-5 shadow sm:h-fit sm:w-fit">
+              <div className="h-fit w-full rounded-lg bg-white p-5 shadow sm:h-fit sm:w-fit">
                 <Heading text="Ingresar Nueva Contraseña" />
 
-                <form id="form" onSubmit={handleSubmit} className="space-y-5 pt-5">
+                <Divider />
+
+                <form id="form" onSubmit={handleSubmit} className="space-y-5">
                   <TextInput
                     id="newPassword"
                     type="password"

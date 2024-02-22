@@ -3,7 +3,7 @@ import { React, useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import {
-  BackdropFilter, Button, CheckBoxInput, Heading, Map, TextInput,
+  BackdropFilter, Button, CheckBoxInput, Divider, Heading, Map, TextInput,
 } from 'src/components';
 import { AuthContext } from 'src/context/authProvider';
 import accountService from 'src/services/accounts';
@@ -36,10 +36,12 @@ const Login = () => {
   return (
     <>
       <div className="z-20 flex grow space-y-5 px-5 pb-5 sm:items-center sm:justify-center">
-        <div className="h-fit w-full divide-y rounded-lg bg-white p-5 shadow sm:h-fit sm:w-fit">
+        <div className="h-fit w-full rounded-lg bg-white p-5 shadow sm:h-fit sm:w-fit">
           <Heading text="Iniciar Sesión" />
 
-          <form onSubmit={handleSubmit} id="form" className="space-y-5 pt-5">
+          <Divider />
+
+          <form onSubmit={handleSubmit} id="form" className="space-y-5">
             <TextInput
               id="email"
               type="email"

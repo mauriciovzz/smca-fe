@@ -4,16 +4,18 @@ import {
 
 import { control } from 'src/assets';
 import {
-  Button, Heading, Label, TextInput,
+  Button, Divider, Heading, Label, TextInput,
 } from 'src/components';
 import { AuthContext } from 'src/context/authProvider';
 import accountService from 'src/services/accounts';
 import notifications from 'src/utils/notifications';
 
-const OverviewButton = ({ title, value, onClick }) => (
+const OverviewButton = ({
+  title, value, isFirst, onClick,
+}) => (
   <button
     type="button"
-    className="flex justify-between py-5 hover:bg-background"
+    className={`${isFirst ? 'pb-5' : 'py-5'} flex justify-between hover:bg-background`}
     onClick={() => onClick()}
   >
     <div className="text-left">
@@ -31,33 +33,39 @@ const OverviewButton = ({ title, value, onClick }) => (
   </button>
 );
 
-const AccountOverview = ({ onClick }) => {
+const AccountOverview = ({ changeView }) => {
   const { auth } = useContext(AuthContext);
 
   return (
-    <div className="flex grow flex-col divide-y rounded-lg bg-white p-5 shadow">
+    <div className="flex grow flex-col rounded-lg bg-white p-5 shadow">
       <Heading text="Cuenta" />
 
-      <OverviewButton
-        title="Nombre"
-        value={`${auth.firstName} ${auth.lastName}`}
-        onClick={() => onClick('UpdateName')}
-      />
-      <OverviewButton
-        title="Correo Electrónico"
-        value={auth.email}
-        onClick={() => onClick('UpdateEmail')}
-      />
-      <OverviewButton
-        title="Contraseña"
-        value="●●●●●●●● "
-        onClick={() => onClick('UpdatePassword')}
-      />
+      <Divider />
+
+      <div className="flex grow flex-col divide-y">
+        <OverviewButton
+          title="Nombre"
+          value={`${auth.firstName} ${auth.lastName}`}
+          isFirst
+          onClick={() => changeView('UpdateName')}
+        />
+        <OverviewButton
+          title="Correo Electrónico"
+          value={auth.email}
+          onClick={() => changeView('UpdateEmail')}
+        />
+        <OverviewButton
+          title="Contraseña"
+          value="●●●●●●●● "
+          onClick={() => changeView('UpdatePassword')}
+        />
+      </div>
+
     </div>
   );
 };
 
-const UpdateName = ({ resetView, isScreenSM }) => {
+const UpdateName = ({ resetView }) => {
   const { auth, setAuth } = useContext(AuthContext);
   const [firstName, setFirstName] = useState(auth.firstName);
   const [lastName, setLastName] = useState(auth.lastName);
@@ -76,15 +84,16 @@ const UpdateName = ({ resetView, isScreenSM }) => {
 
   return (
     <div className="flex grow flex-col rounded-lg bg-white p-5 shadow">
-      <div className="flex grow flex-col divide-y">
+      <div className="flex grow flex-col">
         <Heading
           text="Actualizar Nombre"
           hasButton
-          isCloseButton={!isScreenSM}
           onButtonClick={() => resetView()}
         />
 
-        <form onSubmit={handleSubmit} id="form" className="space-y-5 py-5">
+        <Divider />
+
+        <form onSubmit={handleSubmit} id="form" className="space-y-5">
           <TextInput
             id="firstName"
             type="text"
@@ -111,7 +120,7 @@ const UpdateName = ({ resetView, isScreenSM }) => {
   );
 };
 
-const UpdateEmail = ({ resetView, isScreenSM }) => {
+const UpdateEmail = ({ resetView }) => {
   const { auth } = useContext(AuthContext);
   const [password, setPassword] = useState('');
   const [newEmail, setNewEmail] = useState('');
@@ -129,15 +138,16 @@ const UpdateEmail = ({ resetView, isScreenSM }) => {
 
   return (
     <div className="flex grow flex-col rounded-lg bg-white p-5 shadow">
-      <div className="flex grow flex-col divide-y">
+      <div className="flex grow flex-col">
         <Heading
-          text="Actualizar Correo Electrónico"
+          text="Actualizar Correo"
           hasButton
-          isCloseButton={!isScreenSM}
           onButtonClick={() => resetView()}
         />
 
-        <form onSubmit={handleSubmit} id="form" className="space-y-5 py-5">
+        <Divider />
+
+        <form onSubmit={handleSubmit} id="form" className="space-y-5">
           <TextInput
             id="email"
             type="email"
@@ -174,7 +184,7 @@ const UpdateEmail = ({ resetView, isScreenSM }) => {
   );
 };
 
-const UpdatePassword = ({ resetView, isScreenSM }) => {
+const UpdatePassword = ({ resetView }) => {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [repeatNewPassword, setRepeatNewPassword] = useState('');
@@ -194,13 +204,14 @@ const UpdatePassword = ({ resetView, isScreenSM }) => {
 
   return (
     <div className="flex grow flex-col rounded-lg bg-white p-5 shadow">
-      <div className="flex grow flex-col divide-y">
+      <div className="flex grow flex-col">
         <Heading
           text="Actualizar Contraseña"
           hasButton
-          isCloseButton={!isScreenSM}
           onButtonClick={() => resetView()}
         />
+
+        <Divider />
 
         <form onSubmit={handleSubmit} id="form" className="space-y-5">
           <input
@@ -210,6 +221,7 @@ const UpdatePassword = ({ resetView, isScreenSM }) => {
             autoComplete="email"
             style={{ display: 'none' }}
             readOnly
+            hidden
           />
           <TextInput
             id="currentPassword"
@@ -249,38 +261,27 @@ const UpdatePassword = ({ resetView, isScreenSM }) => {
 
 const Account = () => {
   const [view, setView] = useState(null);
-  const isScreenSM = (window.innerWidth < 640);
+  const isScreenSM = (window.innerWidth <= 640);
 
   const renderView = () => {
     switch (view) {
       case 'UpdateName':
         return (
-          <UpdateName
-            resetView={() => setView(null)}
-            isScreenSM={isScreenSM}
-          />
+          <UpdateName resetView={() => setView(null)} />
         );
       case 'UpdateEmail':
         return (
-          <UpdateEmail
-            resetView={() => setView(null)}
-            isScreenSM={isScreenSM}
-          />
+          <UpdateEmail resetView={() => setView(null)} />
         );
       case 'UpdatePassword':
         return (
-          <UpdatePassword
-            resetView={() => setView(null)}
-            isScreenSM={isScreenSM}
-          />
+          <UpdatePassword resetView={() => setView(null)} />
         );
       default:
         return (
           (isScreenSM)
             ? (
-              <AccountOverview
-                onClick={(value) => setView(value)}
-              />
+              <AccountOverview changeView={(value) => setView(value)} />
             )
             : (
               <div className="flex grow flex-col items-center justify-center rounded-lg bg-white font-medium shadow">
@@ -294,9 +295,7 @@ const Account = () => {
   return (
     <div className="flex grow bg-background px-5 pb-5 sm:grid sm:grid-cols-2 sm:grid-rows-1 sm:gap-5">
       <div className="hidden grow bg-background sm:flex">
-        <AccountOverview
-          onClick={(value) => setView(value)}
-        />
+        <AccountOverview changeView={(value) => setView(value)} />
       </div>
 
       <div className="flex grow bg-background">

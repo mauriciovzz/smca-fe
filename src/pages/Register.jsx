@@ -3,7 +3,7 @@ import { React, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import {
-  BackdropFilter, Button, Heading, Map, TextInput,
+  BackdropFilter, Button, Divider, Heading, Map, TextInput,
 } from 'src/components';
 import { EmailSend } from 'src/layout';
 import accountService from 'src/services/accounts';
@@ -37,10 +37,12 @@ const Register = () => {
         {
           !requestMade
             ? (
-              <div className="h-fit w-full divide-y rounded-lg bg-white p-5 shadow sm:h-fit sm:w-fit">
+              <div className="h-fit w-full rounded-lg bg-white p-5 shadow sm:h-fit sm:w-fit">
                 <Heading text="Registro" />
 
-                <form id="form" onSubmit={handleSubmit} className="space-y-5 pt-5">
+                <Divider />
+
+                <form id="form" onSubmit={handleSubmit} className="space-y-5">
                   <div className="flex flex-col gap-5 sm:flex-row">
                     <TextInput
                       id="firstName"

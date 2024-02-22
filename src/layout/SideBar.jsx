@@ -1,23 +1,24 @@
 import { React, useState } from 'react';
 
-import { NavLink } from 'react-router-dom';
+import { NavLink, useOutletContext } from 'react-router-dom';
 
 import {
-  airWave, cloud, control, location, map, memory, reports, settings, users,
+  airWave, control, locationIcon, map, memory, nodeIcon, reports, settings, usersIcon,
 } from 'src/assets';
 
-const NavLinkItem = ({ link, isMenuOpen }) => (
+const NavLinkItem = ({ link, isMenuOpen, setView }) => (
   <NavLink
     className={({ isActive }) => (`${isActive && 'bg-background'} ${link.order} flex w-fit cursor-pointer items-center rounded-md p-1.5 text-xs text-gray-300 hover:bg-slate-100 sm:p-2 sm:text-sm`)}
+    onClick={(link.alt === 'return') && (() => setView(null))}
     to={link.route}
     end
   >
     <img
       src={link.src}
       alt={link.alt}
-      className={`${isMenuOpen && 'mr-2'} h-[18px] sm:h-[24px]`}
+      className="h-[24px] w-[24px]"
     />
-    <span className={`${!isMenuOpen && 'hidden'} w-[90px] origin-left text-slate-500 duration-200`}>
+    <span className={`${!isMenuOpen && 'hidden'} mx-2 w-[90px] origin-left text-slate-500 duration-200`}>
       {link.title}
     </span>
   </NavLink>
@@ -25,6 +26,7 @@ const NavLinkItem = ({ link, isMenuOpen }) => (
 
 const SideBar = ({ workspaceId }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { setView } = useOutletContext();
 
   const navLinks = [
     {
@@ -32,7 +34,6 @@ const SideBar = ({ workspaceId }) => {
       route: `/espacios-de-trabajo/${workspaceId}`,
       src: map,
       alt: 'map',
-      bottomMenuOrder: 'order-3',
       order: 'order-1',
     },
     {
@@ -40,28 +41,26 @@ const SideBar = ({ workspaceId }) => {
       route: `/espacios-de-trabajo/${workspaceId}/reportes`,
       src: reports,
       alt: 'reports',
-      bottomMenuOrder: 'order-2',
       order: 'order-2',
     },
     {
-      title: 'Cuentas',
-      route: `/espacios-de-trabajo/${workspaceId}/cuentas`,
-      src: users,
+      title: 'Miembros',
+      route: `/espacios-de-trabajo/${workspaceId}/miembros`,
+      src: usersIcon,
       alt: 'accounts',
-      bottomMenuOrder: 'order-4',
       order: 'order-3',
     },
     {
       title: 'Nodos',
       route: '/cuenta/nodos',
-      src: cloud,
+      src: nodeIcon,
       alt: 'nodes',
       order: 'order-4',
     },
     {
       title: 'Ubicaciones',
       route: '/cuenta/ubicaciones',
-      src: location,
+      src: locationIcon,
       alt: 'locations',
       order: 'order-5',
     },
@@ -99,10 +98,8 @@ const SideBar = ({ workspaceId }) => {
   ];
 
   return (
-    <nav className="z-50 hidden h-full bg-transparent sm:flex">
-      <div className={`${isMenuOpen ? 'w-[158px] sm:w-[178px]' : 'w-[50px] sm:w-[80px]'} 
-                      relative flex h-full flex-col rounded-lg bg-white p-5 shadow`}
-      >
+    <nav className="flex h-full bg-transparent">
+      <div className={`${isMenuOpen ? 'w-[180px]' : 'w-[80px]'} relative flex h-full flex-col rounded-lg bg-white p-5 shadow`}>
         <button
           type="button"
           className="absolute -right-3 py-2"
@@ -116,24 +113,25 @@ const SideBar = ({ workspaceId }) => {
         </button>
 
         <div className="flex h-full flex-col justify-between">
-          <ul className="flex flex-col">
+          <ul className="flex flex-col space-y-1">
             {
               navLinks
                 .filter((link) => !link.bottom)
                 .map((link) => (
                   <li key={link.alt}>
-                    <NavLinkItem link={link} isMenuOpen={isMenuOpen} />
+                    <NavLinkItem link={link} isMenuOpen={isMenuOpen} setView={setView} />
                   </li>
                 ))
             }
           </ul>
-          <ul className="flex flex-col">
+
+          <ul className="flex flex-col space-y-1">
             {
               navLinks
                 .filter((link) => link.bottom)
                 .map((link) => (
                   <li key={link.alt}>
-                    <NavLinkItem link={link} isMenuOpen={isMenuOpen} />
+                    <NavLinkItem link={link} isMenuOpen={isMenuOpen} setView={setView} />
                   </li>
                 ))
             }

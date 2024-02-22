@@ -3,35 +3,37 @@ import React from 'react';
 import { close, control } from 'src/assets';
 
 const Title = ({ text }) => (
-  <h1 className="pb-5 text-2xl font-bold leading-none tracking-tight sm:text-3xl">
+  <h1 className="h-[25px] text-2xl font-bold leading-none tracking-tight sm:h-[36px] sm:text-3xl">
     {text}
   </h1>
 );
 
-const Heading = ({
-  text, hasButton, isCloseButton, onButtonClick,
-}) => (
-  hasButton
-    ? (
-      <div className="flex justify-between">
-        <Title text={text} />
+const Heading = ({ text, hasButton, onButtonClick }) => {
+  const isScreenSM = (window.innerWidth <= 640);
 
-        <button
-          type="button"
-          onClick={() => onButtonClick()}
-          className="pb-5"
-        >
-          <img
-            src={isCloseButton ? close : control}
-            alt={isCloseButton ? 'close button' : 'control arrow'}
-            className="h-[28px] w-[28px]"
-          />
-        </button>
-      </div>
-    )
-    : (
-      <Title text={text} />
-    )
-);
+  return (
+    hasButton
+      ? (
+        <div className="flex justify-between">
+          <Title text={text} />
+
+          <button
+            type="button"
+            onClick={() => onButtonClick()}
+            className="self-center"
+          >
+            <img
+              src={isScreenSM ? control : close}
+              alt={isScreenSM ? 'control' : 'close'}
+              className="h-[25px] w-[25px] sm:h-[30px] sm:w-[30px]"
+            />
+          </button>
+        </div>
+      )
+      : (
+        <Title text={text} />
+      )
+  );
+};
 
 export default Heading;

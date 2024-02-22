@@ -16,7 +16,7 @@ import {
   Verification,
   VerifyAccount,
   VerifyEmail,
-  WorkspaceAccounts,
+  WorkspaceMembers,
   WorkspaceInstance,
   WorkspaceMap,
   WorkspaceReports,
@@ -50,15 +50,15 @@ const Routers = () => (
     <Route element={<ProtectedRoute />}>
       <Route path="/cuenta" element={<Account />} />
 
-      <Route path="/espacios-de-trabajo">
-        <Route index element={<Workspaces />} />
+      <Route path="/espacios-de-trabajo" element={<Workspaces />}>
         <Route path=":workspaceId" element={<WorkspaceInstance />}>
           <Route path="" element={<WorkspaceMap />} />
           <Route path="reportes" element={<WorkspaceReports />} />
-          <Route path="cuentas" element={<WorkspaceAccounts />} />
+          <Route path="miembros" element={<WorkspaceMembers />} />
           <Route path="ajustes" element={<WorkspaceSettings />} />
         </Route>
       </Route>
+
     </Route>
 
     {/* <Route element={<Auth allowedRoles={['USER', 'RESEARCHER', 'ADMIN']} />}>
