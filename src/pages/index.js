@@ -8,12 +8,14 @@ import PasswordRecover from './PasswordRecover';
 import PasswordReset from './PasswordReset';
 import Register from './Register';
 import ResendVerificationLink from './ResendVerificationLink';
+import VariableCreation from './Variables/VariableCreation';
+import Variables from './Variables/Variables';
 import Verification from './Verification';
 import VerifyAccount from './VerifyAccount';
 import VerifyEmail from './VerifyEmail';
-import WorkspaceMembers from './WorkspaceMembers';
 import WorkspaceInstance from './WorkspaceInstance';
 import WorkspaceMap from './WorkspaceMap';
+import WorkspaceMembers from './WorkspaceMembers';
 import WorkspaceReports from './WorkspaceReports';
 import Workspaces from './Workspaces';
 import WorkspaceSettings from './WorkspaceSettings';
@@ -29,6 +31,8 @@ export {
   PasswordReset,
   Register,
   ResendVerificationLink,
+  VariableCreation,
+  Variables,
   Verification,
   VerifyAccount,
   VerifyEmail,

@@ -10,7 +10,7 @@ import {
 import {
   control,
 } from 'src/assets';
-import nodesService from 'src/services/nodes';
+// import nodesService from 'src/services/nodes';
 
 const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sab'];
 
@@ -51,27 +51,27 @@ const MeteorologicalWidget = ({ selectedNode, selectedDate }) => {
   };
 
   useEffect(() => {
-    nodesService
-      .getReadingAverages(selectedNode, '2023-11-04', 'MET')
-      .then((requestedData) => {
-        const newData = requestedData.map((variable) => (
-          {
-            name: variable.name,
-            unit: variable.unit,
-            averages: parseAveragesArray(variable.averages),
-          }
-        ));
-        setVariables(newData);
-        setRain(variables.find((variable) => variable.name === 'Rain'));
-        setLoadReadings(!loadReadings);
-      });
+    // nodesService
+    //   .getReadingAverages(selectedNode, '2023-11-04', 'MET')
+    //   .then((requestedData) => {
+    //     const newData = requestedData.map((variable) => (
+    //       {
+    //         name: variable.name,
+    //         unit: variable.unit,
+    //         averages: parseAveragesArray(variable.averages),
+    //       }
+    //     ));
+    //     setVariables(newData);
+    //     setRain(variables.find((variable) => variable.name === 'Rain'));
+    //     setLoadReadings(!loadReadings);
+    //   });
 
-    nodesService
-      .getAveragesRange(selectedNode, '2023-11-04', 'MET')
-      .then((requestedData) => {
-        setRanges(requestedData);
-        setLoadWeekReadings(!loadWeekReadings);
-      });
+    // nodesService
+    //   .getAveragesRange(selectedNode, '2023-11-04', 'MET')
+    //   .then((requestedData) => {
+    //     setRanges(requestedData);
+    //     setLoadWeekReadings(!loadWeekReadings);
+    //   });
   }, []);
 
   let repeater;

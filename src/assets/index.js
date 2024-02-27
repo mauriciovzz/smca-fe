@@ -1,4 +1,5 @@
 import accountIcon from 'src/assets/icons/account.svg';
+import addIconWhite from 'src/assets/icons/addIconWhite.svg';
 import addIcon from 'src/assets/icons/addIcon.svg';
 import addUserIcon from 'src/assets/icons/addUserIcon.svg';
 import adminIcon from 'src/assets/icons/adminIcon.svg';
@@ -31,6 +32,7 @@ import workspacesIcon from 'src/assets/icons/workspacesIcon.svg';
 
 export {
   accountIcon,
+  addIconWhite,
   addIcon,
   addUserIcon,
   adminIcon,

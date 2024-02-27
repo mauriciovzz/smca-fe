@@ -1,34 +1,28 @@
-import {
-  React, useState, useEffect,
-} from 'react';
+import { React, useEffect, useState } from 'react';
 
-import Button from 'src/components/Button';
-import CloseButton from 'src/components/CloseButton';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import TextInput from 'src/components/TextInput';
-import Heading from 'src/components/Heading';
-import Label from 'src/components/Label';
-import TypeSelect from 'src/components/Select/TypeSelect';
+import { useOutletContext } from 'react-router-dom';
+
+import {
+  Button, Divider, Heading, TextInput,
+} from 'src/components';
+import { ConfirmationDialog } from 'src/layout';
 import variablesService from 'src/services/variables';
 import notifications from 'src/utils/notifications';
 
-const VariableManagement = ({ selectedVariable, closeWindow, updateList }) => {
-  const [variableName, setVariableName] = useState(selectedVariable.variable_name);
-  const [unit, setUnit] = useState(selectedVariable.unit);
-  const [variableType, setVariableType] = useState(selectedVariable.variable_type);
-  const [isConDiaModalOpen, setIsConDiaModalOpen] = useState(false);
+const VariableManagement = ({ selectedVariable, updateVariables, changeView }) => {
+  const { selectedWorkspace } = useOutletContext();
   const [isEditable, setIsEditable] = useState(false);
-
-  const selectOptions = [
-    { value: 'ENV', label: 'Ambiental' },
-    { value: 'MET', label: 'Meteorológica' },
-  ];
+  const [isConDiaOpen, setIsConDiaOpen] = useState(false);
+  const [name, setName] = useState(selectedVariable.name);
+  const [unit, setUnit] = useState(selectedVariable.unit);
+  const [variableType, setVariableType] = useState(selectedVariable.type);
 
   const setData = () => {
     setIsEditable(false);
-    setVariableName(selectedVariable.variable_name);
+    setIsConDiaOpen(false);
+    setName(selectedVariable.name);
     setUnit(selectedVariable.unit);
-    setVariableType(selectedVariable.variable_type);
+    setVariableType(selectedVariable.type);
   };
 
   useEffect(() => {
@@ -37,49 +31,53 @@ const VariableManagement = ({ selectedVariable, closeWindow, updateList }) => {
 
   const handleUpdate = async () => {
     try {
-      await variablesService.update({
-        variableId: selectedVariable.variable_id,
-        variableName,
-        unit,
-        variableType,
-      });
+      const response = await variablesService.update(
+        selectedWorkspace.workspace_id,
+        selectedVariable.variable_id,
+        { name, unit },
+      );
 
-      notifications.success(`Variable "${variableName}" modificada exitosamente.`);
-      updateList();
+      notifications.success(response);
+      updateVariables();
       setIsEditable(!isEditable);
-    } catch (exception) {
-      notifications.error(exception);
+    } catch (err) {
+      notifications.error(err);
     }
   };
 
   const handleRemove = async () => {
     try {
-      await variablesService.remove(selectedVariable.variable_id);
-      notifications.success(`Variable "${variableName}" eliminada exitosamente.`);
-      setIsConDiaModalOpen(false);
-      updateList();
-      closeWindow();
-    } catch (exception) {
-      notifications.error(exception);
+      const response = await variablesService.remove(
+        selectedWorkspace.workspace_id,
+        selectedVariable.variable_id,
+      );
+
+      notifications.success(response);
+      updateVariables();
+      changeView(null);
+    } catch (err) {
+      notifications.error(err);
     }
   };
 
   return (
-    <div className="flex h-full w-full flex-col gap-2.5 rounded-lg bg-white p-5 shadow">
+    <div className="relative flex h-full w-full flex-col overflow-hidden rounded-lg bg-white p-5 shadow">
+      <div className="flex grow flex-col">
+        <Heading
+          text="Variable"
+          hasButton
+          onButtonClick={() => changeView(null)}
+        />
 
-      <div className="flex grow flex-col gap-2.5">
-        <div className="flex justify-between">
-          <Heading text="Gestionar Variable" />
-          <CloseButton onClick={() => closeWindow()} />
-        </div>
+        <Divider />
 
-        <form className="flex flex-col gap-2.5 space-y-4 md:space-y-1">
+        <form className="flex flex-col gap-5">
           <TextInput
             id="name"
             type="text"
-            labelText="Nombre de la Variable"
-            value={variableName}
-            setValue={setVariableName}
+            labelText="Nombre"
+            value={name}
+            setValue={setName}
             disabled={!isEditable}
           />
 
@@ -92,37 +90,38 @@ const VariableManagement = ({ selectedVariable, closeWindow, updateList }) => {
             disabled={!isEditable}
           />
 
-          <div>
-            <Label text="Tipo de Variable" />
-            <TypeSelect
-              options={selectOptions}
-              value={selectOptions.find((element) => element.value === variableType)}
-              onChange={(selected) => setVariableType(selected.value)}
-              isDisabled
-            />
-          </div>
+          <TextInput
+            id="variableType"
+            type="text"
+            labelText="Tipo de variable"
+            value={variableType}
+            setValue={setVariableType}
+            disabled
+          />
         </form>
       </div>
 
-      <div className="flex w-full gap-x-2.5">
+      <div className="flex w-full gap-2.5">
         <Button
           text={isEditable ? 'Guardar Cambios' : 'Modificar Variable'}
-          color="blue"
+          typeIsButton
           onClick={isEditable ? () => handleUpdate() : () => setIsEditable(!isEditable)}
+          color="blue"
         />
         <Button
           text={isEditable ? 'Cancelar' : 'Eliminar Variable'}
+          typeIsButton
+          onClick={isEditable ? () => setData(!isEditable) : () => setIsConDiaOpen(true)}
           color="red"
-          onClick={isEditable ? () => setData(!isEditable) : () => setIsConDiaModalOpen(true)}
         />
       </div>
 
       {
-        isConDiaModalOpen && (
+        isConDiaOpen && (
         <ConfirmationDialog
           title="Eliminar Variable"
-          description={`Estas seguro de querer eliminar la variable "${variableName}"?`}
-          onDecline={() => setIsConDiaModalOpen(false)}
+          description={`Estas seguro de querer eliminar la variable "${name}"?`}
+          onDecline={() => setIsConDiaOpen(false)}
           onConfirm={() => handleRemove()}
         />
         )

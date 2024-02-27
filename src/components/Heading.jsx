@@ -9,7 +9,7 @@ const Title = ({ text }) => (
 );
 
 const Heading = ({ text, hasButton, onButtonClick }) => {
-  const isScreenSM = (window.innerWidth <= 640);
+  const isScreenSM = window.innerWidth <= 640;
 
   return (
     hasButton

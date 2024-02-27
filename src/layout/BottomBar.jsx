@@ -3,7 +3,8 @@ import { React, useState } from 'react';
 import { NavLink, useOutletContext } from 'react-router-dom';
 
 import {
-  airWave, close, control, locationIcon, map, memory, menu, nodeIcon, reports, settings, usersIcon,
+  airWave, close, locationIcon, map, memory, menu,
+  nodeIcon, reports, settings, usersIcon, workspacesIcon,
 } from 'src/assets';
 import { BackdropFilter } from 'src/components';
 
@@ -59,7 +60,7 @@ const BottomBar = ({ workspaceId }) => {
     },
     {
       title: 'Variables',
-      route: '/cuenta/variables',
+      route: `/espacios-de-trabajo/${workspaceId}/variables`,
       src: airWave,
       alt: 'variables',
       menuOrder: 'order-7',
@@ -72,17 +73,17 @@ const BottomBar = ({ workspaceId }) => {
       menuOrder: 'order-8',
     },
     {
-      title: 'Regresar',
+      title: 'Espacios',
       route: '/espacios-de-trabajo',
-      src: control,
-      alt: 'return',
+      src: workspacesIcon,
+      alt: 'workspaces',
       barOrder: 'order-1',
       menuOrder: 'order-9',
     },
   ];
 
   const onOpenMenuClick = (linkAlt) => {
-    if (linkAlt === 'return') setView(null);
+    if (linkAlt === 'workspaces') setView(null);
     setIsMenuOpen(false);
   };
 
@@ -123,7 +124,7 @@ const BottomBar = ({ workspaceId }) => {
                   <li key={link.alt} className={`${link.barOrder}`}>
                     <NavLink
                       className={({ isActive }) => (`${isActive && 'bg-background'} flex rounded-md p-2.5`)}
-                      onClick={(link.alt === 'return') && (() => setView(null))}
+                      onClick={(link.alt === 'workspaces') ? (() => setView(null)) : undefined}
                       to={link.route}
                       end
                     >

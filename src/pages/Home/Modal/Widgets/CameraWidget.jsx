@@ -3,7 +3,7 @@ import {
 } from 'react';
 
 import { download } from 'src/assets';
-import photosService from 'src/services/photos';
+// import photosService from 'src/services/photos';
 
 const CameraWidget = ({ selectedNode }) => {
   const [load, setLoad] = useState(false);
@@ -13,12 +13,12 @@ const CameraWidget = ({ selectedNode }) => {
   const photoHour = 14;
 
   useEffect(() => {
-    photosService
-      .getDayPaths(selectedNode, photoDate, photoHour)
-      .then((requestedPath) => {
-        setPhotoPath(requestedPath);
-        setLoad(!load);
-      });
+    // photosService
+    //   .getDayPaths(selectedNode, photoDate, photoHour)
+    //   .then((requestedPath) => {
+    //     setPhotoPath(requestedPath);
+    //     setLoad(!load);
+    //   });
   }, []);
 
   return !load ? null : (

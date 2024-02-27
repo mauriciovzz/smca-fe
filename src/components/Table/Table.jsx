@@ -11,7 +11,7 @@ const Table = ({ columns, data, onRowClick }) => {
   } = useTable({ columns, data, autoResetFilters: false }, useGlobalFilter, useFilters);
 
   return (
-    <div className="flex grow flex-col gap-2.5 pb-2.5">
+    <div className="flex grow flex-col gap-5">
       <div className="flex gap-x-2.5">
         <GlobalFilter
           preGlobalFilteredRows={preGlobalFilteredRows}

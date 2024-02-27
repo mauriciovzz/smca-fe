@@ -3,7 +3,7 @@ import { React, useState, useEffect } from 'react';
 import { useNavigate, Outlet } from 'react-router-dom';
 
 import {
-  addIcon, adminIcon, bellIcon, nodeIcon, userIcon, usersIcon,
+  addIconWhite, adminIcon, bellIcon, nodeIcon, userIcon, usersIcon,
 } from 'src/assets';
 import {
   Button, ColorInput, Divider, Heading, TextInput,
@@ -116,7 +116,7 @@ const WorkspaceList = ({
 
     <div className="relative h-full">
       <ul className={`small-scrollbar absolute flex h-full w-full flex-col justify-start space-y-5 overflow-y-auto rounded-lg border bg-background p-5 shadow
-                      sm:inline-grid sm:grid-cols-layout sm:justify-center sm:gap-5 sm:space-y-0`}
+                    sm:inline-grid sm:grid-cols-layout sm:justify-center sm:gap-5 sm:space-y-0`}
       >
         {
           workspaces
@@ -136,7 +136,7 @@ const WorkspaceList = ({
               Agregar Espacio de Trabajo
             </p>
             <img
-              src={addIcon}
+              src={addIconWhite}
               alt="add"
               className="h-[50px] w-[50px]"
             />
@@ -146,81 +146,6 @@ const WorkspaceList = ({
     </div>
   </div>
 );
-
-const WorkspaceInvitations = ({
-  invitations, updateInvitations, updateWorkspaces, changeView,
-}) => {
-  const invitationResponse = async (workspaceId, wasAccepted) => {
-    try {
-      const response = await workspacesService.invitationResponse({
-        workspaceId, wasAccepted,
-      });
-      notifications.success(response);
-      updateInvitations();
-      updateWorkspaces();
-    } catch (err) {
-      notifications.error(err);
-    }
-  };
-
-  return (
-    <div className="flex h-full w-full flex-col rounded-lg bg-white p-5 shadow">
-      <Heading
-        text="Invitaciones"
-        hasButton
-        onButtonClick={() => changeView(null)}
-      />
-
-      <Divider />
-
-      <div className="relative h-full w-full space-y-5 overflow-hidden">
-        <ul className="small-scrollbar absolute flex h-full w-full flex-col space-y-5 overflow-y-auto rounded-lg border bg-background p-5 pb-10">
-          {
-            (invitations.length !== 0)
-              ? (
-                invitations
-                  .map((invitation) => (
-                    <li
-                      key={invitation.workspace_id}
-                      className="flex h-fit w-full flex-col space-y-2.5 rounded-lg bg-white p-5 shadow"
-                    >
-                      <div>
-                        <div className="break-words font-semibold">
-                          {invitation.name}
-                        </div>
-                        <div className="text-xs">
-                          {`Invitado por: ${invitation.first_name} ${invitation.last_name}`}
-                        </div>
-                      </div>
-
-                      <div className="flex gap-2.5">
-                        <Button
-                          text="Aceptar"
-                          typeIsButton
-                          onClick={() => invitationResponse(invitation.workspace_id, true)}
-                          color="blue"
-                        />
-                        <Button
-                          text="Rechazar"
-                          typeIsButton
-                          onClick={() => invitationResponse(invitation.workspace_id, false)}
-                          color="red"
-                        />
-                      </div>
-                    </li>
-                  ))
-              )
-              : (
-                <li className="h-fit w-full rounded-lg bg-white p-5 text-center shadow">
-                  No has recibido invitaciones a otros espacios de trabajo
-                </li>
-              )
-          }
-        </ul>
-      </div>
-    </div>
-  );
-};
 
 const WorkspaceCreation = ({ updateWorkspaces, changeView }) => {
   const [name, setName] = useState('');
@@ -275,11 +200,87 @@ const WorkspaceCreation = ({ updateWorkspaces, changeView }) => {
   );
 };
 
+const WorkspaceInvitations = ({
+  invitations, updateInvitations, updateWorkspaces, changeView,
+}) => {
+  const invitationResponse = async (workspaceId, wasAccepted) => {
+    try {
+      const response = await workspacesService.invitationResponse({
+        workspaceId, wasAccepted,
+      });
+      notifications.success(response);
+      updateInvitations();
+      updateWorkspaces();
+    } catch (err) {
+      notifications.error(err);
+    }
+  };
+
+  return (
+    <div className="flex h-full w-full flex-col rounded-lg bg-white p-5 shadow">
+      <Heading
+        text="Invitaciones"
+        hasButton
+        onButtonClick={() => changeView(null)}
+      />
+
+      <Divider />
+
+      <div className="relative h-full w-full space-y-5 overflow-hidden">
+        <ul className="small-scrollbar absolute flex h-full w-full flex-col overflow-hidden overflow-y-auto rounded-lg border bg-background">
+          {
+            (invitations.length !== 0)
+              ? (
+                invitations
+                  .map((invitation) => (
+                    <li
+                      key={invitation.workspace_id}
+                      className="flex h-fit w-full flex-col space-y-2.5 border-b bg-white p-5 shadow"
+                    >
+                      <div>
+                        <div className="break-words font-semibold">
+                          {invitation.name}
+                        </div>
+                        <div className="text-xs">
+                          {`Invitado por: ${invitation.first_name} ${invitation.last_name}`}
+                        </div>
+                      </div>
+
+                      <div className="flex gap-2.5">
+                        <Button
+                          text="Aceptar"
+                          typeIsButton
+                          onClick={() => invitationResponse(invitation.workspace_id, true)}
+                          color="blue"
+                        />
+                        <Button
+                          text="Rechazar"
+                          typeIsButton
+                          onClick={() => invitationResponse(invitation.workspace_id, false)}
+                          color="red"
+                        />
+                      </div>
+                    </li>
+                  ))
+              )
+              : (
+                <li className="flex h-fit w-full flex-col space-y-2.5 border-b bg-white p-5 text-center shadow">
+                  No tienes invitaciones a otros espacios de trabajo
+                </li>
+              )
+          }
+        </ul>
+      </div>
+    </div>
+  );
+};
+
 const Workspaces = () => {
+  const [view, setView] = useState(null);
   const [invitations, setInvitations] = useState([]);
   const [workspaces, setWorkspaces] = useState([]);
-  const [view, setView] = useState(null);
   const [selectedWorkspace, setSelectedWorkspace] = useState({});
+
   const [isSideOpen, setIsSideOpen] = useState(false);
   const isScreenSM = (window.innerWidth <= 640);
   const navigate = useNavigate();

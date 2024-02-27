@@ -47,94 +47,108 @@ const navLinks = [
   },
 ];
 
-const NavBar = ({ auth, logout, onClick }) => (
-  <>
-    {
-      navLinks
-        .filter(auth ? () => true : (link) => !link.needsAuth)
-        .map((link) => (
-          <li key={link.title}>
-            <NavLink
-              className={({ isActive }) => (`${isActive ? 'border-b-2 border-main py-1' : 'hover:text-main'}`)}
-              to={link.route}
-              onClick={() => onClick()}
-            >
-              {link.title}
-            </NavLink>
-          </li>
-        ))
-    }
+const NavBar = ({ auth, logout, onClick }) => {
+  const buttonColor = (isActive) => {
+    if (auth) return 'bg-main hover:bg-main-dark';
+    return (isActive) ? 'bg-main-dark' : 'bg-main hover:bg-main-dark';
+  };
 
-    <li>
-      <NavLink
-        className={({ isActive }) => (`${isActive ? 'bg-main-dark' : 'bg-main hover:bg-main-dark'} rounded-lg p-2 font-medium text-white`)}
-        to={auth ? '/cerrar-sesion' : '/iniciar-sesion'}
-        onClick={
-          auth
-            ? () => {
-              logout();
-              onClick();
-            }
-            : () => onClick()
-        }
-      >
-        {auth ? 'Cerrar sesión' : 'Iniciar sesión'}
-      </NavLink>
-    </li>
-  </>
-);
-
-const NavMenu = ({ auth, logout, onClick }) => (
-  <>
-    {
-      navLinks
-        .filter(auth ? () => true : (link) => !link.needsAuth)
-        .map((link) => (
-          <li className="h-full w-full" key={link.alt}>
-            <NavLink
-              className={({ isActive }) => (`${isActive && 'bg-background'} flex h-full w-full flex-col items-center justify-center gap-2.5 rounded-lg`)}
-              to={link.route}
-              onClick={() => onClick()}
-            >
-              <img
-                src={link.src}
-                alt={link.alt}
-                className="h-[35px] w-[35px]"
-              />
-              <span className="text-xs text-slate-500">
+  return (
+    <>
+      {
+        navLinks
+          .filter(auth ? () => true : (link) => !link.needsAuth)
+          .map((link) => (
+            <li key={link.title}>
+              <NavLink
+                className={({ isActive }) => (`${isActive ? 'border-b-2 border-main py-1' : 'hover:text-main'}`)}
+                to={link.route}
+                onClick={() => onClick()}
+              >
                 {link.title}
-              </span>
-            </NavLink>
-          </li>
-        ))
-    }
+              </NavLink>
+            </li>
+          ))
+      }
 
-    <li className="h-full w-full">
-      <NavLink
-        className={({ isActive }) => (`${isActive && 'bg-background'} flex h-full w-full flex-col items-center justify-center gap-2.5 rounded-lg`)}
-        to={auth ? '/cerrar-sesion' : '/iniciar-sesion'}
-        end
-        onClick={
-          auth
-            ? () => {
-              logout();
-              onClick();
-            }
-            : () => onClick()
-        }
-      >
-        <img
-          src={auth ? logoutIcon : loginIcon}
-          alt={auth ? 'logout' : 'login'}
-          className="h-[35px] w-[35px]"
-        />
-        <span className="text-xs text-slate-500">
-          {auth ? 'Cerrar Sesión' : 'Iniciar Sesión'}
-        </span>
-      </NavLink>
-    </li>
-  </>
-);
+      <li>
+        <NavLink
+          className={({ isActive }) => (`${buttonColor(isActive)} rounded-lg p-2 font-medium text-white`)}
+          to={auth ? '/' : '/iniciar-sesion'}
+          onClick={
+            auth
+              ? () => {
+                logout();
+                onClick();
+              }
+              : () => onClick()
+          }
+        >
+          {auth ? 'Cerrar sesión' : 'Iniciar sesión'}
+        </NavLink>
+      </li>
+    </>
+  );
+};
+
+const NavMenu = ({ auth, logout, onClick }) => {
+  const buttonBackground = (isActive) => {
+    if (auth) return '';
+    return (isActive) && 'bg-background';
+  };
+
+  return (
+    <>
+      {
+        navLinks
+          .filter(auth ? () => true : (link) => !link.needsAuth)
+          .map((link) => (
+            <li className="h-full w-full" key={link.alt}>
+              <NavLink
+                className={({ isActive }) => (`${isActive && 'bg-background'} flex h-full w-full flex-col items-center justify-center gap-2.5 rounded-lg`)}
+                to={link.route}
+                onClick={() => onClick()}
+              >
+                <img
+                  src={link.src}
+                  alt={link.alt}
+                  className="h-[35px] w-[35px]"
+                />
+                <span className="text-xs text-slate-500">
+                  {link.title}
+                </span>
+              </NavLink>
+            </li>
+          ))
+      }
+
+      <li className="h-full w-full">
+        <NavLink
+          className={({ isActive }) => (`${buttonBackground(isActive)} flex h-full w-full flex-col items-center justify-center gap-2.5 rounded-lg`)}
+          to={auth ? '/' : '/iniciar-sesion'}
+          end
+          onClick={
+            auth
+              ? () => {
+                logout();
+                onClick();
+              }
+              : () => onClick()
+          }
+        >
+          <img
+            src={auth ? logoutIcon : loginIcon}
+            alt={auth ? 'logout' : 'login'}
+            className="h-[35px] w-[35px]"
+          />
+          <span className="text-xs text-slate-500">
+            {auth ? 'Cerrar Sesión' : 'Iniciar Sesión'}
+          </span>
+        </NavLink>
+      </li>
+    </>
+  );
+};
 
 const Navbar = () => {
   const { auth, logout } = useContext(AuthContext);

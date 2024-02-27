@@ -21,8 +21,8 @@ const SettingsOverview = ({ onClick }) => {
       <div className="flex h-full w-full flex-col divide-y">
         <button
           type="button"
-          className="flex w-full justify-between pb-5 hover:bg-background"
-          onClick={() => onClick('UpdateName')}
+          className={`${selectedWorkspace.is_admin && 'hover:bg-background'} flex w-full justify-between pb-5`}
+          onClick={selectedWorkspace.is_admin ? (() => onClick('UpdateName')) : undefined}
         >
           <div className="flex w-5/6 flex-col items-start">
             <Label text="Nombre" />
@@ -34,14 +34,14 @@ const SettingsOverview = ({ onClick }) => {
           <img
             src={control}
             alt="control arrow"
-            className="h-[28px] w-[28px] rotate-180 self-center"
+            className={`${!selectedWorkspace.is_admin && 'hidden'} h-[28px] w-[28px] rotate-180 self-center`}
           />
         </button>
 
         <button
           type="button"
-          className="flex w-full justify-between py-5 hover:bg-background"
-          onClick={() => onClick('UpdateColor')}
+          className={`${selectedWorkspace.is_admin && 'hover:bg-background'} flex w-full justify-between py-5`}
+          onClick={selectedWorkspace.is_admin ? (() => onClick('UpdateColor')) : undefined}
         >
           <div className="flex w-1/2 flex-col items-start sm:w-1/3">
             <Label text="Color" />
@@ -51,7 +51,7 @@ const SettingsOverview = ({ onClick }) => {
           <img
             src={control}
             alt="control arrow"
-            className="h-[28px] w-[28px] rotate-180 self-center"
+            className={`${!selectedWorkspace.is_admin && 'hidden'} h-[28px] w-[28px] rotate-180 self-center`}
           />
         </button>
 
@@ -69,19 +69,23 @@ const SettingsOverview = ({ onClick }) => {
           />
         </button>
 
-        <button
-          type="button"
-          className="flex w-full items-center justify-between py-5 hover:bg-background"
-          onClick={() => onClick('DeleteWorkspace')}
-        >
-          <div className="font-semibold">Eliminar Espacio</div>
+        {
+          selectedWorkspace.is_admin && (
+            <button
+              type="button"
+              className="flex w-full items-center justify-between py-5 hover:bg-background"
+              onClick={() => onClick('DeleteWorkspace')}
+            >
+              <div className="font-semibold">Eliminar Espacio</div>
 
-          <img
-            src={control}
-            alt="control arrow"
-            className="h-[28px] w-[28px] rotate-180"
-          />
-        </button>
+              <img
+                src={control}
+                alt="control arrow"
+                className="h-[28px] w-[28px] rotate-180"
+              />
+            </button>
+          )
+        }
       </div>
     </div>
   );
@@ -187,7 +191,7 @@ const UpdateColor = ({ resetView }) => {
 };
 
 const LeaveWorkspace = ({ resetView }) => {
-  const { selectedWorkspace, getWorkspaces } = useOutletContext();
+  const { selectedWorkspace, getWorkspaces, setView } = useOutletContext();
   const navigate = useNavigate();
 
   const buttonClick = async () => {
@@ -196,6 +200,7 @@ const LeaveWorkspace = ({ resetView }) => {
       notifications.success(response);
       getWorkspaces();
       navigate('/espacios-de-trabajo');
+      setView('WorkspaceList');
     } catch (err) {
       notifications.error(err);
     }
@@ -212,12 +217,76 @@ const LeaveWorkspace = ({ resetView }) => {
 
         <Divider />
 
+        <p className="text-justify text-gray-500">
+          Si estás seguro de querer abandonar este espacio de trabajo,
+          haz clic en el botón &quot;Abandonar Espacio&quot;.
+        </p>
       </div>
 
       <Button
         text="Abandonar Espacio"
         typeIsButton
         onClick={() => buttonClick()}
+        color="red"
+      />
+    </div>
+  );
+};
+
+const DeleteWorkspace = ({ resetView }) => {
+  const { selectedWorkspace, getWorkspaces, setView } = useOutletContext();
+  const [workspaceName, setWorkspaceName] = useState('');
+  const navigate = useNavigate();
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    if (selectedWorkspace.name === workspaceName) {
+      try {
+        const response = await workspacesService.deleteWorkspace(selectedWorkspace.workspace_id);
+        notifications.success(response);
+        getWorkspaces();
+        navigate('/espacios-de-trabajo');
+        setView('WorkspaceList');
+      } catch (err) {
+        notifications.error(err);
+      }
+    } else {
+      notifications.errorMsg('El nombre ingresado no es correcto.');
+    }
+  };
+
+  return (
+    <div className="flex grow flex-col rounded-lg bg-white p-5 shadow">
+      <div className="flex grow flex-col">
+        <Heading
+          text="Eliminar Espacio"
+          hasButton
+          onButtonClick={() => resetView()}
+        />
+
+        <Divider />
+
+        <form onSubmit={handleSubmit} id="form" className="space-y-5">
+          <p className="text-justify text-gray-500">
+            Si estás seguro de querer eliminar este espacio de trabajo,
+            ingrese el nombre del mismo y luego haga clic en el botón
+            &quot;Eliminar Espacio&quot;.
+          </p>
+
+          <TextInput
+            id="workspaceName"
+            type="text"
+            labelText="Nombre del espacio de trabajo"
+            value={workspaceName}
+            setValue={setWorkspaceName}
+          />
+        </form>
+      </div>
+
+      <Button
+        text="Eliminar Espacio"
+        form="form"
         color="red"
       />
     </div>
@@ -242,13 +311,10 @@ const WorkspaceSettings = () => {
         return (
           <LeaveWorkspace resetView={() => setView(null)} />
         );
-      // case 'LeaveWorkspace':
-      //   return (
-      //     <UpdatePassword
-      //       resetView={() => setView(null)}
-      //       isScreenSM={isScreenSM}
-      //     />
-      //   );
+      case 'DeleteWorkspace':
+        return (
+          <DeleteWorkspace resetView={() => setView(null)} />
+        );
       default:
         return (
           (isScreenSM)

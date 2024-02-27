@@ -55,7 +55,8 @@ const MapEvents = ({ setCoordenates }) => {
 };
 
 const Map = ({
-  markerList, onMarkerClick, markerPopup, nodesToRender, coordenates, setCoordenates, recenter,
+  markerList, onMarkerClick, markerPopup, nodesToRender,
+  coordenates, setCoordenates, recenter, zoomControl,
 }) => {
   const markerRef = useRef(null);
 
@@ -125,14 +126,14 @@ const Map = ({
       maxBoundsViscosity={0.75}
       scrollWheelZoom
       attributionControl={false}
-      className="fixed z-0 top-0 h-full w-full"
+      className="fixed top-0 z-0 h-full w-full"
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
-      {nodesToRender && <ZoomControl position="bottomright" />}
+      {nodesToRender && zoomControl && <ZoomControl position="bottomright" />}
 
       {populateMap()}
     </MapContainer>

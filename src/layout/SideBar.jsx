@@ -3,13 +3,14 @@ import { React, useState } from 'react';
 import { NavLink, useOutletContext } from 'react-router-dom';
 
 import {
-  airWave, control, locationIcon, map, memory, nodeIcon, reports, settings, usersIcon,
+  airWave, control, locationIcon, map, memory,
+  nodeIcon, reports, settings, usersIcon, workspacesIcon,
 } from 'src/assets';
 
 const NavLinkItem = ({ link, isMenuOpen, setView }) => (
   <NavLink
     className={({ isActive }) => (`${isActive && 'bg-background'} ${link.order} flex w-fit cursor-pointer items-center rounded-md p-1.5 text-xs text-gray-300 hover:bg-slate-100 sm:p-2 sm:text-sm`)}
-    onClick={(link.alt === 'return') && (() => setView(null))}
+    onClick={(link.alt === 'workspaces') ? (() => setView(null)) : undefined}
     to={link.route}
     end
   >
@@ -73,7 +74,7 @@ const SideBar = ({ workspaceId }) => {
     },
     {
       title: 'Variables',
-      route: '/cuenta/variables',
+      route: `/espacios-de-trabajo/${workspaceId}/variables`,
       src: airWave,
       alt: 'variables',
       order: 'order-7',
@@ -87,10 +88,10 @@ const SideBar = ({ workspaceId }) => {
       bottom: true,
     },
     {
-      title: 'Regresar',
+      title: 'Espacios',
       route: '/espacios-de-trabajo',
-      src: control,
-      alt: 'return',
+      src: workspacesIcon,
+      alt: 'workspaces',
       bottomMenuOrder: 'order-1',
       order: 'order-9',
       bottom: true,

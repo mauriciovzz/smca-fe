@@ -57,6 +57,11 @@ const leaveWorkspace = async (workspaceId) => {
   return response.data;
 };
 
+const deleteWorkspace = async (workspaceId) => {
+  const response = await axios.delete(`${baseUrl}/deleteWorkspace/${workspaceId}`);
+  return response.data;
+};
+
 export default {
   create,
   getAll,
@@ -69,4 +74,5 @@ export default {
   updateName,
   updateColor,
   leaveWorkspace,
+  deleteWorkspace,
 };

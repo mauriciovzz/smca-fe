@@ -1,132 +1,104 @@
 import {
-  React, useState, useEffect, useContext, useMemo,
+  React, useState, useEffect,
 } from 'react';
 
-import { Outlet } from 'react-router-dom';
+import { useOutletContext } from 'react-router-dom';
 
-import Button from 'src/components/Button';
-import Heading from 'src/components/Heading';
-import SelectFilter from 'src/components/Table/SelectFilter';
-import Table from 'src/components/Table/Table';
-import { AuthContext } from 'src/context/authProvider';
 import variablesService from 'src/services/variables';
+import notifications from 'src/utils/notifications';
 
 import VariableCreation from './VariableCreation';
+import VariableList from './VariableList';
 import VariableManagement from './VariableManagement';
 
-const typeCell = ({ value }) => {
-  const getType = () => {
-    switch (value) {
-      case 'ENV':
-        return 'Ambiental';
-      case 'MET':
-        return 'Meteorológica';
-      default:
-        return '';
-    }
-  };
-
-  return (
-    <div>
-      {getType()}
-    </div>
-  );
-};
-
 const Variables = () => {
-  const [variableList, setVariableList] = useState([]);
+  const { selectedWorkspace } = useOutletContext();
+  const [view, setView] = useState(null);
+  const [variables, setVariables] = useState([]);
+  const [variableTypes, setVariableTypes] = useState([]);
   const [selectedVariable, setSelectedVariable] = useState(null);
-  const [selectedView, setSelectedView] = useState('default');
-  const { logout } = useContext(AuthContext);
+  const isScreenSM = (window.innerWidth <= 640);
 
-  const updateVariableList = () => {
-    variablesService
-      .getAll()
-      .then((variables) => setVariableList(variables))
-      .catch((err) => {
-        if (err.response.data.error === 'La sesión expiró') logout(err);
-      });
+  const getVariables = async () => {
+    try {
+      const variablesResponse = await variablesService.getAll(selectedWorkspace.workspace_id);
+      setVariables(variablesResponse);
+
+      const typesResponse = await variablesService.getTypes();
+      setVariableTypes(typesResponse);
+    } catch (err) {
+      notifications.error(err);
+    }
   };
 
   useEffect(() => {
-    updateVariableList();
+    getVariables();
   }, []);
 
-  const columns = useMemo(() => [
-    {
-      Header: 'Nombre',
-      accessor: 'variable_name',
-    },
-    {
-      Header: 'Unidad',
-      accessor: 'unit',
-    },
-    {
-      Header: 'Tipo',
-      accessor: 'variable_type',
-      Filter: SelectFilter,
-      filter: 'includes',
-      Cell: typeCell,
-    },
-  ], []);
+  const selectVariable = (variable) => {
+    setSelectedVariable(variable);
+    setView('VariableManagement');
+  };
 
-  const renderSelectedView = () => {
-    switch (selectedView) {
-      case 'creation':
+  const renderView = () => {
+    switch (view) {
+      case 'VariableCreation':
         return (
           <VariableCreation
-            closeWindow={() => setSelectedView('default')}
-            updateList={() => updateVariableList()}
+            variableTypes={variableTypes}
+            updateVariables={() => getVariables()}
+            changeView={(value) => setView(value)}
           />
         );
-      case 'management':
+      case 'VariableManagement':
         return (
           <VariableManagement
             selectedVariable={selectedVariable}
-            closeWindow={() => setSelectedView('default')}
-            updateList={() => updateVariableList()}
+            updateVariables={() => getVariables()}
+            changeView={(value) => setView(value)}
           />
         );
       default:
         return (
-          <div className="flex w-full flex-col items-center justify-center rounded-lg bg-white font-medium shadow">
-            <span>Seleciona una variable de la lista para gestionarla</span>
-            <span>o</span>
-            <span>&quot;Agregar Variable&quot; para crear una nueva.</span>
-          </div>
+          (isScreenSM)
+            ? (
+              <VariableList
+                variables={variables}
+                selectVariable={(variable) => selectVariable(variable)}
+                changeView={(value) => setView(value)}
+              />
+            )
+            : (
+              <div className="flex w-full flex-col items-center justify-center rounded-lg bg-white font-medium shadow">
+                <span>Seleciona una variable de la lista para gestionarla</span>
+                <span>o</span>
+                <span>&quot;Agregar Variable&quot; para crear una nueva.</span>
+              </div>
+            )
         );
     }
   };
 
   return (
-    <>
-      <Outlet />
+    <div className="flex grow flex-col">
+      <div className="flex grow bg-background sm:grid sm:grid-cols-2 sm:grid-rows-1 sm:gap-5">
+        {
+          !isScreenSM && (
+            <div className="grow bg-background sm:flex">
+              <VariableList
+                variables={variables}
+                selectVariable={(variable) => selectVariable(variable)}
+                changeView={(value) => setView(value)}
+              />
+            </div>
+          )
+        }
 
-      <div className="grid h-full w-full grid-cols-2 grid-rows-1 gap-5">
-        <div className="flex h-full w-full flex-col justify-between rounded-lg bg-white p-5 shadow">
-          <Heading text="Variables" />
-
-          <Table
-            columns={columns}
-            data={variableList}
-            onRowClick={(variable) => {
-              setSelectedVariable(variable);
-              setSelectedView('management');
-            }}
-          />
-
-          <Button
-            text="Agregar Variable"
-            color="blue"
-            onClick={() => setSelectedView('creation')}
-          />
-        </div>
-
-        <div className="flex h-full w-full">
-          {renderSelectedView()}
+        <div className="flex grow bg-background">
+          {renderView()}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

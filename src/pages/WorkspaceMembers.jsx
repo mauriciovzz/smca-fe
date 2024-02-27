@@ -1,6 +1,6 @@
 import { React, useEffect, useState } from 'react';
 
-import { useParams, useOutletContext } from 'react-router-dom';
+import { useOutletContext } from 'react-router-dom';
 
 import { addUserIcon } from 'src/assets';
 import {
@@ -81,13 +81,12 @@ const MemberList = ({ members, selectMember, changeView }) => {
 };
 
 const Member = ({ selectedMember, updateMembers, changeView }) => {
-  const { workspaceId } = useParams();
   const { selectedWorkspace } = useOutletContext();
 
   const memberRoleUpdate = async () => {
     try {
       const response = await workspacesService.memberRoleUpdate({
-        workspaceId,
+        workspaceId: selectedWorkspace.workspace_id,
         accountId: selectedMember.account_id,
         isAdmin: !selectedMember.is_admin,
       });
@@ -101,7 +100,7 @@ const Member = ({ selectedMember, updateMembers, changeView }) => {
   const memberRemoval = async () => {
     try {
       const response = await workspacesService.memberRemoval(
-        workspaceId,
+        selectedWorkspace.workspace_id,
         selectedMember.account_id,
       );
       notifications.success(response);
@@ -235,7 +234,7 @@ const MemberInvitation = ({ workspaceId, changeView }) => {
 };
 
 const WorkspaceMembers = () => {
-  const { workspaceId } = useParams();
+  const { selectedWorkspace } = useOutletContext();
   const [view, setView] = useState(null);
   const [members, setMembers] = useState([]);
   const [selectedMember, setSelectedMember] = useState({});
@@ -243,7 +242,7 @@ const WorkspaceMembers = () => {
 
   const getMembers = async () => {
     try {
-      const response = await workspacesService.getMembers(workspaceId);
+      const response = await workspacesService.getMembers(selectedWorkspace.workspace_id);
       setMembers(response);
 
       if (selectedMember) {
@@ -278,7 +277,7 @@ const WorkspaceMembers = () => {
       case 'MemberInvitation':
         return (
           <MemberInvitation
-            workspaceId={workspaceId}
+            workspaceId={selectedWorkspace.workspace_id}
             changeView={(value) => setView(value)}
           />
         );

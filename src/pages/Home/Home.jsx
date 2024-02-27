@@ -42,6 +42,7 @@ const Home = () => {
           </>
         )}
         nodesToRender="many"
+        zoomControl
       />
 
       {isOpen && <Modal selectedNode={selectedNode} setIsOpen={setIsOpen} />}

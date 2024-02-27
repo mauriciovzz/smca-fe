@@ -1,17 +1,17 @@
 import { React, useState, useEffect } from 'react';
-import locationService from 'src/services/locations';
+// import locationService from 'src/services/locations';
 
 const NodeInformationWidget = ({ selectedNode }) => {
   const [load, setLoad] = useState(false);
   const [location, setLocation] = useState({});
 
   useEffect(() => {
-    locationService
-      .getOne(selectedNode)
-      .then((data) => {
-        setLocation(data);
-        setLoad(!load);
-      });
+    // locationService
+    //   .getOne(selectedNode)
+    //   .then((data) => {
+    //     setLocation(data);
+    //     setLoad(!load);
+    //   });
   }, []);
 
   return !load ? null : (

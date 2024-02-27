@@ -55,7 +55,6 @@ const AuthProvider = ({ children }) => {
   };
 
   return (
-    // eslint-disable-next-line
     <AuthContext.Provider value={{
       auth, setAuth, login, logout, checkLocalStorage, updateAccessToken,
     }}

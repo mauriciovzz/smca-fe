@@ -28,6 +28,7 @@ const WorkspaceMap = () => {
         </>
       )}
       nodesToRender="many"
+      zoomControl={window.innerWidth >= 640}
     />
   );
 };

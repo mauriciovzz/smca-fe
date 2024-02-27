@@ -19,8 +19,13 @@ const error = (err) => {
   if (err.response.data.error !== 'TokenExpiredError') toast.error(err.response.data.error, config);
 };
 
+const errorMsg = (message) => {
+  toast.error(message, config);
+};
+
 export default {
   success,
   info,
   error,
+  errorMsg,
 };

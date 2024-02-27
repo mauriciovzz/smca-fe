@@ -1,89 +1,92 @@
-import {
-  React, useState, useContext,
-} from 'react';
+import { React, useState } from 'react';
 
-import Button from 'src/components/Button';
-import CloseButton from 'src/components/CloseButton';
-import TextInput from 'src/components/TextInput';
-import Heading from 'src/components/Heading';
-import Label from 'src/components/Label';
-import TypeSelect from 'src/components/Select/TypeSelect';
-import { AuthContext } from 'src/context/authProvider';
+import { useOutletContext } from 'react-router-dom';
+
+import {
+  Button, Divider, Heading, Label, TextInput,
+} from 'src/components';
 import variablesService from 'src/services/variables';
 import notifications from 'src/utils/notifications';
 
-const VariableCreation = ({ closeWindow, updateList }) => {
-  const [variableName, setVariableName] = useState('');
+const VariableCreation = ({ variableTypes, updateVariables, changeView }) => {
+  const { selectedWorkspace } = useOutletContext();
+  const [name, setName] = useState('');
   const [unit, setUnit] = useState('');
   const [variableType, setVariableType] = useState('');
-  const { logout } = useContext(AuthContext);
 
-  const selectOptions = [
-    { value: 'ENV', label: 'Ambiental' },
-    { value: 'MET', label: 'Meteorológica' },
-  ];
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-  const handleSubmit = async () => {
     try {
-      await variablesService.create({
-        variableName,
-        unit,
-        variableType: variableType.value,
-      });
+      const response = await variablesService.create(
+        selectedWorkspace.workspace_id,
+        { name, unit, variableType },
+      );
+      notifications.success(response);
 
-      notifications.success(`Variable "${variableName}" registrad@.`);
-      setVariableName('');
+      setName('');
       setUnit('');
-      setVariableType(null);
-      updateList();
+      setVariableType('');
+      updateVariables();
     } catch (err) {
-      if (err.response.data.error === 'La sesión expiró') logout(err);
+      notifications.error(err);
     }
   };
 
   return (
-    <div className="flex h-full w-full flex-col gap-2.5 rounded-lg bg-white p-5 shadow">
+    <div className="flex grow flex-col rounded-lg bg-white p-5 shadow">
+      <div className="flex grow flex-col">
+        <Heading
+          text="Agregar Variable"
+          hasButton
+          onButtonClick={() => changeView(null)}
+        />
 
-      <div className="flex grow flex-col gap-2.5">
-        <div className="flex justify-between">
-          <Heading text="Agregar Variable" />
-          <CloseButton onClick={() => closeWindow()} />
-        </div>
+        <Divider />
 
-        <form className="flex flex-col gap-2.5 space-y-4 md:space-y-1">
+        <form onSubmit={handleSubmit} id="form" className="space-y-5">
           <TextInput
             id="name"
             type="text"
-            labelText="Nombre de la Variable"
-            value={variableName}
-            setValue={setVariableName}
+            labelText="Nombre de la variable"
+            value={name}
+            setValue={setName}
+            autoComplete="off"
           />
-
           <TextInput
             id="unit"
             type="text"
-            labelText="Unidad"
+            labelText="Unidad de la variable"
             value={unit}
             setValue={setUnit}
+            autoComplete="off"
           />
-
           <div>
-            <Label text="Tipo de Variable" />
-            <TypeSelect
-              options={selectOptions}
+            <Label text="Tipo de variable" />
+            <select
+              name="variableType"
+              id="varialeType"
               value={variableType}
-              onChange={(selected) => setVariableType(selected)}
-              isDisabled={false}
-            />
+              onChange={(event) => setVariableType(event.target.value)}
+              className="h-[38px] w-full rounded-lg border border-gray-300 px-1 py-0.5 focus:border-main focus:ring-1 focus:ring-main"
+            >
+              <option value="" disabled hidden>Seleciona un tipo de variable</option>
+              {
+                variableTypes
+                  .map((vt) => (
+                    <option key={vt.variable_type_id} value={vt.variable_type_id}>{vt.type}</option>
+                  ))
+              }
+            </select>
           </div>
 
         </form>
       </div>
 
       <Button
-        text="Registrar Variable"
+        text="Agregar Variable"
+        form="form"
         color="blue"
-        onClick={() => handleSubmit()}
       />
     </div>
   );

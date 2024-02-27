@@ -13,6 +13,7 @@ import {
   PasswordReset,
   Register,
   ResendVerificationLink,
+  Variables,
   Verification,
   VerifyAccount,
   VerifyEmail,
@@ -53,8 +54,13 @@ const Routers = () => (
       <Route path="/espacios-de-trabajo" element={<Workspaces />}>
         <Route path=":workspaceId" element={<WorkspaceInstance />}>
           <Route path="" element={<WorkspaceMap />} />
+
           <Route path="reportes" element={<WorkspaceReports />} />
+
           <Route path="miembros" element={<WorkspaceMembers />} />
+
+          <Route path="variables" element={<Variables />} />
+
           <Route path="ajustes" element={<WorkspaceSettings />} />
         </Route>
       </Route>
