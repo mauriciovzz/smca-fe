@@ -89,7 +89,7 @@ const BottomBar = ({ workspaceId }) => {
 
   return (
     <>
-      <div className={`${isMenuOpen && 'absolute bottom-0 left-0 p-5'} flex h-fit w-full bg-transparent`}>
+      <div className={`${isMenuOpen && 'absolute bottom-0 left-0 p-5'} w-full bg-transparent`}>
         <nav className={`${isMenuOpen ? 'z-[70] divide-y' : 'z-[20]'} relative flex h-full w-full flex-col items-center justify-between rounded-lg bg-white px-5 shadow`}>
           <ul className={`${isMenuOpen ? 'flex' : 'hidden'} grid h-[320px] w-full grid-cols-3 grid-rows-3 justify-items-center gap-5 py-5`}>
             {

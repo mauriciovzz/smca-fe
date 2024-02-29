@@ -17,9 +17,9 @@ const WorkspaceInstance = () => {
 
   const getHeight = () => {
     if (isScreenSM) {
-      return isMapRoute ? 'h-fit' : 'h-full';
+      return isMapRoute ? 'h-fit' : 'grow';
     }
-    return 'h-full';
+    return 'grow';
   };
 
   return (

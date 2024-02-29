@@ -156,7 +156,7 @@ const Navbar = () => {
 
   return (
     <>
-      { isMenuOpen && <div className="h-[105px]" /> }
+      { isMenuOpen && <div className="h-[105px] p-5" /> }
 
       <div className={`${isMenuOpen && 'absolute'} w-full bg-transparent p-5`}>
         <nav className={`relative z-50 flex w-full flex-col items-center justify-between space-y-5 divide-y rounded-lg bg-white p-5 shadow 
