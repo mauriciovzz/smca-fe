@@ -27,7 +27,7 @@ const WorkspaceMap = () => {
           {node.location_name}
         </>
       )}
-      nodesToRender="many"
+      markersQuantity="many"
       zoomControl={window.innerWidth >= 640}
     />
   );

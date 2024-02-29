@@ -22,16 +22,16 @@ const mapZoom = 13;
 const southWestBound = [8.183530, -62.878919];
 const northEastBound = [8.398253, -62.539415];
 
-const getPos = (coordenate, type) => {
+const getPos = (coordinate, type) => {
   if (type === 'lat') {
-    if (coordenate < southWestBound[0]) return southWestBound[0];
-    if (coordenate > northEastBound[0]) return northEastBound[0];
-    return coordenate;
+    if (coordinate < southWestBound[0]) return southWestBound[0];
+    if (coordinate > northEastBound[0]) return northEastBound[0];
+    return coordinate;
   }
 
-  if (coordenate < southWestBound[1]) return southWestBound[1];
-  if (coordenate > northEastBound[1]) return northEastBound[1];
-  return coordenate;
+  if (coordinate < southWestBound[1]) return southWestBound[1];
+  if (coordinate > northEastBound[1]) return northEastBound[1];
+  return coordinate;
 };
 
 const RecenterAutomatically = ({ recenter }) => {
@@ -55,8 +55,9 @@ const MapEvents = ({ setCoordenates }) => {
 };
 
 const Map = ({
-  markerList, onMarkerClick, markerPopup, nodesToRender,
-  coordenates, setCoordenates, recenter, zoomControl,
+  markerList, onMarkerClick, markerPopup, markersQuantity,
+  coordinates, setCoordenates, recenter,
+  zoomControl, isNotFullScreen,
 }) => {
   const markerRef = useRef(null);
 
@@ -77,7 +78,7 @@ const Map = ({
   );
 
   const populateMap = () => {
-    switch (nodesToRender) {
+    switch (markersQuantity) {
       case 'many':
         return (
           markerList.map((marker) => (
@@ -104,12 +105,19 @@ const Map = ({
               icon={icon}
               draggable
               eventHandlers={eventHandlers}
-              position={[coordenates.lat, coordenates.long]}
+              position={[coordinates.lat, coordinates.long]}
               ref={markerRef}
             />
             <RecenterAutomatically recenter={recenter} />
             <MapEvents setCoordenates={setCoordenates} />
           </>
+        );
+      case 'oneToShow':
+        return (
+          <Marker
+            icon={icon}
+            position={[coordinates.lat, coordinates.long]}
+          />
         );
       default:
         return (null);
@@ -118,22 +126,22 @@ const Map = ({
 
   return (
     <MapContainer
-      center={mapCenter}
-      zoom={mapZoom}
+      center={(markersQuantity === 'oneToShow') ? [coordinates.lat, coordinates.long] : mapCenter}
+      zoom={(markersQuantity === 'oneToShow') ? '18' : mapZoom}
       zoomControl={false}
       minZoom={12}
       maxBounds={[southWestBound, northEastBound]}
       maxBoundsViscosity={0.75}
       scrollWheelZoom
       attributionControl={false}
-      className="fixed top-0 z-0 h-full w-full"
+      className={`${!isNotFullScreen && 'fixed top-0 '} z-0 h-full w-full`}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
-      {nodesToRender && zoomControl && <ZoomControl position="bottomright" />}
+      {markersQuantity && zoomControl && <ZoomControl position="bottomright" />}
 
       {populateMap()}
     </MapContainer>

@@ -46,7 +46,7 @@ const BottomBar = ({ workspaceId }) => {
     },
     {
       title: 'Ubicaciones',
-      route: '/cuenta/ubicaciones',
+      route: `/espacios-de-trabajo/${workspaceId}/ubicaciones`,
       src: locationIcon,
       alt: 'locations',
       menuOrder: 'order-5',

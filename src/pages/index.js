@@ -3,6 +3,7 @@ import Components from './Components/Components';
 import Faq from './Faq';
 import Home from './Home/Home';
 import Information from './Information';
+import Locations from './Locations/Locations';
 import Login from './Login';
 import NotFound from './NotFound';
 import PasswordRecover from './PasswordRecover';
@@ -27,6 +28,7 @@ export {
   Faq,
   Home,
   Information,
+  Locations,
   Login,
   NotFound,
   PasswordRecover,

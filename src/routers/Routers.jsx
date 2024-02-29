@@ -9,6 +9,7 @@ import {
   Faq,
   Home,
   Information,
+  Locations,
   Login,
   PasswordRecover,
   PasswordReset,
@@ -60,6 +61,8 @@ const Routers = () => (
 
           <Route path="miembros" element={<WorkspaceMembers />} />
 
+          <Route path="ubicaciones" element={<Locations />} />
+
           <Route path="componentes" element={<Components />} />
 
           <Route path="variables" element={<Variables />} />
@@ -84,10 +87,6 @@ const Routers = () => (
           <Route path="registrar" element={<LocationCreation />} />
           <Route path=":lat/:long" element={<LocationManagement />} />
         </Route>
-
-        <Route path="componentes" element={<Components />} />
-
-        <Route path="variables" element={<Variables />} />
 
         <Route path="reportes" element={<Reports />} />
 

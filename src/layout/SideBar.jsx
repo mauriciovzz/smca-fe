@@ -60,7 +60,7 @@ const SideBar = ({ workspaceId }) => {
     },
     {
       title: 'Ubicaciones',
-      route: '/cuenta/ubicaciones',
+      route: `/espacios-de-trabajo/${workspaceId}/ubicaciones`,
       src: locationIcon,
       alt: 'locations',
       order: 'order-5',

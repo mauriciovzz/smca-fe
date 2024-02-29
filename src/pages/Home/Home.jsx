@@ -41,7 +41,7 @@ const Home = () => {
             {node.location_name}
           </>
         )}
-        nodesToRender="many"
+        markersQuantity="many"
         zoomControl
       />
 
