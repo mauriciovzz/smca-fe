@@ -13,6 +13,7 @@ const VariableManagement = ({ selectedVariable, updateVariables, changeView }) =
   const { selectedWorkspace } = useOutletContext();
   const [isEditable, setIsEditable] = useState(false);
   const [isConDiaOpen, setIsConDiaOpen] = useState(false);
+
   const [name, setName] = useState(selectedVariable.name);
   const [unit, setUnit] = useState(selectedVariable.unit);
   const [variableType, setVariableType] = useState(selectedVariable.type);
@@ -20,6 +21,7 @@ const VariableManagement = ({ selectedVariable, updateVariables, changeView }) =
   const setData = () => {
     setIsEditable(false);
     setIsConDiaOpen(false);
+
     setName(selectedVariable.name);
     setUnit(selectedVariable.unit);
     setVariableType(selectedVariable.type);
@@ -54,7 +56,7 @@ const VariableManagement = ({ selectedVariable, updateVariables, changeView }) =
 
       notifications.success(response);
       updateVariables();
-      changeView(null);
+      changeView();
     } catch (err) {
       notifications.error(err);
     }
@@ -66,7 +68,7 @@ const VariableManagement = ({ selectedVariable, updateVariables, changeView }) =
         <Heading
           text="Variable"
           hasButton
-          onButtonClick={() => changeView(null)}
+          onButtonClick={() => changeView()}
         />
 
         <Divider />
@@ -101,20 +103,24 @@ const VariableManagement = ({ selectedVariable, updateVariables, changeView }) =
         </form>
       </div>
 
-      <div className="flex w-full gap-2.5">
-        <Button
-          text={isEditable ? 'Guardar Cambios' : 'Modificar Variable'}
-          typeIsButton
-          onClick={isEditable ? () => handleUpdate() : () => setIsEditable(!isEditable)}
-          color="blue"
-        />
-        <Button
-          text={isEditable ? 'Cancelar' : 'Eliminar Variable'}
-          typeIsButton
-          onClick={isEditable ? () => setData(!isEditable) : () => setIsConDiaOpen(true)}
-          color="red"
-        />
-      </div>
+      {
+        (selectedWorkspace.is_admin) && (
+          <div className="flex w-full gap-2.5">
+            <Button
+              text={isEditable ? 'Guardar' : 'Modificar'}
+              typeIsButton
+              onClick={isEditable ? () => handleUpdate() : () => setIsEditable(!isEditable)}
+              color="blue"
+            />
+            <Button
+              text={isEditable ? 'Cancelar' : 'Eliminar'}
+              typeIsButton
+              onClick={isEditable ? () => setData(!isEditable) : () => setIsConDiaOpen(true)}
+              color="red"
+            />
+          </div>
+        )
+      }
 
       {
         isConDiaOpen && (

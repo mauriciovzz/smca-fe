@@ -41,7 +41,7 @@ const VariableList = ({ variables, selectVariable, changeView }) => {
             (selectedWorkspace.is_admin) && (
               <button
                 type="button"
-                onClick={() => changeView('VariableCreation')}
+                onClick={() => changeView()}
                 className="self-start"
               >
                 <img

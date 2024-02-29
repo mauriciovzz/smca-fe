@@ -53,7 +53,7 @@ const BottomBar = ({ workspaceId }) => {
     },
     {
       title: 'Componentes',
-      route: '/cuenta/componentes',
+      route: `/espacios-de-trabajo/${workspaceId}/componentes`,
       src: memory,
       alt: 'components',
       menuOrder: 'order-6',

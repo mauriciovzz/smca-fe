@@ -1,4 +1,5 @@
 import Account from './Account';
+import Components from './Components/Components';
 import Faq from './Faq';
 import Home from './Home/Home';
 import Information from './Information';
@@ -22,6 +23,7 @@ import WorkspaceSettings from './WorkspaceSettings';
 
 export {
   Account,
+  Components,
   Faq,
   Home,
   Information,

@@ -14,18 +14,15 @@ import VariableManagement from './VariableManagement';
 const Variables = () => {
   const { selectedWorkspace } = useOutletContext();
   const [view, setView] = useState(null);
+
   const [variables, setVariables] = useState([]);
-  const [variableTypes, setVariableTypes] = useState([]);
   const [selectedVariable, setSelectedVariable] = useState(null);
   const isScreenSM = (window.innerWidth <= 640);
 
   const getVariables = async () => {
     try {
-      const variablesResponse = await variablesService.getAll(selectedWorkspace.workspace_id);
-      setVariables(variablesResponse);
-
-      const typesResponse = await variablesService.getTypes();
-      setVariableTypes(typesResponse);
+      const response = await variablesService.getAll(selectedWorkspace.workspace_id);
+      setVariables(response);
     } catch (err) {
       notifications.error(err);
     }
@@ -45,9 +42,8 @@ const Variables = () => {
       case 'VariableCreation':
         return (
           <VariableCreation
-            variableTypes={variableTypes}
             updateVariables={() => getVariables()}
-            changeView={(value) => setView(value)}
+            changeView={() => setView(null)}
           />
         );
       case 'VariableManagement':
@@ -55,7 +51,7 @@ const Variables = () => {
           <VariableManagement
             selectedVariable={selectedVariable}
             updateVariables={() => getVariables()}
-            changeView={(value) => setView(value)}
+            changeView={() => setView(null)}
           />
         );
       default:
@@ -65,14 +61,13 @@ const Variables = () => {
               <VariableList
                 variables={variables}
                 selectVariable={(variable) => selectVariable(variable)}
-                changeView={(value) => setView(value)}
+                changeView={() => setView('VariableCreation')}
               />
             )
             : (
               <div className="flex w-full flex-col items-center justify-center rounded-lg bg-white font-medium shadow">
-                <span>Seleciona una variable de la lista para gestionarla</span>
-                <span>o</span>
-                <span>&quot;Agregar Variable&quot; para crear una nueva.</span>
+                <span>Selecciona una variable de la lista para gestionarla</span>
+                <span>o el botón ⊕ para crear una nueva.</span>
               </div>
             )
         );
@@ -88,7 +83,7 @@ const Variables = () => {
               <VariableList
                 variables={variables}
                 selectVariable={(variable) => selectVariable(variable)}
-                changeView={(value) => setView(value)}
+                changeView={() => setView('VariableCreation')}
               />
             </div>
           )

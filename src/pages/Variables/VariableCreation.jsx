@@ -1,4 +1,4 @@
-import { React, useState } from 'react';
+import { React, useEffect, useState } from 'react';
 
 import { useOutletContext } from 'react-router-dom';
 
@@ -8,11 +8,26 @@ import {
 import variablesService from 'src/services/variables';
 import notifications from 'src/utils/notifications';
 
-const VariableCreation = ({ variableTypes, updateVariables, changeView }) => {
+const VariableCreation = ({ updateVariables, changeView }) => {
   const { selectedWorkspace } = useOutletContext();
+  const [variableTypes, setVariableTypes] = useState([]);
+
   const [name, setName] = useState('');
   const [unit, setUnit] = useState('');
   const [variableType, setVariableType] = useState('');
+
+  const getVariableTypes = async () => {
+    try {
+      const response = await variablesService.getTypes();
+      setVariableTypes(response);
+    } catch (err) {
+      notifications.error(err);
+    }
+  };
+
+  useEffect(() => {
+    getVariableTypes();
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -34,12 +49,12 @@ const VariableCreation = ({ variableTypes, updateVariables, changeView }) => {
   };
 
   return (
-    <div className="flex grow flex-col rounded-lg bg-white p-5 shadow">
+    <div className="flex h-full w-full flex-col rounded-lg bg-white p-5 shadow">
       <div className="flex grow flex-col">
         <Heading
           text="Agregar Variable"
           hasButton
-          onButtonClick={() => changeView(null)}
+          onButtonClick={() => changeView()}
         />
 
         <Divider />

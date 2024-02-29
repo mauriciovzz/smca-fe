@@ -4,6 +4,7 @@ import { Routes, Route } from 'react-router-dom';
 
 import {
   Account,
+  Components,
   NotFound,
   Faq,
   Home,
@@ -58,6 +59,8 @@ const Routers = () => (
           <Route path="reportes" element={<WorkspaceReports />} />
 
           <Route path="miembros" element={<WorkspaceMembers />} />
+
+          <Route path="componentes" element={<Components />} />
 
           <Route path="variables" element={<Variables />} />
 

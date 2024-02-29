@@ -2,13 +2,13 @@ import axios from 'axios';
 
 const baseUrl = '/api/variables';
 
-const getAll = async (workspaceId) => {
-  const request = await axios.get(`${baseUrl}/${workspaceId}`);
+const getTypes = async () => {
+  const request = await axios.get(`${baseUrl}/getTypes`);
   return request.data;
 };
 
-const getTypes = async () => {
-  const request = await axios.get(`${baseUrl}/getTypes`);
+const getAll = async (workspaceId) => {
+  const request = await axios.get(`${baseUrl}/${workspaceId}`);
   return request.data;
 };
 
@@ -28,8 +28,8 @@ const remove = async (workspaceid, variableId) => {
 };
 
 export default {
-  getAll,
   getTypes,
+  getAll,
   create,
   update,
   remove,
