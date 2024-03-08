@@ -12,13 +12,13 @@ const create = async (workspaceId, newLocation) => {
   return request.data;
 };
 
-const update = async (workspaceid, locationId, newData) => {
-  const request = await axios.put(`${baseUrl}/${workspaceid}/${locationId}`, newData);
+const update = async (workspaceid, variableId, newData) => {
+  const request = await axios.put(`${baseUrl}/${workspaceid}/${variableId}`, newData);
   return request.data;
 };
 
-const remove = async (workspaceid, locationId) => {
-  const request = await axios.delete(`${baseUrl}/${workspaceid}/${locationId}`);
+const remove = async (workspaceid, variableId) => {
+  const request = await axios.delete(`${baseUrl}/${workspaceid}/${variableId}`);
   return request.data;
 };
 

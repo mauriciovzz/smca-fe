@@ -11,17 +11,6 @@ import ComponentCreation from './ComponentCreation';
 import ComponentList from './ComponentList';
 import ComponentManagement from './ComponentManagement';
 
-// const LinkCell = ({ value }) => (
-//   <a
-//     className="text-blue-600 underline"
-//     href={value}
-//     target="_blank"
-//     rel="noopener noreferrer"
-//   >
-//     Link
-//   </a>
-// );
-
 const Components = () => {
   const { selectedWorkspace } = useOutletContext();
   const [view, setView] = useState(null);

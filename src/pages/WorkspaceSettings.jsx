@@ -45,7 +45,9 @@ const SettingsOverview = ({ onClick }) => {
         >
           <div className="flex w-1/2 flex-col items-start sm:w-1/3">
             <Label text="Color" />
-            <div className="h-[24px] w-full rounded-3xl border-2 border-black" style={{ backgroundColor: selectedWorkspace.color }} />
+            <div className="h-[24px] w-full rounded-lg border p-0.5">
+              <div className="h-full w-full rounded-lg" style={{ backgroundColor: selectedWorkspace.color }} />
+            </div>
           </div>
 
           <img
@@ -60,7 +62,7 @@ const SettingsOverview = ({ onClick }) => {
           className="flex w-full items-center justify-between py-5 hover:bg-background"
           onClick={() => onClick('LeaveWorkspace')}
         >
-          <div className="font-semibold">Abandonar Espacio</div>
+          <div className="self-center font-semibold">Abandonar Espacio</div>
 
           <img
             src={control}
@@ -76,7 +78,7 @@ const SettingsOverview = ({ onClick }) => {
               className="flex w-full items-center justify-between py-5 hover:bg-background"
               onClick={() => onClick('DeleteWorkspace')}
             >
-              <div className="font-semibold">Eliminar Espacio</div>
+              <div className="self-center  font-semibold">Eliminar Espacio</div>
 
               <img
                 src={control}
@@ -125,7 +127,7 @@ const UpdateName = ({ resetView }) => {
           <TextInput
             id="newName"
             type="text"
-            labelText="Nombre del espacio de trabajo"
+            labelText="Nombre"
             value={newName}
             setValue={setNewName}
           />
@@ -174,7 +176,7 @@ const UpdateColor = ({ resetView }) => {
         <form onSubmit={handleSubmit} id="form" className="space-y-5">
           <ColorInput
             id="newColor"
-            labelText="Color del Espacio de Trabajo"
+            labelText="Color"
             value={newColor}
             setValue={setNewColor}
           />
@@ -269,9 +271,8 @@ const DeleteWorkspace = ({ resetView }) => {
 
         <form onSubmit={handleSubmit} id="form" className="space-y-5">
           <p className="text-justify text-gray-500">
-            Si estás seguro de querer eliminar este espacio de trabajo,
-            ingrese el nombre del mismo y luego haga clic en el botón
-            &quot;Eliminar Espacio&quot;.
+            {`Si estás seguro de querer eliminar el espacio de trabajo "${selectedWorkspace.name}", 
+            ingrese el nombre del mismo y luego haga clic en el botón "Eliminar Espacio".`}
           </p>
 
           <TextInput

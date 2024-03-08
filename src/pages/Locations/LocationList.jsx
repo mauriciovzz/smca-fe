@@ -2,9 +2,9 @@ import { React, useState } from 'react';
 
 import { useOutletContext } from 'react-router-dom';
 
-import { addIcon, nodeIcon } from 'src/assets';
+import { addIcon } from 'src/assets';
 import {
-  Button, Divider, Heading, Map,
+  Button, Divider, Heading, LocationTakenLabel, Map, MapViewButton,
 } from 'src/components';
 
 const MarkersMap = ({
@@ -50,16 +50,6 @@ const LocationList = ({ locations, selectLocation, changeView }) => {
   const [isMapOpen, setIsMapOpen] = useState(false);
   const isScreenSM = (window.innerWidth <= 640);
 
-  const isTakenBadge = (taken) => (
-    taken
-      ? (
-        <div className="h-[20px] w-[20px] rounded-full bg-red-500" />
-      )
-      : (
-        <div className="h-[20px] w-[20px] rounded-full bg-green-500" />
-      )
-  );
-
   return (
     <div className="relative grid h-full w-full grid-cols-1 grid-rows-1 gap-5 sm:grid sm:grid-cols-2 sm:grid-rows-1">
       <div className="flex h-full w-full flex-col rounded-lg bg-white p-5 shadow">
@@ -76,7 +66,7 @@ const LocationList = ({ locations, selectLocation, changeView }) => {
                 >
                   <img
                     src={addIcon}
-                    alt="add user"
+                    alt="add icon"
                     className="h-[25px] w-[25px] sm:h-[36px] sm:w-[36px]"
                   />
                 </button>
@@ -101,15 +91,13 @@ const LocationList = ({ locations, selectLocation, changeView }) => {
                         className="flex h-fit w-full space-x-5"
                       >
                         <div className="flex h-full w-full flex-col">
+                          <LocationTakenLabel isTaken={location.is_taken} />
                           <div className="text-left font-medium">
                             {location.name}
                           </div>
                           <div className="text-left text-xs font-medium text-gray-500">
                             {location.location}
                           </div>
-                        </div>
-                        <div className="h-full w-[20px] self-center">
-                          {isTakenBadge(location.is_taken)}
                         </div>
                       </button>
                     </li>
@@ -119,20 +107,10 @@ const LocationList = ({ locations, selectLocation, changeView }) => {
           </div>
           {
             (isScreenSM) && (
-              <button
-                type="button"
+              <MapViewButton
+                text="Buscar ubicación en el mapa"
                 onClick={() => setIsMapOpen(true)}
-                className="flex items-center justify-center space-x-2.5 pt-5"
-              >
-                <div className="font-medium">
-                  Buscar ubicación en el mapa
-                </div>
-                <img
-                  src={nodeIcon}
-                  alt="node icon"
-                  className="h-[34px] w-[34px]"
-                />
-              </button>
+              />
             )
           }
         </div>

@@ -6,6 +6,7 @@ import adminIcon from 'src/assets/icons/adminIcon.svg';
 import airWave from 'src/assets/icons/airwave.svg';
 import bellIcon from 'src/assets/icons/bellIcon.svg';
 import blueMarker from 'src/assets/markers/marker-icon-blue.png';
+import checkCircleIcon from 'src/assets/icons/checkCircleIcon.svg';
 import close from 'src/assets/icons/close.svg';
 import cloud from 'src/assets/icons/cloud.svg';
 import control from 'src/assets/icons/control.svg';
@@ -26,6 +27,7 @@ import refresh from 'src/assets/icons/refresh.svg';
 import reports from 'src/assets/icons/reports.svg';
 import settings from 'src/assets/icons/settings.svg'
 import successIcon from 'src/assets/icons/successIcon.svg'
+import uncheckCircleIcon from 'src/assets/icons/uncheckCircleIcon.svg';
 import userIcon from 'src/assets/icons/userIcon.svg';
 import usersIcon from 'src/assets/icons/usersIcon.svg';
 import workspacesIcon from 'src/assets/icons/workspacesIcon.svg';
@@ -39,6 +41,7 @@ export {
   airWave,
   bellIcon,
   blueMarker,
+  checkCircleIcon,
   close,
   cloud,
   control,
@@ -59,6 +62,7 @@ export {
   reports,
   settings,
   successIcon,
+  uncheckCircleIcon,
   userIcon,
   usersIcon,
   workspacesIcon,

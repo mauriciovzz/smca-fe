@@ -39,7 +39,7 @@ const BottomBar = ({ workspaceId }) => {
     },
     {
       title: 'Nodos',
-      route: '/cuenta/nodos',
+      route: `/espacios-de-trabajo/${workspaceId}/nodos`,
       src: nodeIcon,
       alt: 'pin',
       menuOrder: 'order-4',
@@ -82,7 +82,7 @@ const BottomBar = ({ workspaceId }) => {
     },
   ];
 
-  const onOpenMenuClick = (linkAlt) => {
+  const onBarClick = (linkAlt) => {
     if (linkAlt === 'workspaces') setView(null);
     setIsMenuOpen(false);
   };
@@ -98,7 +98,7 @@ const BottomBar = ({ workspaceId }) => {
                   <li key={link.alt} className={`${link.menuOrder} h-full w-full`}>
                     <NavLink
                       className={({ isActive }) => (`${isActive && 'bg-background'} flex h-full w-full flex-col items-center justify-center gap-2.5 rounded-lg`)}
-                      onClick={() => onOpenMenuClick(link.alt)}
+                      onClick={() => onBarClick(link.alt)}
                       to={link.route}
                       end
                     >
@@ -124,7 +124,7 @@ const BottomBar = ({ workspaceId }) => {
                   <li key={link.alt} className={`${link.barOrder}`}>
                     <NavLink
                       className={({ isActive }) => (`${isActive && 'bg-background'} flex rounded-md p-2.5`)}
-                      onClick={(link.alt === 'workspaces') ? (() => setView(null)) : undefined}
+                      onClick={() => onBarClick(link.alt)}
                       to={link.route}
                       end
                     >

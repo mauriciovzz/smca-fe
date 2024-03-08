@@ -11,6 +11,7 @@ import {
   Information,
   Locations,
   Login,
+  Nodes,
   PasswordRecover,
   PasswordReset,
   Register,
@@ -61,6 +62,8 @@ const Routers = () => (
 
           <Route path="miembros" element={<WorkspaceMembers />} />
 
+          <Route path="nodos" element={<Nodes />} />
+
           <Route path="ubicaciones" element={<Locations />} />
 
           <Route path="componentes" element={<Components />} />
@@ -72,26 +75,6 @@ const Routers = () => (
       </Route>
 
     </Route>
-
-    {/* <Route element={<Auth allowedRoles={['USER', 'RESEARCHER', 'ADMIN']} />}>
-      <Route path="/cuenta" element={<Account />}>
-
-        <Route path="nodos" element={<NodesPage />}>
-          <Route path="" element={<NodesView />} />
-          <Route path="registrar" element={<NodeCreation />} />
-          <Route path=":node_type/:node_id" element={<NodeManagement />} />
-        </Route>
-
-        <Route path="ubicaciones" element={<Locations />}>
-          <Route path="" element={<LocationList />} />
-          <Route path="registrar" element={<LocationCreation />} />
-          <Route path=":lat/:long" element={<LocationManagement />} />
-        </Route>
-
-        <Route path="reportes" element={<Reports />} />
-
-      </Route>
-    </Route> */}
 
     <Route path="*" element={<NotFound />} />
   </Routes>

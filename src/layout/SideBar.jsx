@@ -53,7 +53,7 @@ const SideBar = ({ workspaceId }) => {
     },
     {
       title: 'Nodos',
-      route: '/cuenta/nodos',
+      route: `/espacios-de-trabajo/${workspaceId}/nodos`,
       src: nodeIcon,
       alt: 'nodes',
       order: 'order-4',

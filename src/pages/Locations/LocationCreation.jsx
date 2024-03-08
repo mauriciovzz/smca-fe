@@ -4,7 +4,7 @@ import { useOutletContext } from 'react-router-dom';
 
 import { nodeIcon } from 'src/assets';
 import {
-  Button, Divider, Heading, Label, Map, TextInput,
+  Button, Divider, Heading, Label, Map, TextAreaInput, TextInput,
 } from 'src/components';
 import locationsService from 'src/services/locations';
 import notifications from 'src/utils/notifications';
@@ -96,20 +96,12 @@ const LocationCreation = ({ updateLocations, changeView }) => {
               setValue={setName}
               autoComplete="off"
             />
-            <label htmlFor="address" className="block">
-              <div className="mb-2 text-sm font-medium text-gray-900">
-                Dirección
-              </div>
-              <textarea
-                id="address"
-                name="address"
-                value={location}
-                onChange={({ target }) => setLocation(target.value)}
-                rows="3"
-                required
-                className="block w-full resize-none rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-sky-600 sm:text-sm"
-              />
-            </label>
+            <TextAreaInput
+              id="address"
+              labelText="Dirección"
+              value={location}
+              setValue={(newValue) => setLocation(newValue)}
+            />
 
             {
               (isScreenSM)

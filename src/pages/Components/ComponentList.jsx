@@ -3,51 +3,10 @@ import { React } from 'react';
 import { useOutletContext } from 'react-router-dom';
 
 import { addIcon } from 'src/assets';
-import {
-  Divider, Heading,
-} from 'src/components';
+import { Badge, Divider, Heading } from 'src/components';
 
 const ComponentList = ({ components, selectComponent, changeView }) => {
   const { selectedWorkspace } = useOutletContext();
-
-  const componentTypeBadge = (type) => {
-    switch (type) {
-      case 'Placa':
-        return (
-          <div className="flex h-[20px] w-[60px] items-center justify-center self-center rounded-3xl bg-[#9DB28C] text-sm font-medium text-white">
-            placa
-          </div>
-        );
-      case 'Sensor':
-        return (
-          <div className="flex h-[20px] w-[60px] items-center justify-center self-center rounded-3xl bg-[#C8C8C7] text-sm font-medium text-white">
-            sensor
-          </div>
-        );
-      case 'Camara':
-        return (
-          <div className="flex h-[20px] w-[60px] items-center justify-center self-center rounded-3xl bg-[#8F8D8E] text-sm font-medium text-white">
-            camara
-          </div>
-        );
-      case 'Pantalla':
-        return (
-          <div className="flex h-[20px] w-[60px] items-center justify-center self-center rounded-3xl bg-[#A3A6B5] text-sm font-medium text-white">
-            pantalla
-          </div>
-        );
-      case 'Otro':
-        return (
-          <div className="flex h-[20px] w-[60px] items-center justify-center self-center rounded-3xl bg-[#A89A8E] text-sm font-medium text-white">
-            otro
-          </div>
-        );
-      default:
-        return (
-          <div />
-        );
-    }
-  };
 
   return (
     <div className="flex grow flex-col rounded-lg bg-white p-5 shadow">
@@ -93,7 +52,7 @@ const ComponentList = ({ components, selectComponent, changeView }) => {
                           {component.name}
                         </div>
                         <div className="flex w-1/4 justify-end">
-                          {componentTypeBadge(component.type)}
+                          <Badge value={component.type} />
                         </div>
                       </div>
                     </button>

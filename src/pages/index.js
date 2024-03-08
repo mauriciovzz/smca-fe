@@ -5,6 +5,7 @@ import Home from './Home/Home';
 import Information from './Information';
 import Locations from './Locations/Locations';
 import Login from './Login';
+import Nodes from './Nodes/Nodes';
 import NotFound from './NotFound';
 import PasswordRecover from './PasswordRecover';
 import PasswordReset from './PasswordReset';
@@ -30,6 +31,7 @@ export {
   Information,
   Locations,
   Login,
+  Nodes,
   NotFound,
   PasswordRecover,
   PasswordReset,

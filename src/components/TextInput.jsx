@@ -8,7 +8,7 @@ const TextInput = ({
   <label htmlFor={id} className="flex flex-col">
     <Label text={labelText} />
     <input
-      className={`${disabled ? 'bg-gray-100' : 'bg-gray-50'} 
+      className={`${disabled ? 'bg-disabled' : 'bg-enabled'} 
                   w-full rounded-lg border border-gray-300 px-2 py-1.5 focus:border-main focus:ring-main`}
       id={id}
       name={id}

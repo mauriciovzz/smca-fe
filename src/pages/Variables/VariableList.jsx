@@ -3,33 +3,10 @@ import { React } from 'react';
 import { useOutletContext } from 'react-router-dom';
 
 import { addIcon } from 'src/assets';
-import {
-  Divider, Heading,
-} from 'src/components';
+import { Badge, Divider, Heading } from 'src/components';
 
 const VariableList = ({ variables, selectVariable, changeView }) => {
   const { selectedWorkspace } = useOutletContext();
-
-  const getTypeBadge = (type) => {
-    switch (type) {
-      case 'Meteorológica':
-        return (
-          <div className="flex h-[28px] w-[50px] items-center justify-center self-center rounded-3xl bg-sky-200 text-sm font-medium text-main">
-            met
-          </div>
-        );
-      case 'Ambiental':
-        return (
-          <div className="flex h-[28px] w-[50px] items-center justify-center self-center rounded-3xl bg-green-200 text-sm font-medium text-green-600">
-            amb
-          </div>
-        );
-      default:
-        return (
-          <div />
-        );
-    }
-  };
 
   return (
     <div className="flex grow flex-col rounded-lg bg-white p-5 shadow">
@@ -79,7 +56,7 @@ const VariableList = ({ variables, selectVariable, changeView }) => {
                         </div>
                       </div>
 
-                      {getTypeBadge(variable.type)}
+                      <Badge value={variable.type} />
                     </button>
                   </li>
                 ))

@@ -4,7 +4,7 @@ import { useOutletContext } from 'react-router-dom';
 
 import { addIcon } from 'src/assets';
 import {
-  Button, Divider, Heading, Label, TextInput,
+  Badge, Button, Divider, Heading, Label, TextInput,
 } from 'src/components';
 import VariableCreation from 'src/pages/Variables/VariableCreation';
 import componentsService from 'src/services/components';
@@ -79,27 +79,6 @@ const ComponentCreation = ({ updateComponents, changeView }) => {
     }
   };
 
-  const getTypeBadge = (type) => {
-    switch (type) {
-      case 'Meteorológica':
-        return (
-          <div className="flex h-[28px] w-[40px] items-center justify-center self-center rounded-3xl bg-sky-200 text-xs font-medium text-main">
-            met
-          </div>
-        );
-      case 'Ambiental':
-        return (
-          <div className="flex h-[28px] w-[40px] items-center justify-center self-center rounded-3xl bg-green-200 text-xs font-medium text-green-600">
-            amb
-          </div>
-        );
-      default:
-        return (
-          <div />
-        );
-    }
-  };
-
   const handleVariableSelection = (variableId) => {
     if (componentVariables.includes(variableId)) {
       setComponentVariables(componentVariables.filter((vr) => vr !== variableId));
@@ -109,7 +88,7 @@ const ComponentCreation = ({ updateComponents, changeView }) => {
   };
 
   return (
-    <div className="relative flex grow flex-col rounded-lg bg-white p-5 shadow">
+    <div className="relative flex h-full w-full flex-col rounded-lg bg-white p-5 shadow">
       <div className="flex grow flex-col">
         <Heading
           text="Agregar Componente"
@@ -191,7 +170,7 @@ const ComponentCreation = ({ updateComponents, changeView }) => {
                               </div>
                             </div>
                             <div className="w-fit">
-                              {getTypeBadge(variable.type)}
+                              <Badge value={variable.type} changeHeight="h-[20px]" />
                             </div>
                           </button>
                         </li>

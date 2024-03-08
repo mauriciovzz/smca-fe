@@ -14,7 +14,7 @@ const VariableCreation = ({ updateVariables, changeView }) => {
 
   const [name, setName] = useState('');
   const [unit, setUnit] = useState('');
-  const [variableType, setVariableType] = useState('');
+  const [variableType, setVariableType] = useState('Meteorológica');
 
   const getVariableTypes = async () => {
     try {
@@ -35,13 +35,17 @@ const VariableCreation = ({ updateVariables, changeView }) => {
     try {
       const response = await variablesService.create(
         selectedWorkspace.workspace_id,
-        { name, unit, variableType },
+        {
+          name,
+          unit,
+          variableType: variableTypes.find((vt) => vt.type === variableType).variable_type_id,
+        },
       );
       notifications.success(response);
 
       setName('');
       setUnit('');
-      setVariableType('');
+      setVariableType('Meteorológica');
       updateVariables();
     } catch (err) {
       notifications.error(err);
@@ -63,38 +67,53 @@ const VariableCreation = ({ updateVariables, changeView }) => {
           <TextInput
             id="name"
             type="text"
-            labelText="Nombre de la variable"
+            labelText="Nombre"
             value={name}
             setValue={setName}
             autoComplete="off"
           />
+
           <TextInput
             id="unit"
             type="text"
-            labelText="Unidad de la variable"
+            labelText="Unidad"
             value={unit}
             setValue={setUnit}
             autoComplete="off"
           />
-          <div>
-            <Label text="Tipo de variable" />
-            <select
-              name="variableType"
-              id="varialeType"
-              value={variableType}
-              onChange={(event) => setVariableType(event.target.value)}
-              className="h-[38px] w-full rounded-lg border border-gray-300 px-1 py-0.5 focus:border-main focus:ring-1 focus:ring-main"
-            >
-              <option value="" disabled hidden>Seleciona un tipo de variable</option>
-              {
-                variableTypes
-                  .map((vt) => (
-                    <option key={vt.variable_type_id} value={vt.variable_type_id}>{vt.type}</option>
-                  ))
-              }
-            </select>
-          </div>
 
+          <div>
+            <Label text="Tipo" />
+            <div className="flex h-fit w-full overflow-hidden rounded-2xl border-2 bg-white font-medium ">
+              <button
+                type="button"
+                className={`${(variableType === 'Meteorológica') ? 'rounded-r-2xl bg-meteorological text-white' : 'bg-white text-slate-400'} flex w-1/2 flex-col items-center justify-center p-1 text-center`}
+                onClick={() => setVariableType('Meteorológica')}
+              >
+                <div>
+                  Meteorológica
+                </div>
+                <Divider changePadding="p-[2.5px]" changeColor={(variableType === 'Meteorológica') ? 'border-white' : 'border-slate-400'} />
+                <div className="text-xs">
+                  Referentes al tiempo atmosferico
+                </div>
+              </button>
+
+              <button
+                type="button"
+                className={`${(variableType === 'Ambiental') ? 'rounded-l-2xl bg-enviromental text-white' : 'bg-white text-slate-400'} flex w-1/2 flex-col items-center justify-center p-1 text-center`}
+                onClick={() => setVariableType('Ambiental')}
+              >
+                <div>
+                  Ambiental
+                </div>
+                <Divider changePadding="p-[2.5px]" changeColor={(variableType === 'Ambiental') ? 'border-white' : 'border-slate-400'} />
+                <div className="text-xs">
+                  Referentes a contaminantes
+                </div>
+              </button>
+            </div>
+          </div>
         </form>
       </div>
 

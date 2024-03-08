@@ -4,7 +4,7 @@ import { useOutletContext } from 'react-router-dom';
 
 import { addUserIcon } from 'src/assets';
 import {
-  Button, Divider, Heading, Label, TextInput,
+  Badge, Button, Divider, Heading, Label, TextInput,
 } from 'src/components';
 import workspacesService from 'src/services/workspaces';
 import notifications from 'src/utils/notifications';
@@ -65,9 +65,11 @@ const MemberList = ({ members, selectMember, changeView }) => {
                         </div>
                       </div>
 
-                      <div className={`${account.is_admin ? 'flex' : 'hidden'} h-[28px] w-[56px] items-center justify-center self-center rounded-3xl bg-main text-sm font-medium text-white`}>
-                        <div>admin</div>
-                      </div>
+                      {
+                        (account.is_admin) && (
+                          <Badge value="admin" />
+                        )
+                      }
                     </button>
 
                   </li>
@@ -147,12 +149,17 @@ const Member = ({ selectedMember, updateMembers, changeView }) => {
 
           <div className="py-5 text-left">
             <Label text="Rol" />
-            <div className="flex h-[30px] w-full overflow-hidden rounded-2xl border-2 border-black font-medium ">
-              <div className={`${selectedMember.is_admin ? 'bg-white text-black' : 'rounded-r-2xl bg-black text-white'} w-1/2 text-center`}>
-                usuario
+            <div className="flex h-fit w-full overflow-hidden rounded-2xl border-2 bg-white font-medium ">
+              <div
+                className={`${!selectedMember.is_admin ? 'rounded-r-2xl bg-main text-white' : 'bg-white text-slate-400'} flex w-1/2 flex-col items-center justify-center p-1 text-center`}
+              >
+                Usuario
               </div>
-              <div className={`${selectedMember.is_admin ? 'rounded-l-2xl bg-black text-white' : 'bg-white text-black'} w-1/2 text-center`}>
-                admin
+
+              <div
+                className={`${selectedMember.is_admin ? 'rounded-l-2xl bg-main text-white' : 'bg-white text-slate-400'} flex w-1/2 flex-col items-center justify-center p-1 text-center`}
+              >
+                Administrador
               </div>
             </div>
           </div>

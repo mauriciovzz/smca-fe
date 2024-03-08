@@ -3,7 +3,7 @@ import { React, useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 
 import {
-  Button, Divider, Heading, TextInput,
+  Button, Divider, Heading, Label, TextInput,
 } from 'src/components';
 import { ConfirmationDialog } from 'src/layout';
 import variablesService from 'src/services/variables';
@@ -92,14 +92,13 @@ const VariableManagement = ({ selectedVariable, updateVariables, changeView }) =
             disabled={!isEditable}
           />
 
-          <TextInput
-            id="variableType"
-            type="text"
-            labelText="Tipo de variable"
-            value={variableType}
-            setValue={setVariableType}
-            disabled
-          />
+          <div className="flex h-fit w-full flex-col">
+            <Label text="Tipo" />
+            <div className={`${(variableType === 'Meteorológica') ? 'bg-meteorological' : 'bg-enviromental'} flex h-[38px] w-full items-center justify-center rounded-xl font-medium text-white`}>
+              {variableType}
+            </div>
+          </div>
+
         </form>
       </div>
 

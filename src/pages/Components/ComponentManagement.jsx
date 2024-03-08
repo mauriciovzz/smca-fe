@@ -4,13 +4,24 @@ import { useOutletContext } from 'react-router-dom';
 
 import { addIcon } from 'src/assets';
 import {
-  Button, Divider, Heading, Label, TextInput,
+  Badge, Button, Divider, Heading, Label, TextInput,
 } from 'src/components';
 import { ConfirmationDialog } from 'src/layout';
 import VariableCreation from 'src/pages/Variables/VariableCreation';
 import componentsService from 'src/services/components';
 import variablesService from 'src/services/variables';
 import notifications from 'src/utils/notifications';
+
+const DatasheetButton = ({ link }) => (
+  <a
+    href={link}
+    target="_blank"
+    rel="noreferrer noopener"
+    className="flex h-[24px] w-full items-center justify-center rounded-3xl bg-[#0066CC] text-center text-sm font-medium text-white"
+  >
+    Datasheet
+  </a>
+);
 
 const ComponentManagement = ({ selectedComponent, updateComponents, changeView }) => {
   const { selectedWorkspace } = useOutletContext();
@@ -100,66 +111,6 @@ const ComponentManagement = ({ selectedComponent, updateComponents, changeView }
     }
   };
 
-  const variableTypeBadge = (type) => {
-    switch (type) {
-      case 'Meteorológica':
-        return (
-          <div className="flex h-[28px] w-[40px] items-center justify-center self-center rounded-3xl bg-sky-200 text-xs font-medium text-main">
-            met
-          </div>
-        );
-      case 'Ambiental':
-        return (
-          <div className="flex h-[28px] w-[40px] items-center justify-center self-center rounded-3xl bg-green-200 text-xs font-medium text-green-600">
-            amb
-          </div>
-        );
-      default:
-        return (
-          <div />
-        );
-    }
-  };
-
-  const componentTypeBadge = (type) => {
-    switch (type) {
-      case 'Placa':
-        return (
-          <div className="flex h-[25px] w-full items-center justify-center rounded-3xl bg-[#9DB28C] text-center text-sm font-medium text-white">
-            placa
-          </div>
-        );
-      case 'Sensor':
-        return (
-          <div className="flex h-[25px] w-full items-center justify-center rounded-3xl bg-[#C8C8C7] text-center text-sm font-medium text-white">
-            sensor
-          </div>
-        );
-      case 'Camara':
-        return (
-          <div className="flex h-[25px] w-full items-center justify-center rounded-3xl bg-[#8F8D8E] text-center text-sm font-medium text-white">
-            camara
-          </div>
-        );
-      case 'Pantalla':
-        return (
-          <div className="flex h-[25px] w-full items-center justify-center rounded-3xl bg-[#A3A6B5] text-center text-sm font-medium text-white">
-            pantalla
-          </div>
-        );
-      case 'Otro':
-        return (
-          <div className="flex h-[25px] w-full items-center justify-center rounded-3xl bg-[#A89A8E] text-center text-sm font-medium text-white">
-            otro
-          </div>
-        );
-      default:
-        return (
-          <div />
-        );
-    }
-  };
-
   // const copyClipboard = async () => {
   //   const text = await navigator.clipboard.readText();
   //   setName(text)
@@ -235,16 +186,8 @@ const ComponentManagement = ({ selectedComponent, updateComponents, changeView }
                           </div>
 
                           <div className="flex h-full w-full space-x-5">
-                            {componentTypeBadge(componentType)}
-
-                            <a
-                              href={datasheetLink}
-                              target="_blank"
-                              rel="noreferrer noopener"
-                              className="flex h-[25px] w-full items-center justify-center rounded-3xl bg-[#0066CC] text-center text-xs font-medium text-white"
-                            >
-                              Datasheet
-                            </a>
+                            <Badge value={componentType} changeWidht="w-full" />
+                            <DatasheetButton link={datasheetLink} />
                           </div>
                         </div>
                       )
@@ -262,17 +205,9 @@ const ComponentManagement = ({ selectedComponent, updateComponents, changeView }
                             />
                           </div>
 
-                          <div className="flex h-full w-[100px] flex-col justify-between pl-5">
-                            {componentTypeBadge(componentType)}
-
-                            <a
-                              href={datasheetLink}
-                              target="_blank"
-                              rel="noreferrer noopener"
-                              className="flex h-[25px] w-full items-center justify-center rounded-3xl bg-[#0066CC] text-center text-xs font-medium text-white"
-                            >
-                              Datasheet
-                            </a>
+                          <div className="flex h-full w-[125px] flex-col justify-between pl-5">
+                            <Badge value={componentType} changeWidht="w-full" />
+                            <DatasheetButton link={datasheetLink} />
                           </div>
                         </div>
                       )
@@ -310,7 +245,7 @@ const ComponentManagement = ({ selectedComponent, updateComponents, changeView }
                               </div>
                             </div>
                             <div className="w-fit">
-                              {variableTypeBadge(variable.type)}
+                              <Badge value={variable.type} changeHeight="h-[20px]" />
                             </div>
                           </button>
                         </li>
@@ -356,7 +291,7 @@ const ComponentManagement = ({ selectedComponent, updateComponents, changeView }
             <Button
               text={isEditable ? 'Cancelar' : 'Eliminar'}
               typeIsButton
-              onClick={isEditable ? () => setData(!isEditable) : () => setIsConDiaOpen(true)}
+              onClick={isEditable ? () => setData() : () => setIsConDiaOpen(true)}
               color="red"
             />
           </div>
