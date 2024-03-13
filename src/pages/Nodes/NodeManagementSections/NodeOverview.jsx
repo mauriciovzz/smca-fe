@@ -3,132 +3,13 @@ import { React } from 'react';
 import { useOutletContext } from 'react-router-dom';
 
 import {
-  Button, Divider, Heading,
+  Badge, Button, Divider, Heading,
 } from 'src/components';
-
-// import nodesService from 'src/services/nodes';
-// import notifications from 'src/utils/notifications';
 
 const NodeOverview = ({
   selectedNode, nodeComponents, changeView, close,
 }) => {
   const { selectedWorkspace } = useOutletContext();
-
-  // const handleDelete = () => {
-  //   console.log('delete');
-  // };
-
-  const stateBadge = (state) => {
-    switch (state) {
-      case 'Activo':
-        return (
-          <div className="flex h-[24px] w-1/3 items-center justify-center rounded-lg bg-green-500 text-center text-sm font-medium text-white">
-            Activo
-          </div>
-        );
-      case 'Inactivo':
-        return (
-          <div className="flex h-[24px] w-1/3 items-center justify-center rounded-lg bg-yellow-500 text-center text-sm font-medium text-white">
-            Inactivo
-          </div>
-        );
-      case 'Fuera de Servicio':
-        return (
-          <div className="flex h-[24px] w-1/3 items-center justify-center rounded-lg bg-red-500 text-center text-sm font-medium text-white">
-            FDS
-          </div>
-        );
-      default:
-        return (
-          <div className="w-1/3" />
-        );
-    }
-  };
-
-  const typeBadge = (type) => {
-    switch (type) {
-      case 'Indoor':
-        return (
-          <div className="flex h-[24px] w-1/3 items-center justify-center rounded-lg bg-slate-500 text-center text-sm font-medium text-white">
-            Indoor
-          </div>
-        );
-      case 'Outdoor':
-        return (
-          <div className="flex h-[24px] w-1/3 items-center justify-center rounded-lg bg-sky-500 text-center text-sm font-medium text-white">
-            Outdoor
-          </div>
-        );
-      default:
-        return (
-          <div className="flex h-[24px] w-1/3 items-center justify-center rounded-lg bg-white text-center text-sm font-medium">
-            n/s
-          </div>
-        );
-    }
-  };
-
-  const visibilityBadge = (visibility) => {
-    switch (visibility) {
-      case (true):
-        return (
-          <div className="flex h-[24px] w-1/3 items-center justify-center rounded-lg bg-sky-500 text-center text-sm font-medium text-white">
-            Publico
-          </div>
-        );
-      case (false):
-        return (
-          <div className="flex h-[24px] w-1/3 items-center justify-center rounded-lg bg-slate-500 text-center text-sm font-medium text-white">
-            Privado
-          </div>
-        );
-      default:
-        return (
-          <div className="flex h-[24px] w-1/3 items-center justify-center rounded-lg bg-white text-center text-sm font-medium">
-            n/s
-          </div>
-        );
-    }
-  };
-
-  const componentTypeBadge = (type) => {
-    switch (type) {
-      case 'Placa':
-        return (
-          <div className="flex h-[20px] w-[60px] items-center justify-center rounded-3xl bg-[#9DB28C] text-sm font-medium text-white">
-            placa
-          </div>
-        );
-      case 'Sensor':
-        return (
-          <div className="flex h-[20px] w-[60px] items-center justify-center rounded-3xl bg-[#C8C8C7] text-sm font-medium text-white">
-            sensor
-          </div>
-        );
-      case 'Camara':
-        return (
-          <div className="flex h-[20px] w-[60px] items-center justify-center rounded-3xl bg-[#8F8D8E] text-sm font-medium text-white">
-            camara
-          </div>
-        );
-      case 'Pantalla':
-        return (
-          <div className="flex h-[20px] w-[60px] items-center justify-center rounded-3xl bg-[#A3A6B5] text-sm font-medium text-white">
-            pantalla
-          </div>
-        );
-      case 'Otro':
-        return (
-          <div className="flex h-[20px] w-[60px] items-center justify-center rounded-3xl bg-[#A89A8E] text-sm font-medium text-white">
-            otro
-          </div>
-        );
-      default:
-        return (
-          <div />
-        );
-    }
-  };
 
   return (
     <div className="relative flex grow flex-col rounded-lg bg-white p-5 shadow">
@@ -143,18 +24,26 @@ const NodeOverview = ({
 
         <div className="flex h-full w-full flex-col space-y-5">
           <div className="flex h-fit w-full flex-col items-center justify-center text-center">
-            <div className="font-semibold">
-              {selectedNode.name}
+            <div className="flex h-fit w-full items-center justify-center text-center font-semibold">
+              {selectedNode.node_name}
             </div>
-            <div className="text-sm text-gray-500">
-              {selectedNode.location}
+
+            <div className="flex h-fit w-full items-center justify-center text-center font-semibold">
+              <div className="flex flex-col">
+                <div className="text-sm font-medium">
+                  {selectedNode.location_name}
+                </div>
+                <div className="text-xs text-gray-500">
+                  {selectedNode.location}
+                </div>
+              </div>
             </div>
           </div>
 
           <div className="flex h-fit w-full space-x-2.5">
-            {stateBadge(selectedNode.state)}
-            {typeBadge(selectedNode.type)}
-            {visibilityBadge(selectedNode.is_visible)}
+            <Badge value={selectedNode.state} width="w-1/3" rounded="rounded-lg" />
+            <Badge value={selectedNode.type} width="w-1/3" rounded="rounded-lg" />
+            <Badge value={selectedNode.is_visible ? 'Público' : 'Privado'} width="w-1/3" rounded="rounded-lg" />
           </div>
 
           <div className="flex grow flex-col">
@@ -173,7 +62,7 @@ const NodeOverview = ({
                               {component.name}
                             </div>
                             <div className="flex w-1/4 justify-end">
-                              {componentTypeBadge(component.type)}
+                              <Badge value={component.type} />
                             </div>
                           </div>
                           {
@@ -211,16 +100,29 @@ const NodeOverview = ({
       {
         (selectedWorkspace.is_admin) && (
           <div className="flex w-full gap-2.5">
-            <Button
-              text="Modificar"
-              typeIsButton
-              onClick={() => changeView('ManagementMenu')}
-              color="blue"
-            />
+            {
+              (selectedNode.state !== 'Terminado') && (
+                <>
+                  <Button
+                    text="Codigo"
+                    typeIsButton
+                    onClick={() => changeView('ManagementMenu')}
+                    color="gray"
+                  />
+                  <Button
+                    text="Modificar"
+                    typeIsButton
+                    onClick={() => changeView('ManagementMenu')}
+                    color="blue"
+                  />
+                </>
+              )
+            }
+
             <Button
               text="Eliminar"
               typeIsButton
-              onClick={undefined}
+              onClick={() => changeView('DeleteNode')}
               color="red"
             />
           </div>

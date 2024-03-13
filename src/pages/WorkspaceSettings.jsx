@@ -240,9 +240,7 @@ const DeleteWorkspace = ({ resetView }) => {
   const [workspaceName, setWorkspaceName] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
+  const handleWorkspaceDeletion = async () => {
     if (selectedWorkspace.name === workspaceName) {
       try {
         const response = await workspacesService.deleteWorkspace(selectedWorkspace.workspace_id);
@@ -259,7 +257,7 @@ const DeleteWorkspace = ({ resetView }) => {
   };
 
   return (
-    <div className="flex grow flex-col rounded-lg bg-white p-5 shadow">
+    <div className="flex grow flex-col space-y-5 rounded-lg bg-white p-5 shadow">
       <div className="flex grow flex-col">
         <Heading
           text="Eliminar Espacio"
@@ -269,25 +267,31 @@ const DeleteWorkspace = ({ resetView }) => {
 
         <Divider />
 
-        <form onSubmit={handleSubmit} id="form" className="space-y-5">
+        <div className="space-y-5">
           <p className="text-justify text-gray-500">
             {`Si estás seguro de querer eliminar el espacio de trabajo "${selectedWorkspace.name}", 
             ingrese el nombre del mismo y luego haga clic en el botón "Eliminar Espacio".`}
           </p>
 
-          <TextInput
-            id="workspaceName"
-            type="text"
-            labelText="Nombre del espacio de trabajo"
-            value={workspaceName}
-            setValue={setWorkspaceName}
-          />
-        </form>
+          <p className="text-justify text-gray-500">
+            {`Toma en cuenta que se eliminara todos los datos del mismo, 
+            incluyendo la informacion de los nodos registrados y las lecturas realizadas por los mismos.`}
+          </p>
+        </div>
       </div>
+
+      <TextInput
+        id="workspaceName"
+        type="text"
+        labelText="Nombre del espacio de trabajo"
+        value={workspaceName}
+        setValue={setWorkspaceName}
+      />
 
       <Button
         text="Eliminar Espacio"
-        form="form"
+        typeIsButton
+        onClick={() => handleWorkspaceDeletion()}
         color="red"
       />
     </div>

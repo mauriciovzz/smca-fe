@@ -93,8 +93,8 @@ const LocationManagement = ({ selectedLocation, updateLocations, changeView }) =
   };
 
   return (
-    <div className="relative grid h-full w-full grid-cols-1 grid-rows-1 gap-5 sm:grid sm:grid-cols-2 sm:grid-rows-1">
-      <div className="flex h-full w-full flex-col rounded-lg bg-white p-5 shadow">
+    <div className=" grid h-full w-full grid-cols-1 grid-rows-1 gap-5 sm:grid sm:grid-cols-2 sm:grid-rows-1">
+      <div className="relative flex h-full w-full flex-col rounded-lg bg-white p-5 shadow">
         <div className="flex grow flex-col">
           <Heading
             text="Ubicación"
@@ -185,6 +185,17 @@ const LocationManagement = ({ selectedLocation, updateLocations, changeView }) =
             </div>
           )
         }
+
+        {
+          isConDiaOpen && (
+          <ConfirmationDialog
+            title="Eliminar Ubicación"
+            description={`Estas seguro de querer eliminar la ubicación "${name}"?`}
+            onDecline={() => setIsConDiaOpen(false)}
+            onConfirm={() => handleRemove()}
+          />
+          )
+        }
       </div>
 
       {
@@ -205,17 +216,6 @@ const LocationManagement = ({ selectedLocation, updateLocations, changeView }) =
             />
           </div>
 
-        )
-      }
-
-      {
-        isConDiaOpen && (
-        <ConfirmationDialog
-          title="Eliminar Ubicación"
-          description={`Estas seguro de querer eliminar la ubicación "${name}"?`}
-          onDecline={() => setIsConDiaOpen(false)}
-          onConfirm={() => handleRemove()}
-        />
         )
       }
     </div>

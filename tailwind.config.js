@@ -25,45 +25,45 @@ module.exports = {
         enabled: '#f8fafc',
 
         // NODE STATES ------------------------------
-        // green-600
-        activo: '#16a34a',
-        // green-700
-        'activo-dark': '#15803d',
-
+        // lime-500
+        active: '#84cc16',
         // yellow-400
-        inactivo: '#facc15',
-        // yellow-500
-        'inactivo-dark': '#eab308',
-
+        inactive: '#facc15',
         // red-600
-        terminado: '#dc2626',
-        // red-700
-        'terminado-dark': '#b91c1c',
+        terminated: '#dc2626',
 
         // NODE TYPES  ------------------------------
         // sky-400
         outdoor: '#38bdf8',
-        // sky-500
-        'outdoor-dark': '#0ea5e9',
+        // neutral-400
+        indoor: '#a3a3a3',
 
-        // stone-500
-        indoor: '#78716c',
-        // stone-600
-        'indoor-dark': '#57534e',
+        // NODE Visibility  ------------------------------
+        // sky-400
+        public: '#38bdf8',
+        // neutral-400
+        private: '#a3a3a3',
 
         // VARIABLE TYPES  ------------------------------
         // cyan-600
         meteorological: '#0891b2',
 
-        // emerald-600
-        enviromental: '#059669',
+        // green-600
+        enviromental: '#16a34a',
 
-        // COMPONENTS  ------------------------------  ------------------------------
-        board: '#9DB28C',
-        sensor: '#C8C8C7',
-        camera: '#8F8D8E',
-        screen: '#A3A6B5',
-        other: '#A89A8E',
+        // COMPONENTS  ------------------------------
+        // lime-400
+        board: '#a3e635',
+        // teal-400
+        sensor: '#2dd4bf',
+        // blue-400
+        'rain-sensor': '#60a5fa',
+        // purple-400
+        camera: '#c084fc',
+        // rose-400
+        screen: '#fb7185',
+        // zinc-400
+        other: '#a1a1aa',
       },
       gridTemplateColumns: {
         layout: 'repeat(auto-fit, 230px);',

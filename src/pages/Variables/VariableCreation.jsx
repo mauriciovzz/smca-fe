@@ -3,7 +3,7 @@ import { React, useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 
 import {
-  Button, Divider, Heading, Label, TextInput,
+  Button, Divider, Heading, TextInput, ToggleButton,
 } from 'src/components';
 import variablesService from 'src/services/variables';
 import notifications from 'src/utils/notifications';
@@ -82,38 +82,24 @@ const VariableCreation = ({ updateVariables, changeView }) => {
             autoComplete="off"
           />
 
-          <div>
-            <Label text="Tipo" />
-            <div className="flex h-fit w-full overflow-hidden rounded-2xl border-2 bg-white font-medium ">
-              <button
-                type="button"
-                className={`${(variableType === 'Meteorológica') ? 'rounded-r-2xl bg-meteorological text-white' : 'bg-white text-slate-400'} flex w-1/2 flex-col items-center justify-center p-1 text-center`}
-                onClick={() => setVariableType('Meteorológica')}
-              >
-                <div>
-                  Meteorológica
-                </div>
-                <Divider changePadding="p-[2.5px]" changeColor={(variableType === 'Meteorológica') ? 'border-white' : 'border-slate-400'} />
-                <div className="text-xs">
-                  Referentes al tiempo atmosferico
-                </div>
-              </button>
-
-              <button
-                type="button"
-                className={`${(variableType === 'Ambiental') ? 'rounded-l-2xl bg-enviromental text-white' : 'bg-white text-slate-400'} flex w-1/2 flex-col items-center justify-center p-1 text-center`}
-                onClick={() => setVariableType('Ambiental')}
-              >
-                <div>
-                  Ambiental
-                </div>
-                <Divider changePadding="p-[2.5px]" changeColor={(variableType === 'Ambiental') ? 'border-white' : 'border-slate-400'} />
-                <div className="text-xs">
-                  Referentes a contaminantes
-                </div>
-              </button>
-            </div>
-          </div>
+          <ToggleButton
+            labelText="Tipo"
+            selectedOption={variableType}
+            leftOption={{
+              title: 'Meteorológica',
+              text: 'Referentes al tiempo atmosferico',
+              value: 'Meteorológica',
+              onClick: () => setVariableType('Meteorológica'),
+              color: 'bg-meteorological',
+            }}
+            rigthOption={{
+              title: 'Ambiental',
+              text: 'Referentes a contaminantes',
+              value: 'Ambiental',
+              onClick: () => setVariableType('Ambiental'),
+              color: 'bg-enviromental',
+            }}
+          />
         </form>
       </div>
 

@@ -1,14 +1,10 @@
-import { React, useEffect, useState } from 'react';
+import { React, useState } from 'react';
 
-import { useOutletContext } from 'react-router-dom';
-
-import { addIcon, nodeIcon } from 'src/assets';
+import { addIcon } from 'src/assets';
 import {
-  Button, Divider, Map, SelectionBar,
+  Button, Divider, Map, SelectionBar, MapViewButton,
 } from 'src/components';
 import LocationCreation from 'src/pages/Locations/LocationCreation';
-import locationsService from 'src/services/locations';
-import notifications from 'src/utils/notifications';
 
 const MarkersMap = ({
   locations, selectLocation, isScreenSM, changeView,
@@ -49,30 +45,14 @@ const MarkersMap = ({
 );
 
 const LocationSelection = ({
-  selectedLocation, selectLocation, leftButtonClick, rightButtonClick,
+  locations, updateLocations, selectedLocation, setLocation, leftButtonClick, rightButtonClick,
 }) => {
-  const { selectedWorkspace } = useOutletContext();
   const [isMapOpen, setIsMapOpen] = useState(false);
   const [isLocCreOpen, setIsLocCreOpen] = useState(false);
   const isScreenSM = (window.innerWidth <= 640);
 
-  const [freeLocations, setFreeLocations] = useState([]);
-
-  const getLocations = async () => {
-    try {
-      const locations = await locationsService.getAll(selectedWorkspace.workspace_id);
-      setFreeLocations(locations.filter((location) => !location.is_taken));
-    } catch (err) {
-      notifications.error(err);
-    }
-  };
-
-  useEffect(() => {
-    getLocations();
-  }, []);
-
   const selectMarker = (location) => {
-    selectLocation(location);
+    setLocation(location);
     setIsMapOpen(false);
   };
 
@@ -86,11 +66,11 @@ const LocationSelection = ({
 
       <Divider changePadding="p-[5px]" />
 
-      <div className="flex h-full w-full flex-col space-y-2.5">
+      <div className="flex h-full w-full flex-col">
         <div className="relative h-full w-full">
           <ul className="small-scrollbar absolute flex h-full w-full flex-col overflow-hidden overflow-y-auto rounded-lg border bg-background">
             {
-              freeLocations
+              locations
                 .map((location) => (
                   <li
                     key={location.lat + location.long}
@@ -98,7 +78,7 @@ const LocationSelection = ({
                   >
                     <button
                       type="button"
-                      onClick={() => selectLocation(location)}
+                      onClick={() => setLocation(location)}
                       className="flex h-fit w-full space-x-5"
                     >
                       <div className="flex h-full w-full flex-col">
@@ -130,20 +110,10 @@ const LocationSelection = ({
         </div>
         {
           (isScreenSM) && (
-            <button
-              type="button"
+            <MapViewButton
+              text="Buscar ubicación en el mapa"
               onClick={() => setIsMapOpen(true)}
-              className="flex items-center justify-center space-x-1.5"
-            >
-              <div className="text-sm font-medium">
-                Buscar ubicación en el mapa
-              </div>
-              <img
-                src={nodeIcon}
-                alt="node icon"
-                className="h-[28px] w-[28px]"
-              />
-            </button>
+            />
           )
         }
       </div>
@@ -152,7 +122,7 @@ const LocationSelection = ({
         (isScreenSM) && (isMapOpen) && (
           <div className="absolute left-0 top-0 h-full w-full">
             <MarkersMap
-              locations={freeLocations}
+              locations={locations}
               selectLocation={selectMarker}
               isScreenSM={isScreenSM}
               changeView={() => setIsMapOpen(false)}
@@ -166,7 +136,7 @@ const LocationSelection = ({
         isLocCreOpen && (
           <div className="absolute left-0 top-0 h-full w-full">
             <LocationCreation
-              updateLocations={() => getLocations()}
+              updateLocations={() => updateLocations()}
               changeView={() => setIsLocCreOpen(false)}
             />
           </div>

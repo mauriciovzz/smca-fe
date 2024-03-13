@@ -2,44 +2,118 @@ import { React, useEffect, useState } from 'react';
 
 import { useOutletContext } from 'react-router-dom';
 
-import { Divider, Heading } from 'src/components';
+import {
+  Badge, Button, Divider, Heading, SelectionBar,
+} from 'src/components';
 import componentsService from 'src/services/components';
-import locationsService from 'src/services/locations';
 import nodesService from 'src/services/nodes';
 import notifications from 'src/utils/notifications';
 
-import ComponentSelection from './NodeCreationSections/ComponentSelection';
-import LocationSelection from './NodeCreationSections/LocationSelection';
-import NewNodeOverview from './NodeCreationSections/NewNodeOverview';
-import NodeInformation from './NodeCreationSections/NodeInformation';
-import SensorSelection from './NodeCreationSections/SensorSelection';
-import VisibilitySelection from './NodeCreationSections/VisibilitySelection';
-import NodeSuccessMessage from './NodeSuccessMessage';
+import ComponentSelection from '../NodeCreationSections/ComponentSelection';
+import SensorSelection from '../NodeCreationSections/SensorSelection';
+import NodeSuccessMessage from '../NodeSuccessMessage';
 
-const NodeCreation = ({ updateNodes, changeView }) => {
+const NewComponentsOverview = ({
+  nodeComponents, nodeVariables, handleComponentsUpdate, leftButtonClick,
+}) => {
+  const isVariableSelected = (variable) => (
+    nodeVariables
+      .find(
+        (nv) => nv.component_id === variable.component_id
+          && nv.variable_id === variable.variable_id,
+      )
+  );
+
+  return (
+    <div className="relative flex h-full w-full flex-col rounded-lg border bg-white p-2.5">
+      <SelectionBar
+        text="Confirmar Cambios"
+        leftAction={leftButtonClick}
+      />
+
+      <Divider changePadding="p-[5px]" />
+
+      <div className="flex h-full w-full flex-col space-y-2.5">
+        <div className="flex grow flex-col">
+          <div className="relative flex grow overflow-hidden rounded-lg border">
+            <ul className="small-scrollbar absolute flex h-full w-full flex-col overflow-hidden overflow-y-auto bg-background">
+              {
+                nodeComponents
+                  .sort((a, b) => (
+                    a.component_type_id - b.component_type_id
+                    || a.name.localeCompare(b.name)
+                  ))
+                  .map((component) => (
+                    <li
+                      key={component.component_id}
+                      className="h-fit w-full border-b bg-white p-2.5 shadow"
+                    >
+                      <div className="flex h-full w-full flex-col">
+                        <div className="flex w-full items-center justify-between">
+                          <div className="h-fit w-3/4 break-words font-medium">
+                            {component.name}
+                          </div>
+                          <div className="flex w-1/4 justify-end">
+                            <Badge value={component.type} />
+                          </div>
+                        </div>
+                        {
+                          (component.type === 'Sensor') && (
+                            <ul className="flex flex-col">
+                              <Divider changePadding="p-[5px]" changeColor="border-black" />
+
+                              {
+                                component.variables
+                                  .filter((variable) => isVariableSelected(variable))
+                                  .sort((a, b) => (
+                                    a.variable_type_id - b.variable_type_id
+                                    || a.name.localeCompare(b.name)
+                                  ))
+                                  .map((variable) => (
+                                    <li
+                                      key={`${component.component_id}${variable.variable_id}`}
+                                      className="pt-[5px]"
+                                    >
+                                      <div>
+                                        {variable.name}
+                                      </div>
+                                    </li>
+                                  ))
+                              }
+                            </ul>
+                          )
+                        }
+                      </div>
+                    </li>
+                  ))
+              }
+            </ul>
+          </div>
+        </div>
+
+        <Button
+          text="Guardar Cambios"
+          typeIsButton
+          onClick={() => handleComponentsUpdate()}
+          color="blue"
+        />
+      </div>
+    </div>
+  );
+};
+
+const UpdateComponents = ({
+  selectedNode, currentComponents, currentRainSensor, currentVariables,
+  updateCurrentComponents, changeView,
+}) => {
   const { selectedWorkspace } = useOutletContext();
   const [view, setView] = useState(null);
 
-  const [nodeTypes, setNodeTypes] = useState([]);
   const [components, setComponents] = useState([]);
-  const [locations, setLocations] = useState([]);
 
-  const [name, setName] = useState('');
-  const [type, setType] = useState('Indoor');
-  const [nodeComponents, setNodeComponents] = useState([]);
-  const [rainSensor, setRainSensor] = useState([]);
-  const [nodeVariables, setNodeVariables] = useState([]);
-  const [location, setLocation] = useState({});
-  const [visibility, setVisibility] = useState('Privado');
-
-  const getTypes = async () => {
-    try {
-      const response = await nodesService.getTypes();
-      setNodeTypes(response);
-    } catch (err) {
-      notifications.error(err);
-    }
-  };
+  const [nodeComponents, setNodeComponents] = useState(currentComponents);
+  const [rainSensor, setRainSensor] = useState(currentRainSensor);
+  const [nodeVariables, setNodeVariables] = useState(currentVariables);
 
   const getComponents = async () => {
     try {
@@ -50,19 +124,8 @@ const NodeCreation = ({ updateNodes, changeView }) => {
     }
   };
 
-  const getLocations = async () => {
-    try {
-      const response = await locationsService.getAll(selectedWorkspace.workspace_id);
-      setLocations(response.filter((loc) => !loc.is_taken));
-    } catch (err) {
-      notifications.error(err);
-    }
-  };
-
   useEffect(() => {
-    getTypes();
     getComponents();
-    getLocations();
   }, []);
 
   const handleComponentSelection = (component) => {
@@ -113,27 +176,24 @@ const NodeCreation = ({ updateNodes, changeView }) => {
     }
   };
 
-  const createNode = async () => {
+  const handleComponentsUpdate = async () => {
     try {
       if (rainSensor.length === 1) {
         nodeComponents.push(rainSensor[0]);
       }
 
-      await nodesService.create(
+      await nodesService.updateComponents(
         selectedWorkspace.workspace_id,
+        selectedNode.node_id,
         {
-          nodeName: name,
-          nodeType: nodeTypes.find((t) => t.type === type).node_type_id,
           nodeComponents: nodeComponents.map((c) => c.component_id),
           nodeVariables: nodeVariables.map(
             (v) => ({ component_id: v.component_id, variable_id: v.variable_id }),
           ),
-          nodeLocation: location.location_id,
-          nodeVisibility: !(visibility === 'Privado'),
         },
       );
 
-      updateNodes();
+      updateCurrentComponents();
       setView('NodeSuccessMessage');
     } catch (err) {
       notifications.error(err);
@@ -145,41 +205,17 @@ const NodeCreation = ({ updateNodes, changeView }) => {
       case 'NodeSuccessMessage':
         return (
           <NodeSuccessMessage
-            title="Nodo Creado Exitosamente"
+            title="Actualizacion Exitosa"
             includeCodeMessage
-            close={() => changeView()}
+            close={() => changeView('ManagementMenu')}
           />
         );
-      case 'NewNodeOverview':
+      case 'NewComponentsOverview':
         return (
-          <NewNodeOverview
-            name={name}
-            type={type}
-            visibility={visibility}
-            location={location}
+          <NewComponentsOverview
             nodeComponents={nodeComponents}
             nodeVariables={nodeVariables}
-            createNode={() => createNode()}
-            leftButtonClick={() => setView('VisibilitySelection')}
-          />
-        );
-      case 'VisibilitySelection':
-        return (
-          <VisibilitySelection
-            visibility={visibility}
-            setVisibility={setVisibility}
-            rightButtonClick={() => setView('NewNodeOverview')}
-            leftButtonClick={() => setView('LocationSelection')}
-          />
-        );
-      case 'LocationSelection':
-        return (
-          <LocationSelection
-            locations={locations}
-            updateLocations={() => getLocations()}
-            selectedLocation={location}
-            setLocation={setLocation}
-            rightButtonClick={() => setView('VisibilitySelection')}
+            handleComponentsUpdate={handleComponentsUpdate}
             leftButtonClick={() => setView('OtherSelection')}
           />
         );
@@ -191,7 +227,7 @@ const NodeCreation = ({ updateNodes, changeView }) => {
             updateComponents={() => getComponents()}
             selectedComponents={nodeComponents}
             selectComponent={(component) => handleComponentSelection(component)}
-            rightButtonClick={() => setView('LocationSelection')}
+            rightButtonClick={() => setView('NewComponentsOverview')}
             leftButtonClick={() => setView('ScreenSelection')}
           />
         );
@@ -243,7 +279,7 @@ const NodeCreation = ({ updateNodes, changeView }) => {
             leftButtonClick={() => setView('BoardSelection')}
           />
         );
-      case 'BoardSelection':
+      default:
         return (
           <ComponentSelection
             text="Selecionar Placas"
@@ -252,17 +288,6 @@ const NodeCreation = ({ updateNodes, changeView }) => {
             selectedComponents={nodeComponents}
             selectComponent={(component) => handleComponentSelection(component)}
             rightButtonClick={() => setView('SensorSelection')}
-            leftButtonClick={() => setView(null)}
-          />
-        );
-      default:
-        return (
-          <NodeInformation
-            name={name}
-            setName={setName}
-            type={type}
-            setType={setType}
-            rightButtonClick={() => setView('BoardSelection')}
           />
         );
     }
@@ -272,9 +297,9 @@ const NodeCreation = ({ updateNodes, changeView }) => {
     <div className="flex h-full w-full flex-col rounded-lg bg-white p-5 shadow">
       <div className="flex grow flex-col">
         <Heading
-          text="Agregar Nodo"
+          text="Actualizar Componentes"
           hasButton
-          onButtonClick={() => changeView()}
+          onButtonClick={() => changeView('ManagementMenu')}
         />
 
         <Divider />
@@ -285,4 +310,4 @@ const NodeCreation = ({ updateNodes, changeView }) => {
   );
 };
 
-export default NodeCreation;
+export default UpdateComponents;

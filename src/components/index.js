@@ -9,10 +9,12 @@ import Label from 'src/components/Label';
 import LocationTakenLabel from 'src/components/LocationTakenLabel';
 import Map from 'src/components/Map';
 import MapViewButton from 'src/components/MapViewButton';
-import OptionButton from 'src/components/OptionButton';
 import SelectionBar from 'src/components/SelectionBar';
 import TextAreaInput from 'src/components/TextAreaInput';
 import TextInput from 'src/components/TextInput';
+import ToggleButton from 'src/components/ToggleButton';
+import ToggleNodeType from 'src/components/ToggleNodeType';
+import ToggleNodeVisibility from 'src/components/ToggleNodeVisibility';
 
 export {
   BackdropFilter,
@@ -26,8 +28,10 @@ export {
   LocationTakenLabel,
   Map,
   MapViewButton,
-  OptionButton,
   SelectionBar,
   TextAreaInput,
   TextInput,
+  ToggleButton,
+  ToggleNodeType,
+  ToggleNodeVisibility,
 };

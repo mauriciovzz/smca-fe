@@ -22,6 +22,10 @@ const Nodes = () => {
     try {
       const response = await nodesService.getAll(selectedWorkspace.workspace_id);
       setNodes(response);
+
+      if (selectedNode) {
+        setSelectedNode(response.find((n) => n.node_id === selectedNode.node_id));
+      }
     } catch (err) {
       notifications.error(err);
     }

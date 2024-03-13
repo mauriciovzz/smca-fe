@@ -186,7 +186,7 @@ const ComponentManagement = ({ selectedComponent, updateComponents, changeView }
                           </div>
 
                           <div className="flex h-full w-full space-x-5">
-                            <Badge value={componentType} changeWidht="w-full" />
+                            <Badge value={componentType} width="w-full" />
                             <DatasheetButton link={datasheetLink} />
                           </div>
                         </div>
@@ -206,7 +206,7 @@ const ComponentManagement = ({ selectedComponent, updateComponents, changeView }
                           </div>
 
                           <div className="flex h-full w-[125px] flex-col justify-between pl-5">
-                            <Badge value={componentType} changeWidht="w-full" />
+                            <Badge value={componentType} width="w-full" />
                             <DatasheetButton link={datasheetLink} />
                           </div>
                         </div>
@@ -245,7 +245,7 @@ const ComponentManagement = ({ selectedComponent, updateComponents, changeView }
                               </div>
                             </div>
                             <div className="w-fit">
-                              <Badge value={variable.type} changeHeight="h-[20px]" />
+                              <Badge value={variable.type} height="h-[20px]" />
                             </div>
                           </button>
                         </li>

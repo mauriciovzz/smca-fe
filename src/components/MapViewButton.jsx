@@ -2,11 +2,14 @@ import { React } from 'react';
 
 import { nodeIcon } from 'src/assets';
 
-const MapViewButton = ({ text, onClick }) => (
+const MapViewButton = ({ text, onClick, padding }) => (
   <button
     type="button"
     onClick={() => onClick()}
-    className="flex items-center justify-center space-x-2 pt-5"
+    className={`
+      ${!padding ? 'pt-2.5' : padding}
+      flex items-center justify-center space-x-2 pt-2.5
+    `}
   >
     <div className="text-sm font-medium">
       {text}

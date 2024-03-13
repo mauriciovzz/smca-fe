@@ -1,21 +1,14 @@
 import { React } from 'react';
 
-import { control } from 'src/assets';
 import { Divider, Heading } from 'src/components';
 
-const OverviewButton = ({ title, isFirst, onClick }) => (
+const OverviewButton = ({ title, onClick }) => (
   <button
     type="button"
-    className={`${isFirst ? 'pb-5' : 'py-5'} flex justify-between hover:bg-background`}
+    className="flex h-full w-full items-center justify-center rounded-lg border p-2.5 text-lg font-medium shadow hover:bg-background"
     onClick={() => onClick()}
   >
-    <div className="self-center font-semibold">{title}</div>
-
-    <img
-      src={control}
-      alt="control arrow"
-      className="h-[28px] w-[28px] rotate-180 self-center"
-    />
+    {title}
   </button>
 );
 
@@ -29,10 +22,13 @@ const ManagementMenu = ({ changeView }) => (
 
     <Divider />
 
-    <div className="flex grow flex-col divide-y">
+    <div className="grid grow grid-cols-2 grid-rows-3 gap-5">
+      <OverviewButton
+        title="Actualizar Nombre"
+        onClick={() => changeView('UpdateName')}
+      />
       <OverviewButton
         title="Actualizar Estado"
-        isFirst
         onClick={() => changeView('UpdateState')}
       />
       <OverviewButton

@@ -4,7 +4,7 @@ import { useOutletContext } from 'react-router-dom';
 
 import { addUserIcon } from 'src/assets';
 import {
-  Badge, Button, Divider, Heading, Label, TextInput,
+  Badge, Button, Divider, Heading, Label, TextInput, ToggleButton,
 } from 'src/components';
 import workspacesService from 'src/services/workspaces';
 import notifications from 'src/utils/notifications';
@@ -71,7 +71,6 @@ const MemberList = ({ members, selectMember, changeView }) => {
                         )
                       }
                     </button>
-
                   </li>
                 ))
             }
@@ -148,20 +147,20 @@ const Member = ({ selectedMember, updateMembers, changeView }) => {
           </div>
 
           <div className="py-5 text-left">
-            <Label text="Rol" />
-            <div className="flex h-fit w-full overflow-hidden rounded-2xl border-2 bg-white font-medium ">
-              <div
-                className={`${!selectedMember.is_admin ? 'rounded-r-2xl bg-main text-white' : 'bg-white text-slate-400'} flex w-1/2 flex-col items-center justify-center p-1 text-center`}
-              >
-                Usuario
-              </div>
-
-              <div
-                className={`${selectedMember.is_admin ? 'rounded-l-2xl bg-main text-white' : 'bg-white text-slate-400'} flex w-1/2 flex-col items-center justify-center p-1 text-center`}
-              >
-                Administrador
-              </div>
-            </div>
+            <ToggleButton
+              labelText="rol"
+              selectedOption={selectedMember.is_admin}
+              leftOption={{
+                title: 'Usuario',
+                value: false,
+                color: 'bg-main',
+              }}
+              rigthOption={{
+                title: 'Administrador',
+                value: true,
+                color: 'bg-main',
+              }}
+            />
           </div>
         </div>
       </div>

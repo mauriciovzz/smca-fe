@@ -170,7 +170,7 @@ const ComponentCreation = ({ updateComponents, changeView }) => {
                               </div>
                             </div>
                             <div className="w-fit">
-                              <Badge value={variable.type} changeHeight="h-[20px]" />
+                              <Badge value={variable.type} height="h-[20px]" />
                             </div>
                           </button>
                         </li>

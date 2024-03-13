@@ -5,9 +5,12 @@ import { useOutletContext } from 'react-router-dom';
 import nodesService from 'src/services/nodes';
 import notifications from 'src/utils/notifications';
 
+import DeleteNode from './NodeManagementSections/DeleteNode';
 import ManagementMenu from './NodeManagementSections/ManagementMenu';
 import NodeOverview from './NodeManagementSections/NodeOverview';
+import UpdateComponents from './NodeManagementSections/UpdateComponents';
 import UpdateLocation from './NodeManagementSections/UpdateLocation';
+import UpdateName from './NodeManagementSections/UpdateName';
 import UpdateState from './NodeManagementSections/UpdateState';
 import UpdateType from './NodeManagementSections/UpdateType';
 import UpdateVisibility from './NodeManagementSections/UpdateVisibility';
@@ -19,7 +22,7 @@ const NodeManagement = ({ selectedNode, updateNodes, changeView }) => {
 
   const [nodeComponents, setNodeComponents] = useState([]);
 
-  const getComponents = async () => {
+  const getNodeComponents = async () => {
     try {
       const response = await nodesService.getComponents(
         selectedWorkspace.workspace_id,
@@ -32,37 +35,77 @@ const NodeManagement = ({ selectedNode, updateNodes, changeView }) => {
   };
 
   useEffect(() => {
-    getComponents();
+    getNodeComponents();
   }, []);
+
+  const getCurrentVariables = () => {
+    const sensors = nodeComponents.filter((nc) => nc.type === 'Sensor');
+    const nodeVariables = [];
+
+    sensors.forEach((s) => s.variables.forEach((v) => nodeVariables.push(v)));
+    return nodeVariables;
+  };
 
   const renderView = () => {
     switch (view) {
+      case 'UpdateName':
+        return (
+          <UpdateName
+            selectedNode={selectedNode}
+            updateNodes={updateNodes}
+            changeView={(value) => setView(value)}
+          />
+        );
       case 'UpdateState':
         return (
           <UpdateState
-            nodeState={selectedNode.state}
+            selectedNode={selectedNode}
+            updateNodes={updateNodes}
             changeView={(value) => setView(value)}
           />
         );
       case 'UpdateType':
         return (
           <UpdateType
-            nodeType={selectedNode.type}
+            selectedNode={selectedNode}
+            updateNodes={updateNodes}
             changeView={(value) => setView(value)}
           />
         );
       case 'UpdateVisibility':
         return (
           <UpdateVisibility
-            nodeVisibility={selectedNode.is_visible}
+            selectedNode={selectedNode}
+            updateNodes={updateNodes}
             changeView={(value) => setView(value)}
           />
         );
       case 'UpdateLocation':
         return (
           <UpdateLocation
-            nodeLocation={selectedNode.location_id}
+            selectedNode={selectedNode}
+            updateNodes={updateNodes}
             changeView={(value) => setView(value)}
+          />
+        );
+      case 'UpdateComponents':
+        return (
+          <UpdateComponents
+            selectedNode={selectedNode}
+            currentComponents={nodeComponents.filter((nc) => nc.type !== 'Sensor de Lluvia')}
+            currentRainSensor={nodeComponents.filter((nc) => nc.type === 'Sensor de Lluvia')}
+            currentVariables={getCurrentVariables()}
+            updateCurrentComponents={() => getNodeComponents()}
+            changeView={(value) => setView(value)}
+          />
+        );
+      case 'DeleteNode':
+        return (
+          <DeleteNode
+            selectedNode={selectedNode}
+            updateNodes={updateNodes}
+            changeView={(value) => setView(value)}
+            resetView={() => changeView()}
           />
         );
       case 'ManagementMenu':

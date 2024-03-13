@@ -133,7 +133,7 @@ const WorkspaceList = ({
             onClick={() => changeView('WorkspaceCreation')}
           >
             <p className="h-[25px] w-full overflow-hidden break-words font-semibold text-white">
-              Agregar Espacio de Trabajo
+              Agregar Espacio
             </p>
             <img
               src={addIconWhite}

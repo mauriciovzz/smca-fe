@@ -27,37 +27,40 @@ const create = async (workspaceId, newNode) => {
   return request.data;
 };
 
-const update = async (workspaceid, locationId, newData) => {
-  const request = await axios.put(`${baseUrl}/${workspaceid}/${locationId}`, newData);
+const updateName = async (workspaceid, nodeId, newName) => {
+  const request = await axios.put(`${baseUrl}/updateName/${workspaceid}/${nodeId}`, newName);
   return request.data;
 };
 
-const remove = async (workspaceid, locationId) => {
-  const request = await axios.delete(`${baseUrl}/${workspaceid}/${locationId}`);
+const updateState = async (workspaceid, nodeId, stateId) => {
+  const request = await axios.put(`${baseUrl}/updateState/${workspaceid}/${nodeId}`, stateId);
   return request.data;
 };
 
-// const getActiveNodes = async () => {
-//   const request = await axios.get(`${baseUrl}/active`);
-//   return request.data;
-// };
+const updateType = async (workspaceid, nodeId, typeId) => {
+  const request = await axios.put(`${baseUrl}/updateType/${workspaceid}/${nodeId}`, typeId);
+  return request.data;
+};
 
-// const getAllNodes = async () => {
-//   const request = await axios.get(`${baseUrl}/all`);
-//   return request.data;
-// };
+const updateVisibility = async (workspaceid, nodeId, newVisibility) => {
+  const request = await axios.put(`${baseUrl}/updateVisibility/${workspaceid}/${nodeId}`, newVisibility);
+  return request.data;
+};
 
-// const getReadingAverages = async (node, date, variableType) => {
-//   const request = await axios.get(`${baseUrl}/${node.node_type}/
-// ${node.node_id}/${node.lat}/${node.long}/${date}/${variableType}`);
-//   return request.data;
-// };
+const updateLocation = async (workspaceid, nodeId, newLocation) => {
+  const request = await axios.put(`${baseUrl}/updateLocation/${workspaceid}/${nodeId}`, newLocation);
+  return request.data;
+};
 
-// const getAveragesRange = async (node, date, variableType) => {
-//   const request = await axios.get(`${baseUrl}/${node.node_type}/${node.node_id}
-// /${node.lat}/${ node.long } /${date}/${ variableType } /range`);
-//   return request.data;
-// };
+const updateComponents = async (workspaceid, nodeId, updatedComponents) => {
+  const request = await axios.put(`${baseUrl}/updateComponents/${workspaceid}/${nodeId}`, updatedComponents);
+  return request.data;
+};
+
+const remove = async (workspaceid, nodeId) => {
+  const request = await axios.delete(`${baseUrl}/${workspaceid}/${nodeId}`);
+  return request.data;
+};
 
 export default {
   getTypes,
@@ -65,11 +68,11 @@ export default {
   getAll,
   getComponents,
   create,
+  updateName,
+  updateState,
+  updateType,
+  updateVisibility,
+  updateLocation,
+  updateComponents,
   remove,
-  update,
-
-  // getActiveNodes,
-  // getAllNodes,
-  // getReadingAverages,
-  // getAveragesRange,
 };
