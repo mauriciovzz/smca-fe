@@ -17,6 +17,21 @@ const getAll = async (workspaceId) => {
   return request.data;
 };
 
+const getPublicNodes = async () => {
+  const request = await axios.get(`${baseUrl}/publicNodes`);
+  return request.data;
+};
+
+const getAccountNodes = async () => {
+  const request = await axios.get(`${baseUrl}/accountNodes`);
+  return request.data;
+};
+
+const getWorkspaceNodes = async (workspaceId) => {
+  const request = await axios.get(`${baseUrl}/workspaceNodes/${workspaceId}`);
+  return request.data;
+};
+
 const getComponents = async (workspaceId, nodeId) => {
   const request = await axios.get(`${baseUrl}/${workspaceId}/${nodeId}`);
   return request.data;
@@ -66,6 +81,9 @@ export default {
   getTypes,
   getStates,
   getAll,
+  getPublicNodes,
+  getAccountNodes,
+  getWorkspaceNodes,
   getComponents,
   create,
   updateName,

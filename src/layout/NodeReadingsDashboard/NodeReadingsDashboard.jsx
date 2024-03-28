@@ -1,15 +1,11 @@
-import {
-  React,
-  useState,
-} from 'react';
+import { React, useState, useEffect } from 'react';
 
 import Calendar from 'react-calendar';
 import './Calendar.css';
 
-import {
-  close,
-  refresh,
-} from 'src/assets';
+import { close, refresh } from 'src/assets';
+import readingsService from 'src/services/readings';
+import notifications from 'src/utils/notifications';
 
 import CameraWidget from './Widgets/CameraWidget';
 import EnviromentalWidget from './Widgets/EnviromentalWidget';
@@ -19,7 +15,10 @@ import NodeInfoWidget from './Widgets/NodeInfoWidget';
 const dayNames = ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'];
 const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
-const Modal = ({ selectedNode, setIsOpen }) => {
+const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
+  const [isPageLoading, setIsPageLoading] = useState(true);
+
+  const [dayReadings, setDayReadings] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   const onChange = (nextValue) => {
@@ -45,15 +44,74 @@ const Modal = ({ selectedNode, setIsOpen }) => {
     return `${hours} ${ampm}`;
   };
 
-  return (
-    <div className="absolute z-40 h-full w-full bg-white/25 p-4 backdrop-blur-sm">
+  const parseAverages = (dayAverages) => {
+    const newArray = [];
+
+    for (let i = 1; i <= 24; i += 1) {
+      const match = dayAverages.find(
+        (reading) => reading.end_hour === i,
+      );
+
+      if (i === 6 || i === 18) {
+        newArray.push(
+          {
+            time: (i === 6) ? 'sunrise' : 'sunset',
+            value: null,
+          },
+        );
+      }
+
+      newArray.push(
+        {
+          time: i,
+          value: (match) ? match.average : null,
+        },
+      );
+    }
+
+    return newArray;
+  };
+
+  const getPublicNodeReadings = async () => {
+    try {
+      const response = await readingsService.getPublicNodeReadings(
+        selectedNode.node_id,
+        selectedDate.toISOString().split('T')[0],
+      );
+
+      setDayReadings(response.map((v) => ({ ...v, dayAverages: parseAverages(v.dayAverages) })));
+      setIsPageLoading(!isPageLoading);
+    } catch (err) {
+      notifications.error(err);
+    }
+  };
+
+  const getPrivateNodeReadings = async () => {
+    try {
+      const response = await readingsService.getPrivateNodeReadings(
+        selectedNode.node_id,
+        selectedDate.toISOString().split('T')[0],
+      );
+
+      setDayReadings(response.map((v) => ({ ...v, dayAverages: parseAverages(v.dayAverages) })));
+      setIsPageLoading(!isPageLoading);
+    } catch (err) {
+      notifications.error(err);
+    }
+  };
+
+  useEffect(() => {
+    (selectedNode.is_visible) ? getPublicNodeReadings() : getPrivateNodeReadings();
+  }, []);
+
+  return (!isPageLoading) && (
+    <div className="absolute z-[100] h-full w-full bg-white/25 p-5 backdrop-blur-sm">
 
       {/* Desktop */}
       <div className="hidden h-full w-full sm:flex">
         <div className="grid h-full w-full  grid-cols-12 grid-rows-3 gap-4">
 
-          {/* Info Widget */}
-          <div className={`relative ${(selectedNode.camera) ? 'col-span-4' : 'col-span-6'} row-span-1`}>
+          <div className={`${(selectedNode.camera) ? 'col-span-4' : 'col-span-6'} row-span-1`}>
             <NodeInfoWidget selectedNode={selectedNode} />
           </div>
 
@@ -128,7 +186,8 @@ const Modal = ({ selectedNode, setIsOpen }) => {
           {/* Meteorological Widget */}
           <div className="relative col-span-6 col-start-1 row-span-2">
             <MeteorologicalWidget
-              selectedNode={selectedNode}
+              dayReadings={dayReadings.filter((dr) => dr.type === 'Meteorológica')}
+              hasRainSensor={selectedNode.rain}
               selectedDate={selectedDate}
             />
           </div>
@@ -136,7 +195,7 @@ const Modal = ({ selectedNode, setIsOpen }) => {
           {/* Envormental Widget */}
           <div className="relative col-span-6 row-span-2">
             <EnviromentalWidget
-              selectedNode={selectedNode}
+              dayReadings={dayReadings.filter((dr) => dr.type === 'Ambiental')}
               selectedDate={selectedDate}
             />
           </div>
@@ -243,4 +302,4 @@ const Modal = ({ selectedNode, setIsOpen }) => {
   );
 };
 
-export default Modal;
+export default nodeReadingsDashboard;

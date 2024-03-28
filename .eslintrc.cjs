@@ -31,6 +31,7 @@ module.exports = {
     'react/no-unstable-nested-components': [1, { allowAsProps: true }],
     'react/jsx-props-no-spreading': [0],
     'no-param-reassign': [2, { props: false }],
+    'no-unused-expressions': [1, { allowTernary: true }],
     'import/order': [
       2,
       {

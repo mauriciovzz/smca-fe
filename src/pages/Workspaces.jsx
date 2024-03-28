@@ -115,7 +115,7 @@ const WorkspaceList = ({
     <Divider />
 
     <div className="relative h-full">
-      <ul className={`small-scrollbar absolute flex h-full w-full flex-col justify-start space-y-5 overflow-y-auto rounded-lg border bg-background p-5 shadow
+      <ul className={`small-scrollbar absolute flex h-full w-full flex-col justify-start space-y-5 overflow-y-scroll rounded-lg border bg-background p-5 shadow
                     sm:inline-grid sm:grid-cols-layout sm:justify-center sm:gap-5 sm:space-y-0`}
       >
         {
@@ -227,7 +227,7 @@ const WorkspaceInvitations = ({
       <Divider />
 
       <div className="relative h-full w-full space-y-5 overflow-hidden">
-        <ul className="small-scrollbar absolute flex h-full w-full flex-col overflow-hidden overflow-y-auto rounded-lg border bg-background">
+        <ul className="small-scrollbar absolute flex h-full w-full flex-col overflow-hidden overflow-y-scroll rounded-lg border bg-background">
           {
             (invitations.length !== 0)
               ? (

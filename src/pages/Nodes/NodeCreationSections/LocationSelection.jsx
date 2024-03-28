@@ -68,7 +68,7 @@ const LocationSelection = ({
 
       <div className="flex h-full w-full flex-col">
         <div className="relative h-full w-full">
-          <ul className="small-scrollbar absolute flex h-full w-full flex-col overflow-hidden overflow-y-auto rounded-lg border bg-background">
+          <ul className="small-scrollbar absolute flex h-full w-full flex-col overflow-hidden overflow-y-scroll rounded-lg border bg-background">
             {
               locations
                 .map((location) => (

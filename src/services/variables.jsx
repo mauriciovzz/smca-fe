@@ -7,6 +7,11 @@ const getTypes = async () => {
   return request.data;
 };
 
+const getValueTypes = async () => {
+  const request = await axios.get(`${baseUrl}/getValueTypes`);
+  return request.data;
+};
+
 const getAll = async (workspaceId) => {
   const request = await axios.get(`${baseUrl}/${workspaceId}`);
   return request.data;
@@ -29,6 +34,7 @@ const remove = async (workspaceid, variableId) => {
 
 export default {
   getTypes,
+  getValueTypes,
   getAll,
   create,
   update,

@@ -23,6 +23,13 @@ const Variables = () => {
     try {
       const response = await variablesService.getAll(selectedWorkspace.workspace_id);
       setVariables(response);
+
+      if (selectedVariable) {
+        const updatedVariable = response.find(
+          (r) => r.variable_id === selectedVariable.variable_id,
+        );
+        setSelectedVariable(updatedVariable);
+      }
     } catch (err) {
       notifications.error(err);
     }

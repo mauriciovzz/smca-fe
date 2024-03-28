@@ -1,14 +1,15 @@
-import { React, useState, useEffect } from 'react';
-
-import { useOutletContext } from 'react-router-dom';
+import {
+  React, useState, useEffect, useContext,
+} from 'react';
 
 import { Map } from 'src/components';
+import { AuthContext } from 'src/context/authProvider';
 import { NodeReadingsDashboard } from 'src/layout';
 import nodesService from 'src/services/nodes';
 import notifications from 'src/utils/notifications';
 
-const WorkspaceMap = () => {
-  const { selectedWorkspace } = useOutletContext();
+const Home = () => {
+  const { checkLocalStorage } = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
 
   const [nodes, setNodes] = useState([]);
@@ -19,9 +20,18 @@ const WorkspaceMap = () => {
     setSelectedNode(node);
   };
 
-  const getWorkspaceNodes = async () => {
+  const getPublicNodes = async () => {
     try {
-      const response = await nodesService.getWorkspaceNodes(selectedWorkspace.workspace_id);
+      const response = await nodesService.getPublicNodes();
+      setNodes(response);
+    } catch (err) {
+      notifications.error(err);
+    }
+  };
+
+  const getAccountNodes = async () => {
+    try {
+      const response = await nodesService.getAccountNodes();
       setNodes(response);
     } catch (err) {
       notifications.error(err);
@@ -29,7 +39,8 @@ const WorkspaceMap = () => {
   };
 
   useEffect(() => {
-    getWorkspaceNodes();
+    const user = checkLocalStorage();
+    (user) ? getAccountNodes() : getPublicNodes();
   }, []);
 
   return (
@@ -47,14 +58,12 @@ const WorkspaceMap = () => {
           </>
         )}
         markersQuantity="many"
-        zoomControl={window.innerWidth >= 640}
+        zoomControl
       />
 
       {isOpen && <NodeReadingsDashboard selectedNode={selectedNode} setIsOpen={setIsOpen} />}
-
     </>
-
   );
 };
 
-export default WorkspaceMap;
+export default Home;

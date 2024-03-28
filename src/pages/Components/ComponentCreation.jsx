@@ -149,7 +149,7 @@ const ComponentCreation = ({ updateComponents, changeView }) => {
                 <Label text="Variables del componente" />
 
                 <div className="relative h-full w-full">
-                  <ul className="small-scrollbar absolute flex h-full w-full flex-col overflow-hidden overflow-y-auto rounded-lg border bg-background">
+                  <ul className="small-scrollbar absolute flex h-full w-full flex-col overflow-hidden overflow-y-scroll rounded-lg border bg-background">
                     {
                       variables.map((variable) => (
                         <li

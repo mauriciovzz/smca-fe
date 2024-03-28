@@ -48,7 +48,7 @@ const NodeOverview = ({
 
           <div className="flex grow flex-col">
             <div className="relative flex grow overflow-hidden rounded-lg border">
-              <ul className="small-scrollbar absolute flex h-full w-full flex-col overflow-hidden overflow-y-auto bg-background">
+              <ul className="small-scrollbar absolute flex h-full w-full flex-col overflow-hidden overflow-y-scroll bg-background">
                 {
                   nodeComponents
                     .map((component) => (

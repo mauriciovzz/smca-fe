@@ -15,9 +15,34 @@ import UpdateState from './NodeManagementSections/UpdateState';
 import UpdateType from './NodeManagementSections/UpdateType';
 import UpdateVisibility from './NodeManagementSections/UpdateVisibility';
 
+const LocationInMap = ({ coordinates, isScreenSM, changeView }) => (
+  <div className="flex h-full w-full flex-col space-y-5 overflow-hidden rounded-lg bg-white p-5 shadow">
+    <div className="relative flex h-full w-full overflow-hidden rounded-lg shadow">
+      <Map
+        markersQuantity="oneToShow"
+        coordinates={coordinates}
+        isNotFullScreen
+      />
+    </div>
+    {
+      (isScreenSM) && (
+        <div className="h-fit w-full">
+          <Button
+            text="Regresar"
+            typeIsButton
+            onClick={() => changeView()}
+            color="blue"
+          />
+        </div>
+      )
+    }
+  </div>
+);
+
 const NodeManagement = ({ selectedNode, updateNodes, changeView }) => {
   const { selectedWorkspace } = useOutletContext();
   const [view, setView] = useState(null);
+  const [isMapOpen, setIsMapOpen] = useState(false);
   const isScreenSM = (window.innerWidth <= 640);
 
   const [nodeComponents, setNodeComponents] = useState([]);
@@ -128,9 +153,9 @@ const NodeManagement = ({ selectedNode, updateNodes, changeView }) => {
               />
             )
             : (
-              <div className="flex grow flex-col items-center justify-center rounded-lg bg-white font-medium shadow">
-                <span>Selecciona una opción para realizar cambios.</span>
-              </div>
+              <LocationInMap
+                coordinates={[selectedNode.lat, selectedNode.long]}
+              />
             )
         );
     }

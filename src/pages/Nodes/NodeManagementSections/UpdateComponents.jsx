@@ -36,7 +36,7 @@ const NewComponentsOverview = ({
       <div className="flex h-full w-full flex-col space-y-2.5">
         <div className="flex grow flex-col">
           <div className="relative flex grow overflow-hidden rounded-lg border">
-            <ul className="small-scrollbar absolute flex h-full w-full flex-col overflow-hidden overflow-y-auto bg-background">
+            <ul className="small-scrollbar absolute flex h-full w-full flex-col overflow-hidden overflow-y-scroll bg-background">
               {
                 nodeComponents
                   .sort((a, b) => (

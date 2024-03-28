@@ -19,7 +19,7 @@ const ToggleButton = ({
         // eslint-disable-next-line no-unneeded-ternary
         disabled={leftOption.onClick ? false : true}
       >
-        <div>
+        <div className="text-sm">
           {leftOption.title}
         </div>
         {
@@ -45,7 +45,7 @@ const ToggleButton = ({
         // eslint-disable-next-line no-unneeded-ternary
         disabled={rigthOption.onClick ? false : true}
       >
-        <div>
+        <div className="text-sm">
           {rigthOption.title}
         </div>
         {

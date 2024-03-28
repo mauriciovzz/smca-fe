@@ -15,15 +15,15 @@ const MarkersMap = ({
       <Map
         markerList={nodes}
         onMarkerClick={selectNode}
-        markerPopup={
-          (node) => (
-            <>
-              <b>{node.node_name}</b>
-              <br />
-              {node.address}
-            </>
-          )
-        }
+        markerPopup={(node) => (
+          <>
+            <b>
+              {node.node_name}
+            </b>
+            <br />
+            {node.location_name}
+          </>
+        )}
         markersQuantity="many"
         zoomControl
         isNotFullScreen
@@ -77,7 +77,7 @@ const NodeList = ({ nodes, selectNode, changeView }) => {
           <Divider />
 
           <div className="relative h-full w-full">
-            <ul className="small-scrollbar absolute flex h-full w-full flex-col overflow-hidden overflow-y-auto rounded-lg border bg-background">
+            <ul className="small-scrollbar absolute flex h-full w-full flex-col overflow-hidden overflow-y-scroll rounded-lg border bg-background">
               {
                 nodes
                   .map((node) => (
@@ -122,7 +122,7 @@ const NodeList = ({ nodes, selectNode, changeView }) => {
       {
         (!isScreenSM) && (
           <MarkersMap
-            nodes={nodes.filter((n) => n.location_id)}
+            nodes={nodes}
             selectNode={selectNode}
           />
         )
@@ -132,7 +132,7 @@ const NodeList = ({ nodes, selectNode, changeView }) => {
         (isScreenSM) && (isMapOpen) && (
           <div className="absolute h-full w-full">
             <MarkersMap
-              nodes={nodes.filter((n) => n.location_id)}
+              nodes={nodes}
               selectNode={selectNode}
               isScreenSM={isScreenSM}
               changeView={() => setIsMapOpen(false)}

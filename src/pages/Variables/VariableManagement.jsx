@@ -14,17 +14,19 @@ const VariableManagement = ({ selectedVariable, updateVariables, changeView }) =
   const [isEditable, setIsEditable] = useState(false);
   const [isConDiaOpen, setIsConDiaOpen] = useState(false);
 
+  const [variableType, setVariableType] = useState(selectedVariable.type);
+  const [variableValueType, setVariableValueType] = useState(selectedVariable.value_type);
   const [name, setName] = useState(selectedVariable.name);
   const [unit, setUnit] = useState(selectedVariable.unit);
-  const [variableType, setVariableType] = useState(selectedVariable.type);
 
   const setData = () => {
     setIsEditable(false);
     setIsConDiaOpen(false);
 
+    setVariableType(selectedVariable.type);
+    setVariableValueType(selectedVariable.value_type);
     setName(selectedVariable.name);
     setUnit(selectedVariable.unit);
-    setVariableType(selectedVariable.type);
   };
 
   useEffect(() => {
@@ -33,10 +35,16 @@ const VariableManagement = ({ selectedVariable, updateVariables, changeView }) =
 
   const handleUpdate = async () => {
     try {
+      const requestData = { name };
+
+      if (variableValueType === 'Numérico') {
+        requestData.unit = unit;
+      }
+
       const response = await variablesService.update(
         selectedWorkspace.workspace_id,
         selectedVariable.variable_id,
-        { name, unit },
+        requestData,
       );
 
       notifications.success(response);
@@ -74,6 +82,20 @@ const VariableManagement = ({ selectedVariable, updateVariables, changeView }) =
         <Divider />
 
         <form className="flex flex-col gap-5">
+          <div className="flex h-fit w-full flex-col">
+            <Label text="Tipo de Variable" />
+            <div className={`${(variableType === 'Meteorológica') ? 'bg-meteorological' : 'bg-enviromental'} flex h-[38px] w-full items-center justify-center rounded-xl font-medium text-white`}>
+              {variableType}
+            </div>
+          </div>
+
+          <div className="flex h-fit w-full flex-col">
+            <Label text="Tipo de Valor" />
+            <div className="flex h-[38px] w-full items-center justify-center rounded-xl bg-indoor font-medium text-white">
+              {variableValueType}
+            </div>
+          </div>
+
           <TextInput
             id="name"
             type="text"
@@ -83,22 +105,18 @@ const VariableManagement = ({ selectedVariable, updateVariables, changeView }) =
             disabled={!isEditable}
           />
 
-          <TextInput
-            id="unit"
-            type="text"
-            labelText="Unidad"
-            value={unit}
-            setValue={setUnit}
-            disabled={!isEditable}
-          />
-
-          <div className="flex h-fit w-full flex-col">
-            <Label text="Tipo" />
-            <div className={`${(variableType === 'Meteorológica') ? 'bg-meteorological' : 'bg-enviromental'} flex h-[38px] w-full items-center justify-center rounded-xl font-medium text-white`}>
-              {variableType}
-            </div>
-          </div>
-
+          {
+            (variableValueType === 'Numérico') && (
+              <TextInput
+                id="unit"
+                type="text"
+                labelText="Unidad"
+                value={unit}
+                setValue={setUnit}
+                disabled={!isEditable}
+              />
+            )
+          }
         </form>
       </div>
 
