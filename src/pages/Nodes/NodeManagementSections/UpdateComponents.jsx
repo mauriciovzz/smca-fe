@@ -207,7 +207,7 @@ const UpdateComponents = ({
           <NodeSuccessMessage
             title="Actualizacion Exitosa"
             includeCodeMessage
-            close={() => changeView('ManagementMenu')}
+            close={() => changeView(null)}
           />
         );
       case 'NewComponentsOverview':
@@ -299,7 +299,7 @@ const UpdateComponents = ({
         <Heading
           text="Actualizar Componentes"
           hasButton
-          onButtonClick={() => changeView('ManagementMenu')}
+          onButtonClick={() => changeView(null)}
         />
 
         <Divider />

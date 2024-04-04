@@ -43,7 +43,7 @@ const UpdateType = ({ selectedNode, updateNodes, changeView }) => {
       <Heading
         text="Actualizar Tipo"
         hasButton
-        onButtonClick={() => changeView('ManagementMenu')}
+        onButtonClick={() => changeView(null)}
       />
 
       <Divider />

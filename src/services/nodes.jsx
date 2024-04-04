@@ -37,6 +37,17 @@ const getComponents = async (workspaceId, nodeId) => {
   return request.data;
 };
 
+const getConfigFile = async (workspaceId, nodeId) => {
+  const request = await axios.get(`${baseUrl}/getConfigFile/${workspaceId}/${nodeId}`, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    responseType: 'arraybuffer',
+  });
+
+  return request.data;
+};
+
 const create = async (workspaceId, newNode) => {
   const request = await axios.post(`${baseUrl}/${workspaceId}`, newNode);
   return request.data;
@@ -85,6 +96,7 @@ export default {
   getAccountNodes,
   getWorkspaceNodes,
   getComponents,
+  getConfigFile,
   create,
   updateName,
   updateState,

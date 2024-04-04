@@ -33,7 +33,7 @@ const UpdateName = ({ selectedNode, updateNodes, changeView }) => {
       <Heading
         text="Actualizar Nombre"
         hasButton
-        onButtonClick={() => changeView('ManagementMenu')}
+        onButtonClick={() => changeView(null)}
       />
 
       <Divider />

@@ -93,7 +93,7 @@ const UpdateState = ({ selectedNode, updateNodes, changeView }) => {
       <Heading
         text="Actualizar Estado"
         hasButton
-        onButtonClick={() => changeView('ManagementMenu')}
+        onButtonClick={() => changeView(null)}
       />
 
       <Divider />

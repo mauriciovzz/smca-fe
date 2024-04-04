@@ -200,7 +200,7 @@ const LocationSelection = ({ selectedNode, updateNodes, changeView }) => {
         return (
           <NodeSuccessMessage
             title="Actualizacion Exitosa"
-            close={() => changeView('ManagementMenu')}
+            close={() => changeView(null)}
           />
         );
       default:
@@ -222,7 +222,7 @@ const LocationSelection = ({ selectedNode, updateNodes, changeView }) => {
       <Heading
         text="Actualizar Ubicación"
         hasButton
-        onButtonClick={() => changeView('ManagementMenu')}
+        onButtonClick={() => changeView(null)}
       />
 
       <Divider />

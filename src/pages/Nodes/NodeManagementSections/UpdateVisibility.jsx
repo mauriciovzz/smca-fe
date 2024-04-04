@@ -33,7 +33,7 @@ const UpdateVisibility = ({ selectedNode, updateNodes, changeView }) => {
       <Heading
         text="Actualizar Visibilidad"
         hasButton
-        onButtonClick={() => changeView('ManagementMenu')}
+        onButtonClick={() => changeView(null)}
       />
 
       <Divider />

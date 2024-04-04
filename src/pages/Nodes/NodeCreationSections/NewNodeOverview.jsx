@@ -1,28 +1,40 @@
 import { React } from 'react';
 
 import {
-  Badge, Button, Divider, SelectionBar,
+  Badge, Button, Divider, Heading, SelectionBar,
 } from 'src/components';
 
 const NewNodeOverview = ({
-  name, type, visibility, location, nodeComponents, nodeVariables, createNode,
-  leftButtonClick, rightButtonClick,
+  name, type, visibility, location, nodeComponents, nodeVariables, rainSensor, createNode,
+  isScreenSM, leftButtonClick, rightButtonClick,
 }) => {
-  const isVariableSelected = (variable) => (
-    nodeVariables
-      .find(
-        (nv) => nv.component_id === variable.component_id
-          && nv.variable_id === variable.variable_id,
-      )
+  const isVariableSelected = (componentType, variable) => (
+    (componentType === 'Sensor de Lluvia')
+      ? true
+      : nodeVariables
+        .find(
+          (nv) => nv.component_id === variable.component_id
+            && nv.variable_id === variable.variable_id,
+        )
   );
 
   return (
-    <div className="relative flex h-full w-full flex-col rounded-lg border bg-white p-2.5">
-      <SelectionBar
-        text="Confirmar Nodo"
-        leftAction={leftButtonClick}
-        rightAction={rightButtonClick}
-      />
+    <div className={`${!isScreenSM && 'p-5'} relative flex h-full w-full flex-col rounded-lg border bg-white p-2.5`}>
+      {
+        (isScreenSM)
+          ? (
+            <SelectionBar
+              text="Confirmar Nodo"
+              leftAction={leftButtonClick}
+              rightAction={rightButtonClick}
+            />
+          )
+          : (
+            <Heading
+              text="Confirmar Nodo"
+            />
+          )
+      }
 
       <Divider changePadding="p-[5px]" />
 
@@ -58,6 +70,7 @@ const NewNodeOverview = ({
             <ul className="small-scrollbar absolute flex h-full w-full flex-col overflow-hidden overflow-y-scroll bg-background">
               {
                 nodeComponents
+                  .concat(rainSensor)
                   .sort((a, b) => (
                     a.component_type_id - b.component_type_id
                     || a.name.localeCompare(b.name)
@@ -77,13 +90,16 @@ const NewNodeOverview = ({
                           </div>
                         </div>
                         {
-                          (component.type === 'Sensor') && (
+                          (component.type === 'Sensor' || component.type === 'Sensor de Lluvia') && (
                             <ul className="flex flex-col">
                               <Divider changePadding="p-[5px]" changeColor="border-black" />
 
                               {
                                 component.variables
-                                  .filter((variable) => isVariableSelected(variable))
+                                  .filter((variable) => isVariableSelected(
+                                    component.type,
+                                    variable,
+                                  ))
                                   .sort((a, b) => (
                                     a.variable_type_id - b.variable_type_id
                                     || a.name.localeCompare(b.name)

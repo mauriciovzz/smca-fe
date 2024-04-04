@@ -19,6 +19,7 @@ import NodeSuccessMessage from './NodeSuccessMessage';
 const NodeCreation = ({ updateNodes, changeView }) => {
   const { selectedWorkspace } = useOutletContext();
   const [view, setView] = useState(null);
+  const isScreenSM = (window.innerWidth <= 640);
 
   const [nodeTypes, setNodeTypes] = useState([]);
   const [components, setComponents] = useState([]);
@@ -27,7 +28,7 @@ const NodeCreation = ({ updateNodes, changeView }) => {
   const [name, setName] = useState('');
   const [type, setType] = useState('Indoor');
   const [nodeComponents, setNodeComponents] = useState([]);
-  const [rainSensor, setRainSensor] = useState([]);
+  const [rainSensor, setRainSensor] = useState(null);
   const [nodeVariables, setNodeVariables] = useState([]);
   const [location, setLocation] = useState({});
   const [visibility, setVisibility] = useState('Privado');
@@ -115,22 +116,27 @@ const NodeCreation = ({ updateNodes, changeView }) => {
 
   const createNode = async () => {
     try {
-      if (rainSensor.length === 1) {
-        nodeComponents.push(rainSensor[0]);
+      const requestData = {
+        nodeName: name,
+        nodeType: nodeTypes.find((t) => t.type === type).node_type_id,
+        nodeComponents: nodeComponents.map((c) => c.component_id),
+        nodeVariables: nodeVariables.map(
+          (v) => ({ component_id: v.component_id, variable_id: v.variable_id }),
+        ),
+        nodeLocation: location.location_id,
+        nodeVisibility: !(visibility === 'Privado'),
+      };
+
+      if (rainSensor) {
+        requestData.rainSensor = {
+          component_id: rainSensor.component_id,
+          variable_id: rainSensor.variables[0].variable_id,
+        };
       }
 
       await nodesService.create(
         selectedWorkspace.workspace_id,
-        {
-          nodeName: name,
-          nodeType: nodeTypes.find((t) => t.type === type).node_type_id,
-          nodeComponents: nodeComponents.map((c) => c.component_id),
-          nodeVariables: nodeVariables.map(
-            (v) => ({ component_id: v.component_id, variable_id: v.variable_id }),
-          ),
-          nodeLocation: location.location_id,
-          nodeVisibility: !(visibility === 'Privado'),
-        },
+        requestData,
       );
 
       updateNodes();
@@ -159,7 +165,9 @@ const NodeCreation = ({ updateNodes, changeView }) => {
             location={location}
             nodeComponents={nodeComponents}
             nodeVariables={nodeVariables}
+            rainSensor={rainSensor ? [rainSensor] : []}
             createNode={() => createNode()}
+            isScreenSM={isScreenSM}
             leftButtonClick={() => setView('VisibilitySelection')}
           />
         );
@@ -168,7 +176,7 @@ const NodeCreation = ({ updateNodes, changeView }) => {
           <VisibilitySelection
             visibility={visibility}
             setVisibility={setVisibility}
-            rightButtonClick={() => setView('NewNodeOverview')}
+            rightButtonClick={isScreenSM ? () => setView('NewNodeOverview') : null}
             leftButtonClick={() => setView('LocationSelection')}
           />
         );
@@ -225,8 +233,8 @@ const NodeCreation = ({ updateNodes, changeView }) => {
             text="Selecionar Sensor de Lluvia"
             components={components.filter((c) => c.type === 'Sensor de Lluvia')}
             updateComponents={() => getComponents()}
-            selectedComponents={rainSensor}
-            selectComponent={(component) => setRainSensor([component])}
+            selectedComponents={rainSensor ? [rainSensor] : []}
+            selectComponent={(component) => setRainSensor(component)}
             rightButtonClick={() => setView('CameraSelection')}
             leftButtonClick={() => setView('SensorSelection')}
           />
@@ -269,17 +277,35 @@ const NodeCreation = ({ updateNodes, changeView }) => {
   };
 
   return (
-    <div className="flex h-full w-full flex-col rounded-lg bg-white p-5 shadow">
-      <div className="flex grow flex-col">
-        <Heading
-          text="Agregar Nodo"
-          hasButton
-          onButtonClick={() => changeView()}
+
+    <div className="relative flex h-full w-full bg-background sm:grid sm:grid-cols-2 sm:grid-rows-1 sm:gap-5">
+      <div className="flex h-full w-full flex-col rounded-lg bg-white p-5 shadow">
+        <div className="flex grow flex-col">
+          <Heading
+            text="Agregar Nodo"
+            hasButton
+            onButtonClick={() => changeView()}
+          />
+
+          <Divider />
+
+          {renderView()}
+        </div>
+      </div>
+
+      <div className="hidden h-full w-full bg-background sm:flex">
+        <NewNodeOverview
+          name={name}
+          type={type}
+          visibility={visibility}
+          location={location}
+          nodeComponents={nodeComponents}
+          nodeVariables={nodeVariables}
+          rainSensor={rainSensor ? [rainSensor] : []}
+          createNode={() => createNode()}
+          isScreenSM={isScreenSM}
+          leftButtonClick={() => setView('VisibilitySelection')}
         />
-
-        <Divider />
-
-        {renderView()}
       </div>
     </div>
   );
