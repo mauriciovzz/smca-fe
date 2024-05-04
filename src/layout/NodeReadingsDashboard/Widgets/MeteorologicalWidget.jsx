@@ -7,7 +7,9 @@ import { control } from 'src/assets';
 
 const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sab'];
 
-const MeteorologicalWidget = ({ dayReadings, dayUiInfo, selectedDate }) => {
+const MeteorologicalWidget = ({
+  dayReadings, dayUiInfo, selectedDate, changeDate,
+}) => {
   const [selectedVariable, setSelectedVariable] = useState('Resumen');
   const centerRef = useRef(null);
 
@@ -277,9 +279,11 @@ const MeteorologicalWidget = ({ dayReadings, dayUiInfo, selectedDate }) => {
                       <div className="flex justify-evenly border-t pt-2">
                         {
                           dayReadings[selectedVariable].weekData.map((day) => (
-                            <div
+                            <button
+                              type="button"
                               key={day.day}
                               className="flex flex-col"
+                              onClick={() => changeDate(new Date(day.weekDay))}
                             >
                               <div className="self-center text-xs font-bold">
                                 {dayNames[day.day]}
@@ -300,7 +304,7 @@ const MeteorologicalWidget = ({ dayReadings, dayUiInfo, selectedDate }) => {
                                     <i className="wi wi-na self-center text-base" />
                                   )
                               }
-                            </div>
+                            </button>
                           ))
                         }
                       </div>

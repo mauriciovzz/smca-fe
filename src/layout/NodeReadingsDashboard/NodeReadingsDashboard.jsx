@@ -22,7 +22,7 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
   const [dayUiInfo, setDayUiInfo] = useState({});
   const [dayReadings, setDayReadings] = useState([]);
 
-  const onChange = (nextValue) => {
+  const changeDate = (nextValue) => {
     const currenTime = new Date();
 
     setSelectedDate(
@@ -168,7 +168,7 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
           {/* Calendar Widget */}
           <div className="col-span-3 row-span-1 flex items-center overflow-hidden rounded-xl bg-white px-10 text-xs shadow">
             <Calendar
-              onChange={onChange}
+              onChange={changeDate}
               value={selectedDate}
               minDate={new Date(selectedNode.start_date)}
               maxDate={new Date()}
@@ -217,6 +217,7 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
               dayReadings={dayReadings.filter((dr) => dr.type === 'Meteorológica')}
               dayUiInfo={dayUiInfo}
               selectedDate={selectedDate}
+              changeDate={changeDate}
             />
           </div>
 
@@ -299,7 +300,7 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
             {/* Calendar Widget */}
             <div className="flex h-[140px] items-center overflow-hidden rounded-xl bg-white px-10 text-xs shadow">
               <Calendar
-                onChange={onChange}
+                onChange={changeDate}
                 value={selectedDate}
                 minDate={new Date(selectedNode.start_date)}
                 maxDate={new Date()}
