@@ -92,7 +92,7 @@ const Map = ({
                 mouseout: (event) => event.target.closePopup(),
               }}
             >
-              <Popup>
+              <Popup minWidth="250" closeButton={false}>
                 {markerPopup(marker)}
               </Popup>
             </Marker>

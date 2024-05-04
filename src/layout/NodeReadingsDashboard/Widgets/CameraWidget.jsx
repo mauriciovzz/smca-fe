@@ -25,12 +25,12 @@ const CameraWidget = ({ selectedNode }) => {
       <div className="relative flex h-[120px] w-[160px] justify-end">
         <img
           className="self-center rounded-xl shadow"
-          src={`/api/${(photoPath) ? photoPath[0].photo_path : 'images/no_image.png'}`}
+          src={`/api/${(photoPath) ? photoPath[0].photo_path : 'images/example.jpg'}`}
           alt="From OUT-1"
           width="160"
         />
 
-        <a className="absolute flex self-end p-1" href={`/api/${(photoPath) ? photoPath[0].photo_path : 'images/no_image.png'}`} download>
+        <a className="absolute flex self-end p-1" href={`/api/${(photoPath) ? photoPath[0].photo_path : 'images/example.jpg'}`} download>
           <img
             alt="ImageName"
             src={download}

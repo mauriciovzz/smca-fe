@@ -1,28 +1,40 @@
 import { React } from 'react';
 
+import { Badge } from 'src/components';
+
 const NodeInformationWidget = ({ selectedNode }) => (
   <div className="flex h-full w-full flex-col rounded-xl bg-white p-5 shadow">
-
-    {/* title */}
-    <div className="flex space-x-1 border-b pb-2 text-black">
-      <div className="text-2xl font-medium">
-        {`${(selectedNode.node_type === 'OUT') ? 'Outdoor' : 'Indoor'}-${selectedNode.node_id}`}
-      </div>
-      <div className="self-end pb-1 text-xs font-normal">
-        {`[${selectedNode.lat}, ${selectedNode.long}]`}
-      </div>
+    <div className="flex border-b pb-2 text-2xl font-medium text-black">
+      {selectedNode.node_name}
     </div>
 
-    {/* selectedNode */}
-    <div className="pt-2 text-black">
-      <div className="text-base font-medium">
-        {selectedNode.location_name}
+    <div className="flex grow pt-2">
+      <div className="flex h-full w-min flex-col justify-between border-r pr-2">
+        <Badge value={selectedNode.type} width="w-[60px]" rounded="rounded-lg" />
+        <Badge value={selectedNode.is_visible ? 'Público' : 'Privado'} width="w-[60px]" rounded="rounded-lg" />
+        <Badge value={selectedNode.state} width="w-[60px]" rounded="rounded-lg" />
       </div>
-      <div className="whitespace-normal text-sm font-normal">
-        {selectedNode.selectedNode}
+
+      <div className="pl-2 text-sm">
+        <div className="flex">
+          <div className="font-semibold">
+            {selectedNode.location_name}
+            &nbsp;
+          </div>
+        </div>
+
+        <div>
+          {selectedNode.location}
+        </div>
+
+        <div className="flex">
+          <div className="font-semibold">
+            Inicio de operación:&nbsp;
+          </div>
+          {selectedNode.start_date.split('T')[0]}
+        </div>
       </div>
     </div>
-
   </div>
 );
 

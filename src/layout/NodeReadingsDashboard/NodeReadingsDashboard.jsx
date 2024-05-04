@@ -18,18 +18,21 @@ const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Juli
 const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
   const [isPageLoading, setIsPageLoading] = useState(true);
 
-  const [dayReadings, setDayReadings] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [dayUiInfo, setDayUiInfo] = useState({});
+  const [dayReadings, setDayReadings] = useState([]);
 
   const onChange = (nextValue) => {
+    const currenTime = new Date();
+
     setSelectedDate(
       new Date(
         nextValue.getFullYear(),
         nextValue.getMonth(),
         nextValue.getDate(),
-        selectedDate.getHours(),
-        selectedDate.getMinutes(),
-        selectedDate.getSeconds(),
+        currenTime.getHours(),
+        currenTime.getMinutes(),
+        currenTime.getSeconds(),
       ),
     );
   };
@@ -44,11 +47,11 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
     return `${hours} ${ampm}`;
   };
 
-  const parseAverages = (dayAverages) => {
+  const parseAverages = (v) => {
     const newArray = [];
-
+    // if (v.variable_name === 'lluvia') console.log(v);
     for (let i = 1; i <= 24; i += 1) {
-      const match = dayAverages.find(
+      const match = v.dayAverages.find(
         (reading) => reading.end_hour === i,
       );
 
@@ -61,6 +64,8 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
         );
       }
 
+      // if (v.variable_name === 'lluvia') console.log(match);
+
       newArray.push(
         {
           time: i,
@@ -72,15 +77,32 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
     return newArray;
   };
 
-  const getPublicNodeReadings = async () => {
+  const getUiInfo = async () => {
     try {
-      const response = await readingsService.getPublicNodeReadings(
+      const response = await readingsService.getUiInfo(
         selectedNode.node_id,
-        selectedDate.toISOString().split('T')[0],
+        selectedNode.location_id,
+        `${selectedDate.getFullYear()}-${selectedDate.getMonth() + 1}-${selectedDate.getDate()}`,
       );
 
-      setDayReadings(response.map((v) => ({ ...v, dayAverages: parseAverages(v.dayAverages) })));
-      setIsPageLoading(!isPageLoading);
+      setDayUiInfo(response);
+    } catch (err) {
+      notifications.error(err);
+    }
+  };
+
+  const getPublicNodeReadings = async () => {
+    try {
+      getUiInfo();
+
+      const response = await readingsService.getPublicNodeReadings(
+        selectedNode.node_id,
+        selectedNode.location_id,
+        `${selectedDate.getFullYear()}-${selectedDate.getMonth() + 1}-${selectedDate.getDate()}`,
+      );
+
+      setDayReadings(response.map((v) => ({ ...v, dayAverages: parseAverages(v) })));
+      setIsPageLoading(false);
     } catch (err) {
       notifications.error(err);
     }
@@ -88,21 +110,27 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
 
   const getPrivateNodeReadings = async () => {
     try {
+      getUiInfo();
+
       const response = await readingsService.getPrivateNodeReadings(
         selectedNode.node_id,
-        selectedDate.toISOString().split('T')[0],
+        selectedNode.location_id,
+        `${selectedDate.getFullYear()}-${selectedDate.getMonth() + 1}-${selectedDate.getDate()}`,
       );
 
       setDayReadings(response.map((v) => ({ ...v, dayAverages: parseAverages(v.dayAverages) })));
-      setIsPageLoading(!isPageLoading);
     } catch (err) {
       notifications.error(err);
     }
   };
 
   useEffect(() => {
-    (selectedNode.is_visible) ? getPublicNodeReadings() : getPrivateNodeReadings();
-  }, []);
+    if (selectedNode.is_visible) {
+      getPublicNodeReadings();
+    } else {
+      getPrivateNodeReadings();
+    }
+  }, [selectedDate]);
 
   return (!isPageLoading) && (
     <div className="absolute z-[100] h-full w-full bg-white/25 p-5 backdrop-blur-sm">
@@ -111,12 +139,12 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
       <div className="hidden h-full w-full sm:flex">
         <div className="grid h-full w-full  grid-cols-12 grid-rows-3 gap-4">
 
-          <div className={`${(selectedNode.camera) ? 'col-span-4' : 'col-span-6'} row-span-1`}>
+          <div className={`${(true) ? 'col-span-4' : 'col-span-6'} row-span-1`}>
             <NodeInfoWidget selectedNode={selectedNode} />
           </div>
 
           {/* Camera Widget */}
-          {selectedNode.camera && (
+          {(true) && (
             <div className="relative col-span-2 row-span-1">
               <CameraWidget selectedNode={selectedNode} />
             </div>
@@ -187,7 +215,7 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
           <div className="relative col-span-6 col-start-1 row-span-2">
             <MeteorologicalWidget
               dayReadings={dayReadings.filter((dr) => dr.type === 'Meteorológica')}
-              hasRainSensor={selectedNode.rain}
+              dayUiInfo={dayUiInfo}
               selectedDate={selectedDate}
             />
           </div>
@@ -282,7 +310,8 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
             {/* Meteorological Widget */}
             <div className="relative h-[290px]">
               <MeteorologicalWidget
-                selectedNode={selectedNode}
+                dayReadings={dayReadings.filter((dr) => dr.type === 'Meteorológica')}
+                hasRainSensor={selectedNode.rain}
                 selectedDate={selectedDate}
               />
             </div>
@@ -290,7 +319,7 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
             {/* Envormental Widget */}
             <div className="relative h-[290px]">
               <EnviromentalWidget
-                selectedNode={selectedNode}
+                dayReadings={dayReadings.filter((dr) => dr.type === 'Ambiental')}
                 selectedDate={selectedDate}
               />
             </div>
