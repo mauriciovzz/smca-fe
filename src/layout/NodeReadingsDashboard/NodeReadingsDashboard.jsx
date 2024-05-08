@@ -1,10 +1,10 @@
 import { React, useState, useEffect } from 'react';
 
-import { close } from 'src/assets';
 import readingsService from 'src/services/readings';
 import notifications from 'src/utils/notifications';
 
 import CameraWidget from './Widgets/CameraWidget';
+import CloseButtonWidget from './Widgets/CloseButtonWidget';
 import DateWidget from './Widgets/DateWidget/DateWidget';
 import EnviromentalWidget from './Widgets/EnviromentalWidget';
 import MeteorologicalWidget from './Widgets/MeteorologicalWidget';
@@ -143,19 +143,8 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
           </div>
 
           {/* Close button */}
-          <div className="col-span-1 row-span-1 flex items-center justify-center">
-            <div className="flex h-full w-full items-center justify-center rounded-xl bg-white shadow">
-              <button
-                type="button"
-                onClick={() => setIsOpen(false)}
-              >
-                <img
-                  src={close}
-                  alt="close button"
-                  className="h-[28px] w-[28px]"
-                />
-              </button>
-            </div>
+          <div className="col-span-1 row-span-1">
+            <CloseButtonWidget setIsOpen={setIsOpen} />
           </div>
 
           {/* Meteorological Widget */}
