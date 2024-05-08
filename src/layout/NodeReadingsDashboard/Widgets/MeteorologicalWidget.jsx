@@ -7,41 +7,56 @@ import { control } from 'src/assets';
 
 const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sab'];
 
+const Divider = () => <div className="text-gray-300">&nbsp;|&nbsp;</div>;
+
 const MeteorologicalWidget = ({
   dayReadings, dayUiInfo, selectedDate, changeDate,
 }) => {
   const [selectedVariable, setSelectedVariable] = useState('Resumen');
-  const centerRef = useRef(null);
 
-  let repeater;
-  const scroll = (scrollOffset) => {
-    centerRef.current.scrollLeft += scrollOffset;
+  // Graph scroll
+  const centerRefGraph = useRef(null);
+  let graphRepeater;
+
+  const graphScroll = (scrollOffset) => {
+    centerRefGraph.current.scrollLeft += scrollOffset;
   };
 
-  const getVariableIndex = (variableName) => dayReadings.findIndex(
-    (v) => v.variable_name === variableName,
-  );
+  const updateGraphRepeater = (offset) => {
+    graphRepeater = setInterval(graphScroll, 100, offset);
+  };
 
-  const getAverageArrayValue = (variableName, hour) => {
+  // Variable list scroll
+  const centerRefVarList = useRef(null);
+  let varListRepeater;
+
+  const varListScroll = (scrollOffset) => {
+    centerRefVarList.current.scrollLeft += scrollOffset;
+  };
+
+  const updateVarListRepeater = (offset) => {
+    varListRepeater = setInterval(varListScroll, 100, offset);
+  };
+
+  const getReadingValue = (variableName, hour) => {
     const time = hour || selectedDate.getHours();
-    const inx = getVariableIndex(variableName);
+    const inx = dayReadings.findIndex((v) => v.variable_name === variableName);
 
     return (inx !== -1)
       ? dayReadings[inx].dayAverages.find((element) => (element.time === time)).value
       : null;
   };
 
-  const getVariableIcon = (variableName) => {
-    switch (variableName) {
-      case 'humedad':
-        return 'wi wi-humidity';
-      case 'presión atmosférica':
-        return 'wi wi-barometer';
-      case 'luz uv':
-        return 'wi wi-hot';
-      default:
-        return 'wi wi-na';
-    }
+  const getReadingTime = (date) => {
+    if (date === 'sunrise' || date === 'sunset') return '';
+
+    let hours = date;
+    const ampm = (hours >= 12 && hours !== 24) ? 'PM' : 'AM';
+
+    hours %= 12;
+    hours = hours || 12;
+
+    return `${hours} ${ampm}`;
   };
 
   const getChartColor = (type) => {
@@ -66,18 +81,19 @@ const MeteorologicalWidget = ({
 
     if (hour > 5 && hour < 18) {
       if (dayUiInfo.has_rain) {
-        if (getAverageArrayValue('lluvia', hour)) return 'wi wi-day-showers text-orange-700';
+        if (getReadingValue('lluvia', hour)) return 'wi wi-day-showers text-orange-700';
       }
       return 'wi wi-day-sunny text-yellow-400';
     }
 
     const phase = Moon.lunarPhase(selectedDate);
     if (dayUiInfo.has_rain) {
-      if (getAverageArrayValue('lluvia', hour)) {
+      if (getReadingValue('lluvia', hour)) {
         if (phase === 'New' || phase === 'Full') return 'wi wi-night-showers text-sky-700';
         return 'wi wi-night-alt-showers text-sky-700';
       }
     }
+
     switch (phase) {
       case 'New':
         return 'wi wi-moon-alt-new text-gray-400';
@@ -100,66 +116,11 @@ const MeteorologicalWidget = ({
     }
   };
 
-  const formatTime = (date) => {
-    if (date === 'sunrise' || date === 'sunset') return '';
-
-    let hours = date;
-    const ampm = (hours >= 12 && hours !== 24) ? 'PM' : 'AM';
-
-    hours %= 12;
-    hours = hours || 12;
-
-    return `${hours} ${ampm}`;
-  };
-
   return (dayReadings !== undefined) && (dayUiInfo !== undefined) && (
     <div className="absolute flex h-full w-full flex-col rounded-xl bg-white p-4 shadow">
-
-      {/* Overview */}
-      <div className="flex px-2 pb-2 sm:px-7">
-        {/* Temp */}
-        <div className="flex items-center justify-start">
-          <i className={`${getWeatherIcon(selectedDate.getHours())} self-center text-2xl sm:text-4xl`} />
-          {
-            (dayUiInfo.has_temp) && (dayReadings.length !== 0) && (getAverageArrayValue('temperatura') !== null) && (
-              <h1 className="self-center pl-2 text-2xl sm:text-4xl">{`${getAverageArrayValue('temperatura')} °C`}</h1>
-            )
-          }
-        </div>
-
-        {/* other variables */}
-        <div className="flex grow items-center justify-center space-x-1 sm:space-x-4">
-          {
-            (dayUiInfo.has_hum) && (dayReadings.length !== 0) && (getAverageArrayValue('humedad') !== null) && (
-              <div className="flex">
-                <i className={`${getVariableIcon('humedad')} self-center text-xs sm:text-base`} />
-                {
-                  (getAverageArrayValue('humedad'))
-                    ? <h1 className="self-center pl-1.5 text-xs sm:text-base">{`${getAverageArrayValue('humedad')} %`}</h1>
-                    : <i className="wi wi-na self-center pl-1.5 text-base text-gray-400 sm:text-xl" />
-                }
-              </div>
-            )
-          }
-          {
-            (dayUiInfo.has_press) && (dayReadings.length !== 0) && (getAverageArrayValue('presión atmosférica') !== null) && (
-              <div className="flex">
-                <i className={`${getVariableIcon('presión atmosférica')} self-center text-xs sm:text-base`} />
-                {
-                  (getAverageArrayValue('humedad'))
-                    ? <h1 className="self-center pl-1.5 text-xs sm:text-base">{`${getAverageArrayValue('presión atmosférica')} hPa`}</h1>
-                    : <i className="wi wi-na self-center pl-1.5 text-base text-gray-400 sm:text-xl" />
-                }
-              </div>
-            )
-          }
-        </div>
-
-        {/* Title: Tiempo */}
-        <div className="flex items-center justify-end text-2xl sm:text-4xl">
-          <div>
-            Tiempo
-          </div>
+      <div className="px-2 pb-2 sm:px-6">
+        <div className="text-2xl sm:text-4xl">
+          Tiempo
         </div>
       </div>
 
@@ -179,8 +140,18 @@ const MeteorologicalWidget = ({
           : (
             <>
               {/* Variable list */}
-              <div className="hide-scrollbar overflow-scroll scroll-smooth border-y px-2 py-1 text-xs sm:px-7 sm:text-sm">
-                <div className="flex">
+              <div className="flex w-full border-y py-1 text-xs sm:text-sm">
+                <div className="flex w-[28px] justify-center">
+                  <img
+                    src={control}
+                    alt="left var list scroll"
+                    className="hidden h-[20px] w-[20px] self-center sm:flex"
+                    onMouseEnter={() => updateVarListRepeater(-20)}
+                    onMouseLeave={() => clearInterval(varListRepeater)}
+                  />
+                </div>
+
+                <div ref={centerRefVarList} className="hide-scrollbar flex w-full overflow-scroll scroll-smooth">
                   <div className="flex">
                     <button
                       className={`${(selectedVariable === 'Resumen') && 'font-semibold'} whitespace-nowrap`}
@@ -189,46 +160,127 @@ const MeteorologicalWidget = ({
                     >
                       Resumen
                     </button>
-                    <div className="text-gray-300">
-                      &nbsp;|&nbsp;
-                    </div>
+                    <Divider />
                   </div>
+
                   {
-                    (dayReadings) && (dayReadings.filter((v) => v.variable_name !== 'lluvia').map(
+                    dayReadings.filter((v) => v.variable_name !== 'lluvia').map(
                       (v, index) => (
-                        <div key={v.variable_id} className="flex">
+                        <div
+                          key={v.variable_id}
+                          className="flex"
+                        >
                           <button
                             className={`${(index === selectedVariable) && 'font-semibold'} whitespace-nowrap`}
                             type="button"
                             onClick={() => setSelectedVariable(index)}
                           >
-                            {`${v.variable_name}`}
+                            {v.variable_name}
                           </button>
-                          <div className="text-gray-300">
-                            &nbsp;|&nbsp;
-                          </div>
+
+                          {
+                              (dayReadings.filter((vv) => vv.variable_name !== 'lluvia').length - 1 !== index) && (<Divider />)
+                          }
                         </div>
                       ),
-                    ))
+                    )
                   }
+                </div>
+
+                <div className="flex w-[28px] justify-center">
+                  <img
+                    src={control}
+                    alt="right var list scroll"
+                    className="hidden h-[20px] w-[20px] rotate-180 self-center sm:flex"
+                    onMouseEnter={() => updateVarListRepeater(20)}
+                    onMouseLeave={() => clearInterval(varListRepeater)}
+                  />
                 </div>
               </div>
 
               {
                 (selectedVariable === 'Resumen')
-                  ? null
+                  ? (
+                    <div className="flex grow px-6 pt-2">
+                      <div className="grid grow grid-cols-2 grid-rows-2 gap-2">
+                        {/* <div className="flex h-[200px] w-[530px] bg-white">
+                          <div className="h-[90px] w-[90px] bg-blue-400 mr-[20px]">
+                            Temperatura
+                          </div>
+                          <div className="h-[90px] w-[90px] bg-blue-400 mr-[20px]">
+                            test
+                          </div>
+                          <div className="h-[90px] w-[90px] bg-blue-400 mr-[20px]">
+                            test
+                          </div>
+                          <div className="h-[90px] w-[90px] bg-blue-400 mr-[20px]">
+                            test
+                          </div>
+                          <div className="h-[90px] w-[90px] bg-blue-900">
+                            test
+                          </div>
+                        </div> */}
+
+                        <div className="flex flex-col items-center justify-center rounded-lg border p-2">
+                          <div className="flex h-[68px] w-[68px] items-center justify-center">
+                            <i className={`${getWeatherIcon(selectedDate.getHours())} self-center text-2xl sm:text-5xl`} />
+                          </div>
+                        </div>
+
+                        <div className="flex flex-col items-center justify-center rounded-lg border p-2">
+                          <div className="font-semibold">
+                            Temperatura
+                          </div>
+                          <div className="flex items-center justify-start">
+                            {
+                              (dayUiInfo.has_temp) && (dayReadings.length !== 0) && (getReadingValue('temperatura') !== null) && (
+                                <h1 className="self-center pl-2 text-2xl sm:text-3xl">{`${getReadingValue('temperatura')} °C`}</h1>
+                              )
+                            }
+                          </div>
+                        </div>
+
+                        <div className="flex flex-col items-center justify-center rounded-lg border p-2">
+                          <div className="font-semibold">
+                            Humedad
+                          </div>
+                          <div className="flex items-center justify-start">
+                            {
+                              (dayUiInfo.has_hum) && (dayReadings.length !== 0) && (getReadingValue('humedad') !== null) && (
+                                <h1 className="self-center pl-2 text-2xl sm:text-3xl">{`${getReadingValue('humedad')} %`}</h1>
+                              )
+                            }
+                          </div>
+                        </div>
+
+                        <div className="flex flex-col items-center justify-center rounded-lg border p-2">
+                          <div className="font-semibold">
+                            Presión Atmosférica
+                          </div>
+                          <div className="flex items-center justify-start">
+                            {
+                              (dayUiInfo.has_hum) && (dayReadings.length !== 0) && (getReadingValue('presión atmosférica') !== null) && (
+                                <h1 className="self-center pl-2 text-2xl sm:text-3xl">{`${getReadingValue('presión atmosférica')} hPa`}</h1>
+                              )
+                            }
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  )
                   : (
                     <>
                       <div className="flex grow">
                         <img
                           src={control}
-                          alt="left scroll"
+                          alt="left graph scroll"
                           className="hidden h-[28px] w-[28px] self-center sm:flex"
-                          onMouseEnter={() => { repeater = setInterval(scroll, 100, -20); }}
-                          onMouseLeave={() => { clearInterval(repeater); }}
+                          onMouseEnter={() => updateGraphRepeater(-20)}
+                          onMouseLeave={() => clearInterval(graphRepeater)}
                         />
 
-                        <div ref={centerRef} className="hide-scrollbar flex overflow-scroll scroll-smooth pt-1">
+                        <div ref={centerRefGraph} className="hide-scrollbar flex overflow-scroll scroll-smooth pt-1">
                           <div className="flex h-full flex-col">
                             <div className="flex grow">
                               <ResponsiveContainer width="100%" height="100%">
@@ -253,10 +305,12 @@ const MeteorologicalWidget = ({
                                       className={`${(average.time === selectedDate.getHours()) && 'font-semibold shadow'} flex h-[60px] w-[50px] flex-col justify-center space-y-1`}
                                     >
                                       <div className="self-center whitespace-nowrap text-xs">
-                                        {(average.value) ? formatTime(average.time) : ''}
+                                        {getReadingTime(average.time)}
                                       </div>
+
                                       <i className={`${getWeatherIcon(average.time, average.value)} self-center text-lg`} />
-                                      <div className="self-center whitespace-nowrap text-xs">
+
+                                      <div className="h-[16px] self-center whitespace-nowrap text-xs">
                                         {`${(average.time === 'sunrise' || average.time === 'sunset' || average.value === null) ? '' : `${average.value} ${dayReadings[selectedVariable].unit}`}`}
                                       </div>
                                     </div>
@@ -269,10 +323,10 @@ const MeteorologicalWidget = ({
 
                         <img
                           src={control}
-                          alt="right scroll"
+                          alt="right graph scroll"
                           className="hidden h-[28px] w-[28px] rotate-180 self-center sm:flex"
-                          onMouseEnter={() => { repeater = setInterval(scroll, 100, 20); }}
-                          onMouseLeave={() => { clearInterval(repeater); }}
+                          onMouseEnter={() => updateGraphRepeater(20)}
+                          onMouseLeave={() => clearInterval(graphRepeater)}
                         />
                       </div>
 

@@ -6,7 +6,12 @@ import adminIcon from 'src/assets/icons/adminIcon.svg';
 import airWave from 'src/assets/icons/airwave.svg';
 import bellIcon from 'src/assets/icons/bellIcon.svg';
 import blueMarker from 'src/assets/markers/marker-icon-blue.png';
+import calendarDayIcon from 'src/assets/icons/calendarDayIcon.svg';
+import calendarDaySmallIcon from 'src/assets/icons/calendarDaySmallIcon.svg';
+import calendarIcon from 'src/assets/icons/calendarIcon.svg';
+import calendarSmallIcon from 'src/assets/icons/calendarSmallIcon.svg';
 import checkCircleIcon from 'src/assets/icons/checkCircleIcon.svg';
+import clockIcon from 'src/assets/icons/clockIcon.svg';
 import close from 'src/assets/icons/close.svg';
 import cloud from 'src/assets/icons/cloud.svg';
 import control from 'src/assets/icons/control.svg';
@@ -41,7 +46,12 @@ export {
   airWave,
   bellIcon,
   blueMarker,
+  calendarDayIcon,
+  calendarDaySmallIcon,
+  calendarIcon,
+  calendarSmallIcon,
   checkCircleIcon,
+  clockIcon,
   close,
   cloud,
   control,

@@ -11,6 +11,8 @@ module.exports = {
         // UI COLORS ------------------------------
         // slate-100
         background: '#f1f5f9',
+        // gray-detail
+        graydetails: '#e5e7eb',
 
         // sky-600
         main: '#0284c7',

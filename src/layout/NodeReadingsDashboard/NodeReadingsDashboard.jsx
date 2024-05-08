@@ -1,19 +1,14 @@
 import { React, useState, useEffect } from 'react';
 
-import Calendar from 'react-calendar';
-import './Calendar.css';
-
-import { close, refresh } from 'src/assets';
+import { close } from 'src/assets';
 import readingsService from 'src/services/readings';
 import notifications from 'src/utils/notifications';
 
 import CameraWidget from './Widgets/CameraWidget';
+import DateWidget from './Widgets/DateWidget/DateWidget';
 import EnviromentalWidget from './Widgets/EnviromentalWidget';
 import MeteorologicalWidget from './Widgets/MeteorologicalWidget';
 import NodeInfoWidget from './Widgets/NodeInfoWidget';
-
-const dayNames = ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'];
-const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
 const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
   const [isPageLoading, setIsPageLoading] = useState(true);
@@ -22,34 +17,23 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
   const [dayUiInfo, setDayUiInfo] = useState({});
   const [dayReadings, setDayReadings] = useState([]);
 
-  const changeDate = (nextValue) => {
-    const currenTime = new Date();
+  const changeDate = (newDate, newHour) => {
+    const currentDate = newDate || selectedDate;
+    const currenTime = (newHour) ? new Date(newHour) : selectedDate;
 
     setSelectedDate(
       new Date(
-        nextValue.getFullYear(),
-        nextValue.getMonth(),
-        nextValue.getDate(),
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        currentDate.getDate(),
         currenTime.getHours(),
-        currenTime.getMinutes(),
-        currenTime.getSeconds(),
       ),
     );
   };
 
-  const formatTime = (date) => {
-    let hours = date.getHours();
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-
-    hours %= 12;
-    hours = hours || 12;
-
-    return `${hours} ${ampm}`;
-  };
-
   const parseAverages = (v) => {
     const newArray = [];
-    // if (v.variable_name === 'lluvia') console.log(v);
+
     for (let i = 1; i <= 24; i += 1) {
       const match = v.dayAverages.find(
         (reading) => reading.end_hour === i,
@@ -64,11 +48,9 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
         );
       }
 
-      // if (v.variable_name === 'lluvia') console.log(match);
-
       newArray.push(
         {
-          time: i,
+          time: (i === 24) ? 0 : i,
           value: (match) ? match.average : null,
         },
       );
@@ -139,7 +121,8 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
       <div className="hidden h-full w-full sm:flex">
         <div className="grid h-full w-full  grid-cols-12 grid-rows-3 gap-4">
 
-          <div className={`${(true) ? 'col-span-4' : 'col-span-6'} row-span-1`}>
+          {/* <div className={`${(true) ? 'col-span-4' : 'col-span-6'} row-span-1`}> */}
+          <div className="col-span-4 row-span-1">
             <NodeInfoWidget selectedNode={selectedNode} />
           </div>
 
@@ -151,64 +134,28 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
           )}
 
           {/* Date Widget */}
-          <div className="col-span-2 row-span-1 flex flex-col items-center justify-center rounded-xl bg-white px-4 py-2 text-xl font-medium shadow">
-            <div>
-              {dayNames[selectedDate.getDay()]}
-              <br />
-            </div>
-            <div>
-              {`${selectedDate.getDate()} de ${monthNames[selectedDate.getMonth()]}`}
-              <br />
-            </div>
-            <div>
-              {formatTime(selectedDate)}
-            </div>
-          </div>
-
-          {/* Calendar Widget */}
-          <div className="col-span-3 row-span-1 flex items-center overflow-hidden rounded-xl bg-white px-10 text-xs shadow">
-            <Calendar
-              onChange={changeDate}
-              value={selectedDate}
-              minDate={new Date(selectedNode.start_date)}
-              maxDate={new Date()}
-              locale="es-VE"
+          <div className="col-span-5 row-span-1">
+            <DateWidget
+              selectedNode={selectedNode}
+              selectedDate={selectedDate}
+              changeDate={changeDate}
             />
           </div>
 
-          {/* Buttons */}
+          {/* Close button */}
           <div className="col-span-1 row-span-1 flex items-center justify-center">
-            <div className="grid h-full w-full grid-rows-2 gap-4">
-
-              {/* Close */}
-              <div className="row-span-1 flex items-center justify-center rounded-xl bg-white shadow">
-                <button
-                  type="button"
-                  onClick={() => setIsOpen(false)}
-                >
-                  <img
-                    src={close}
-                    alt="close button"
-                    className="h-[28px] w-[28px]"
-                  />
-                </button>
-              </div>
-
-              {/* Refresh */}
-              <div className="row-span-1 flex items-center justify-center rounded-xl bg-white shadow ">
-                <button
-                  type="button"
-                  onClick={() => setSelectedDate(new Date())}
-                >
-                  <img
-                    src={refresh}
-                    alt="close button"
-                    className="h-[28px] w-[28px]"
-                  />
-                </button>
-              </div>
+            <div className="flex h-full w-full items-center justify-center rounded-xl bg-white shadow">
+              <button
+                type="button"
+                onClick={() => setIsOpen(false)}
+              >
+                <img
+                  src={close}
+                  alt="close button"
+                  className="h-[28px] w-[28px]"
+                />
+              </button>
             </div>
-
           </div>
 
           {/* Meteorological Widget */}
@@ -233,14 +180,12 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
       </div>
 
       {/* Mobile */}
-      <div className="flex h-full w-full sm:hidden">
+      {/* <div className="flex h-full w-full sm:hidden">
         <div className="hide-scrollbar flex w-full flex-col overflow-scroll scroll-smooth">
           <div className="inline-block space-y-4">
 
-            {/* Buttons */}
             <div className="flex h-[50px] space-x-4 ">
 
-              {/* Close */}
               <div className="flex grow items-center justify-center rounded-xl bg-white shadow">
                 <button
                   type="button"
@@ -254,7 +199,6 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
                 </button>
               </div>
 
-              {/* Refresh */}
               <div className="flex grow items-center justify-center rounded-xl bg-white shadow ">
                 <button
                   type="button"
@@ -270,20 +214,18 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
 
             </div>
 
-            {/* Info Widget */}
             <div className="relative h-[140px]">
               <NodeInfoWidget selectedNode={selectedNode} />
             </div>
 
-            {/* Camera Widget */}
             {selectedNode.camera && (
               <div className="relative flex h-[140px]">
                 <CameraWidget selectedNode={selectedNode} />
               </div>
             )}
 
-            {/* Date Widget */}
-            <div className="flex h-[140px] flex-col items-center justify-center rounded-xl bg-white px-4 py-2 text-xl font-medium shadow">
+            <div className="flex h-[140px] flex-col items-center justify-center r
+            ounded-xl bg-white px-4 py-2 text-xl font-medium shadow">
               <div>
                 {dayNames[selectedDate.getDay()]}
                 <br />
@@ -297,8 +239,8 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
               </div>
             </div>
 
-            {/* Calendar Widget */}
-            <div className="flex h-[140px] items-center overflow-hidden rounded-xl bg-white px-10 text-xs shadow">
+            <div className="flex h-[140px] items-center
+            overflow-hidden rounded-xl bg-white px-10 text-xs shadow">
               <Calendar
                 onChange={changeDate}
                 value={selectedDate}
@@ -308,7 +250,6 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
               />
             </div>
 
-            {/* Meteorological Widget */}
             <div className="relative h-[290px]">
               <MeteorologicalWidget
                 dayReadings={dayReadings.filter((dr) => dr.type === 'Meteorológica')}
@@ -317,7 +258,6 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
               />
             </div>
 
-            {/* Envormental Widget */}
             <div className="relative h-[290px]">
               <EnviromentalWidget
                 dayReadings={dayReadings.filter((dr) => dr.type === 'Ambiental')}
@@ -326,8 +266,7 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
             </div>
           </div>
         </div>
-      </div>
-
+      </div> */}
     </div>
   );
 };
