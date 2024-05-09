@@ -3,17 +3,16 @@ import { React, useState, useEffect } from 'react';
 import readingsService from 'src/services/readings';
 import notifications from 'src/utils/notifications';
 
-import CameraWidget from './Widgets/CameraWidget';
-import CloseButtonWidget from './Widgets/CloseButtonWidget';
 import DateWidget from './Widgets/DateWidget/DateWidget';
 import EnviromentalWidget from './Widgets/EnviromentalWidget';
 import MeteorologicalWidget from './Widgets/MeteorologicalWidget';
 import NodeInfoWidget from './Widgets/NodeInfoWidget';
+import PhotoWidget from './Widgets/PhotoWidget';
 
 const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
   const [isPageLoading, setIsPageLoading] = useState(true);
 
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(new Date(2024, 3, 2));
   const [dayUiInfo, setDayUiInfo] = useState({});
   const [dayReadings, setDayReadings] = useState([]);
 
@@ -119,22 +118,20 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
 
       {/* Desktop */}
       <div className="hidden h-full w-full sm:flex">
-        <div className="grid h-full w-full  grid-cols-12 grid-rows-3 gap-4">
-
-          {/* <div className={`${(true) ? 'col-span-4' : 'col-span-6'} row-span-1`}> */}
-          <div className="col-span-4 row-span-1">
-            <NodeInfoWidget selectedNode={selectedNode} />
+        <div className="grid h-full w-full  grid-cols-10 grid-rows-3 gap-4">
+          <div className="col-span-5 row-span-1">
+            <NodeInfoWidget selectedNode={selectedNode} setIsOpen={setIsOpen} />
           </div>
 
-          {/* Camera Widget */}
+          {/* Photo Widget */}
           {(true) && (
-            <div className="relative col-span-2 row-span-1">
-              <CameraWidget selectedNode={selectedNode} />
+            <div className="col-span-2 row-span-1">
+              <PhotoWidget />
             </div>
           )}
 
           {/* Date Widget */}
-          <div className="col-span-5 row-span-1">
+          <div className={`${(true) ? 'col-span-3' : 'col-span-5'} row-span-1`}>
             <DateWidget
               selectedNode={selectedNode}
               selectedDate={selectedDate}
@@ -142,13 +139,8 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
             />
           </div>
 
-          {/* Close button */}
-          <div className="col-span-1 row-span-1">
-            <CloseButtonWidget setIsOpen={setIsOpen} />
-          </div>
-
           {/* Meteorological Widget */}
-          <div className="relative col-span-6 col-start-1 row-span-2">
+          <div className="relative col-span-5 col-start-1 row-span-2">
             <MeteorologicalWidget
               dayReadings={dayReadings.filter((dr) => dr.type === 'Meteorológica')}
               dayUiInfo={dayUiInfo}
@@ -158,7 +150,7 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
           </div>
 
           {/* Envormental Widget */}
-          <div className="relative col-span-6 row-span-2">
+          <div className="relative col-span-5 row-span-2">
             <EnviromentalWidget
               dayReadings={dayReadings.filter((dr) => dr.type === 'Ambiental')}
               selectedDate={selectedDate}
@@ -209,7 +201,7 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
 
             {selectedNode.camera && (
               <div className="relative flex h-[140px]">
-                <CameraWidget selectedNode={selectedNode} />
+                <PhotoWidget selectedNode={selectedNode} />
               </div>
             )}
 

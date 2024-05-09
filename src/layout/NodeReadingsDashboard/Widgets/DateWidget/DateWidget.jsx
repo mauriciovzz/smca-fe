@@ -16,12 +16,12 @@ const ArrowButton = ({ direction, onClick }) => (
   <button
     type="button"
     onClick={onClick}
-    className="flex h-[35px] w-[35px] items-center justify-center rounded-lg hover:bg-graydetails"
+    className="flex h-[30px] w-[30px] items-center justify-center rounded-lg hover:bg-graydetails"
   >
     <img
       src={control}
       alt="arrow button"
-      className={`${(direction === 'right') && 'rotate-180'} h-[28px] w-[28px]`}
+      className={`${(direction === 'right') && 'rotate-180'} h-[20px] w-[20px]`}
     />
   </button>
 );
@@ -80,8 +80,8 @@ const DateWidget = ({ selectedNode, selectedDate, changeDate }) => {
             <Calendar
               value={selectedDate}
               onChange={(newDate) => changeDate(newDate)}
-              // minDate={new Date(selectedNode.start_date)}
-              // maxDate={new Date()}
+              minDate={new Date(selectedNode.start_date)}
+              maxDate={new Date()}
               activeStartDate={componentActiveStartDate}
               onActiveStartDateChange={
                 ({ activeStartDate }) => setComponentActiveStartDate(activeStartDate)
@@ -94,7 +94,7 @@ const DateWidget = ({ selectedNode, selectedDate, changeDate }) => {
       default:
         return (
           <div className="flex h-full w-full flex-col justify-center">
-            <div className="flex w-full border-b pb-5">
+            <div className="flex h-[65%] w-full border-b pb-5">
               <div className="flex w-1/6 items-center justify-center">
                 {
                   (checkDate(new Date(selectedNode.start_date))) && (
@@ -104,12 +104,15 @@ const DateWidget = ({ selectedNode, selectedDate, changeDate }) => {
               </div>
 
               <div className="flex w-4/6 items-center justify-center">
-                <div className="flex flex-col">
-                  <div className="w-[220px]">
+                <div className="flex flex-col items-center">
+                  <div className="h-fit text-base">
                     {dayNames[selectedDate.getDay()]}
                   </div>
-                  <div className="w-[220px]">
-                    {`${selectedDate.getDate()} de ${calendarNames[selectedDate.getMonth()]}, ${selectedDate.getFullYear()}`}
+                  <div className="h-full">
+                    {`${selectedDate.getDate()} de ${calendarNames[selectedDate.getMonth()]}`}
+                  </div>
+                  <div className="h-fit text-base">
+                    {selectedDate.getFullYear()}
                   </div>
                 </div>
               </div>
@@ -123,7 +126,7 @@ const DateWidget = ({ selectedNode, selectedDate, changeDate }) => {
               </div>
             </div>
 
-            <div className="flex w-full pt-5">
+            <div className="flex h-[35%] w-full pt-5">
               <div className="flex w-1/6 items-center justify-center">
                 {
                   (checkHour(selectedDate.getHours(), 1)) && (
@@ -133,7 +136,7 @@ const DateWidget = ({ selectedNode, selectedDate, changeDate }) => {
               </div>
 
               <div className="flex w-4/6 items-center justify-center">
-                <div className="w-[220px]">
+                <div>
                   {formatTime(selectedDate)}
                 </div>
               </div>
@@ -152,7 +155,7 @@ const DateWidget = ({ selectedNode, selectedDate, changeDate }) => {
   };
 
   return (
-    <div className="flex h-full w-full rounded-xl bg-white p-5 text-xl font-medium shadow">
+    <div className="flex h-full w-full rounded-xl bg-white p-5 text-lg font-medium shadow">
       <div ref={ref} className="flex h-full w-full items-center justify-center pr-5">
         {renderDateView()}
       </div>

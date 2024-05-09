@@ -117,7 +117,7 @@ const MeteorologicalWidget = ({
   };
 
   return (dayReadings !== undefined) && (dayUiInfo !== undefined) && (
-    <div className="absolute flex h-full w-full flex-col rounded-xl bg-white p-4 shadow">
+    <div className="absolute flex h-full w-full flex-col rounded-xl bg-white p-5 shadow">
       <div className="px-2 pb-2 sm:px-6">
         <div className="text-2xl sm:text-4xl">
           Tiempo
@@ -201,71 +201,104 @@ const MeteorologicalWidget = ({
               {
                 (selectedVariable === 'Resumen')
                   ? (
-                    <div className="flex grow px-6 pt-2">
-                      <div className="grid grow grid-cols-2 grid-rows-2 gap-2">
-                        {/* <div className="flex h-[200px] w-[530px] bg-white">
-                          <div className="h-[90px] w-[90px] bg-blue-400 mr-[20px]">
-                            Temperatura
-                          </div>
-                          <div className="h-[90px] w-[90px] bg-blue-400 mr-[20px]">
-                            test
-                          </div>
-                          <div className="h-[90px] w-[90px] bg-blue-400 mr-[20px]">
-                            test
-                          </div>
-                          <div className="h-[90px] w-[90px] bg-blue-400 mr-[20px]">
-                            test
-                          </div>
-                          <div className="h-[90px] w-[90px] bg-blue-900">
-                            test
-                          </div>
-                        </div> */}
+                    // <div className="flex h-full w-full px-6 pt-2">
+                    //   <div className="grid h-full w-full grid-cols-3 grid-rows-3 gap-2 bg-red-100">
+                    //     {/* <div className="flex h-[200px] w-[530px] bg-white">
+                    //       <div className="h-[90px] w-[90px] bg-blue-400 mr-[20px]">
+                    //         Temperatura
+                    //       </div>
+                    //       <div className="h-[90px] w-[90px] bg-blue-400 mr-[20px]">
+                    //         test
+                    //       </div>
+                    //       <div className="h-[90px] w-[90px] bg-blue-400 mr-[20px]">
+                    //         test
+                    //       </div>
+                    //       <div className="h-[90px] w-[90px] bg-blue-400 mr-[20px]">
+                    //         test
+                    //       </div>
+                    //       <div className="h-[90px] w-[90px] bg-blue-900">
+                    //         test
+                    //       </div>
+                    //     </div> */}
 
-                        <div className="flex flex-col items-center justify-center rounded-lg border p-2">
-                          <div className="flex h-[68px] w-[68px] items-center justify-center">
-                            <i className={`${getWeatherIcon(selectedDate.getHours())} self-center text-2xl sm:text-5xl`} />
-                          </div>
+                    //     <div className="flex flex-col items-center justify-center rounded-lg border p-2">
+                    //       <div className="flex h-[68px] w-[68px] items-center justify-center">
+                    //         <i className={`${getWeatherIcon(selectedDate.getHours())} self-center text-2xl sm:text-5xl`} />
+                    //       </div>
+                    //     </div>
+
+                    //     <div className="flex flex-col items-center justify-center rounded-lg border p-2">
+                    //       <div className="font-semibold">
+                    //         Temperatura
+                    //       </div>
+                    //       <div className="flex items-center justify-start">
+                    //         {
+                    //           (dayUiInfo.has_temp) && (dayReadings.length !== 0) && (getReadingValue('temperatura') !== null) && (
+                    //             <h1 className="self-center pl-2 text-2xl sm:text-3xl">{`${getReadingValue('temperatura')} °C`}</h1>
+                    //           )
+                    //         }
+                    //       </div>
+                    //     </div>
+
+                    //     <div className="flex flex-col items-center justify-center rounded-lg border p-2">
+                    //       <div className="font-semibold">
+                    //         Humedad
+                    //       </div>
+                    //       <div className="flex items-center justify-start">
+                    //         {
+                    //           (dayUiInfo.has_hum) && (dayReadings.length !== 0) && (getReadingValue('humedad') !== null) && (
+                    //             <h1 className="self-center pl-2 text-2xl sm:text-3xl">{`${getReadingValue('humedad')} %`}</h1>
+                    //           )
+                    //         }
+                    //       </div>
+                    //     </div>
+
+                    //     <div className="flex flex-col items-center justify-center rounded-lg border p-2">
+                    //       <div className="font-semibold">
+                    //         Presión Atmosférica
+                    //       </div>
+                    //       <div className="flex items-center justify-start">
+                    //         {
+                    //           (dayUiInfo.has_hum) && (dayReadings.length !== 0) && (getReadingValue('presión atmosférica') !== null) && (
+                    //             <h1 className="self-center pl-2 text-2xl sm:text-3xl">{`${getReadingValue('presión atmosférica')} hPa`}</h1>
+                    //           )
+                    //         }
+                    //       </div>
+                    //     </div>
+
+                    //     <div className="flex flex-col items-center justify-center rounded-lg border p-2">
+                    //       <div className="flex h-[68px] w-[68px] items-center justify-center">
+                    //         <i className={`${getWeatherIcon(selectedDate.getHours())} self-center text-2xl sm:text-5xl`} />
+                    //       </div>
+                    //     </div>
+
+                    //     <div className="flex flex-col items-center justify-center rounded-lg border p-2">
+                    //       <div className="font-semibold">
+                    //         Temperatura
+                    //       </div>
+                    //       <div className="flex items-center justify-start">
+                    //         {
+                    //           (dayUiInfo.has_temp) && (dayReadings.length !== 0) && (getReadingValue('temperatura') !== null) && (
+                    //             <h1 className="self-center pl-2 text-2xl sm:text-3xl">{`${getReadingValue('temperatura')} °C`}</h1>
+                    //           )
+                    //         }
+                    //       </div>
+                    //     </div>
+                    //   </div>
+                    // </div>
+                    <div className="flex h-full w-full bg-sky-200 px-6 pt-2">
+                      <div className="grid h-full w-full grid-cols-12 grid-rows-6 gap-2 bg-sky-400">
+                        <div className="h-full w-full bg-green-100 col-span-4 row-span-6">
+                          hehe sun
                         </div>
-
-                        <div className="flex flex-col items-center justify-center rounded-lg border p-2">
-                          <div className="font-semibold">
-                            Temperatura
-                          </div>
-                          <div className="flex items-center justify-start">
-                            {
-                              (dayUiInfo.has_temp) && (dayReadings.length !== 0) && (getReadingValue('temperatura') !== null) && (
-                                <h1 className="self-center pl-2 text-2xl sm:text-3xl">{`${getReadingValue('temperatura')} °C`}</h1>
-                              )
-                            }
-                          </div>
-                        </div>
-
-                        <div className="flex flex-col items-center justify-center rounded-lg border p-2">
-                          <div className="font-semibold">
-                            Humedad
-                          </div>
-                          <div className="flex items-center justify-start">
-                            {
-                              (dayUiInfo.has_hum) && (dayReadings.length !== 0) && (getReadingValue('humedad') !== null) && (
-                                <h1 className="self-center pl-2 text-2xl sm:text-3xl">{`${getReadingValue('humedad')} %`}</h1>
-                              )
-                            }
-                          </div>
-                        </div>
-
-                        <div className="flex flex-col items-center justify-center rounded-lg border p-2">
-                          <div className="font-semibold">
-                            Presión Atmosférica
-                          </div>
-                          <div className="flex items-center justify-start">
-                            {
-                              (dayUiInfo.has_hum) && (dayReadings.length !== 0) && (getReadingValue('presión atmosférica') !== null) && (
-                                <h1 className="self-center pl-2 text-2xl sm:text-3xl">{`${getReadingValue('presión atmosférica')} hPa`}</h1>
-                              )
-                            }
-                          </div>
-                        </div>
-
+                        {
+                          [1,2].map((v) => (
+                            <div className="h-full w-full bg-green-100 col-span-4 row-span-6">
+                              hehe
+                              {v}
+                            </div>
+                          ))
+                        }
                       </div>
                     </div>
                   )
