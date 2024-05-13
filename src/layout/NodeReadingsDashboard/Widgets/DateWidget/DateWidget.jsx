@@ -105,13 +105,13 @@ const DateWidget = ({ selectedNode, selectedDate, changeDate }) => {
 
               <div className="flex w-4/6 items-center justify-center">
                 <div className="flex flex-col items-center">
-                  <div className="h-fit text-base">
+                  <div className="h-fit text-sm">
                     {dayNames[selectedDate.getDay()]}
                   </div>
                   <div className="h-full">
                     {`${selectedDate.getDate()} de ${calendarNames[selectedDate.getMonth()]}`}
                   </div>
-                  <div className="h-fit text-base">
+                  <div className="h-fit text-sm">
                     {selectedDate.getFullYear()}
                   </div>
                 </div>

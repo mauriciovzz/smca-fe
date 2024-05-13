@@ -120,17 +120,18 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
       <div className="hidden h-full w-full sm:flex">
         <div className="grid h-full w-full  grid-cols-10 grid-rows-3 gap-4">
           <div className="col-span-5 row-span-1">
-            <NodeInfoWidget selectedNode={selectedNode} setIsOpen={setIsOpen} />
+            <NodeInfoWidget
+              selectedNode={selectedNode}
+              setIsOpen={setIsOpen}
+            />
           </div>
 
-          {/* Photo Widget */}
           {(true) && (
             <div className="col-span-2 row-span-1">
               <PhotoWidget />
             </div>
           )}
 
-          {/* Date Widget */}
           <div className={`${(true) ? 'col-span-3' : 'col-span-5'} row-span-1`}>
             <DateWidget
               selectedNode={selectedNode}
@@ -139,9 +140,9 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
             />
           </div>
 
-          {/* Meteorological Widget */}
           <div className="relative col-span-5 col-start-1 row-span-2">
             <MeteorologicalWidget
+              type="meteorological"
               dayReadings={dayReadings.filter((dr) => dr.type === 'Meteorológica')}
               dayUiInfo={dayUiInfo}
               selectedDate={selectedDate}
@@ -149,11 +150,13 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
             />
           </div>
 
-          {/* Envormental Widget */}
           <div className="relative col-span-5 row-span-2">
             <EnviromentalWidget
+              type="enviromental"
               dayReadings={dayReadings.filter((dr) => dr.type === 'Ambiental')}
+              dayUiInfo={dayUiInfo}
               selectedDate={selectedDate}
+              changeDate={changeDate}
             />
           </div>
 

@@ -4,39 +4,29 @@ import { Moon } from 'lunarphase-js';
 import { AreaChart, Area, ResponsiveContainer } from 'recharts';
 
 import { control } from 'src/assets';
+import colors from 'src/utils/colors';
 
 const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sab'];
 
 const Divider = () => <div className="text-gray-300">&nbsp;|&nbsp;</div>;
 
 const MeteorologicalWidget = ({
-  dayReadings, dayUiInfo, selectedDate, changeDate,
+  type, dayReadings, dayUiInfo, selectedDate, changeDate,
 }) => {
   const [selectedVariable, setSelectedVariable] = useState('Resumen');
+  const chartColor = '#FEF08A';
 
   // Graph scroll
   const centerRefGraph = useRef(null);
   let graphRepeater;
-
-  const graphScroll = (scrollOffset) => {
-    centerRefGraph.current.scrollLeft += scrollOffset;
-  };
-
-  const updateGraphRepeater = (offset) => {
-    graphRepeater = setInterval(graphScroll, 100, offset);
-  };
+  const graphScroll = (o) => { centerRefGraph.current.scrollLeft += o; };
+  const updateGraphRepeater = (o) => { graphRepeater = setInterval(graphScroll, 100, o); };
 
   // Variable list scroll
   const centerRefVarList = useRef(null);
   let varListRepeater;
-
-  const varListScroll = (scrollOffset) => {
-    centerRefVarList.current.scrollLeft += scrollOffset;
-  };
-
-  const updateVarListRepeater = (offset) => {
-    varListRepeater = setInterval(varListScroll, 100, offset);
-  };
+  const varListScroll = (o) => { centerRefVarList.current.scrollLeft += o; };
+  const updateVarListRepeater = (o) => { varListRepeater = setInterval(varListScroll, 100, o); };
 
   const getReadingValue = (variableName, hour) => {
     const time = hour || selectedDate.getHours();
@@ -57,21 +47,6 @@ const MeteorologicalWidget = ({
     hours = hours || 12;
 
     return `${hours} ${ampm}`;
-  };
-
-  const getChartColor = (type) => {
-    switch (dayReadings[selectedVariable].variable_name) {
-      case 'temperatura':
-        return (type === 'fill') ? '#FEF08A' : '#facc15';
-      case 'humedad':
-        return (type === 'fill') ? '#BAE6FD' : '#0284c7';
-      case 'presión atmosférica':
-        return (type === 'fill') ? '#D4D4D8' : '#737373';
-      case 'luz uv':
-        return (type === 'fill') ? '#a855f7' : '#d8b4fe';
-      default:
-        return (type === 'fill') ? '#e2e8f0' : '#f1f5f9';
-    }
   };
 
   const getWeatherIcon = (hour, data) => {
@@ -116,11 +91,40 @@ const MeteorologicalWidget = ({
     }
   };
 
+  const getGridSize = (index) => {
+    let varCount = dayReadings.filter((v) => v.variable_name !== 'lluvia').length;
+    if (type === 'meteorological') varCount += 1;
+
+    let rows = '';
+    let cols = '';
+
+    if (varCount < 4) rows = 'row-span-6';
+    else if (varCount < 9) rows = 'row-span-3';
+    else rows = 'row-span-2';
+
+    if (72 % varCount === 0) {
+      if (varCount < 4) cols = `col-span-${12 / varCount}`;
+      else if (varCount < 9) cols = `col-span-${12 / (varCount / 2)}`;
+      else cols = 'col-span-4';
+    } else if (varCount < 9) {
+      if (index < ((varCount - 1) / 2) + 1) cols = `col-span-${12 / ((varCount - 1) / 2)}`;
+      else cols = `col-span-${12 / (((varCount - 1) / 2) + 1)}`;
+    } else if (varCount === 10) {
+      if (index < 3) cols = 'col-span-6';
+      else cols = 'col-span-3';
+    } else if (varCount === 11) {
+      if (index < 4) cols = 'col-span-4';
+      else cols = 'col-span-3';
+    }
+
+    return `${rows} ${cols}`;
+  };
+
   return (dayReadings !== undefined) && (dayUiInfo !== undefined) && (
     <div className="absolute flex h-full w-full flex-col rounded-xl bg-white p-5 shadow">
       <div className="px-2 pb-2 sm:px-6">
         <div className="text-2xl sm:text-4xl">
-          Tiempo
+          {(type === 'meteorological') ? 'Tiempo' : 'Contaminantes'}
         </div>
       </div>
 
@@ -139,7 +143,6 @@ const MeteorologicalWidget = ({
           )
           : (
             <>
-              {/* Variable list */}
               <div className="flex w-full border-y py-1 text-xs sm:text-sm">
                 <div className="flex w-[28px] justify-center">
                   <img
@@ -201,101 +204,45 @@ const MeteorologicalWidget = ({
               {
                 (selectedVariable === 'Resumen')
                   ? (
-                    // <div className="flex h-full w-full px-6 pt-2">
-                    //   <div className="grid h-full w-full grid-cols-3 grid-rows-3 gap-2 bg-red-100">
-                    //     {/* <div className="flex h-[200px] w-[530px] bg-white">
-                    //       <div className="h-[90px] w-[90px] bg-blue-400 mr-[20px]">
-                    //         Temperatura
-                    //       </div>
-                    //       <div className="h-[90px] w-[90px] bg-blue-400 mr-[20px]">
-                    //         test
-                    //       </div>
-                    //       <div className="h-[90px] w-[90px] bg-blue-400 mr-[20px]">
-                    //         test
-                    //       </div>
-                    //       <div className="h-[90px] w-[90px] bg-blue-400 mr-[20px]">
-                    //         test
-                    //       </div>
-                    //       <div className="h-[90px] w-[90px] bg-blue-900">
-                    //         test
-                    //       </div>
-                    //     </div> */}
-
-                    //     <div className="flex flex-col items-center justify-center rounded-lg border p-2">
-                    //       <div className="flex h-[68px] w-[68px] items-center justify-center">
-                    //         <i className={`${getWeatherIcon(selectedDate.getHours())} self-center text-2xl sm:text-5xl`} />
-                    //       </div>
-                    //     </div>
-
-                    //     <div className="flex flex-col items-center justify-center rounded-lg border p-2">
-                    //       <div className="font-semibold">
-                    //         Temperatura
-                    //       </div>
-                    //       <div className="flex items-center justify-start">
-                    //         {
-                    //           (dayUiInfo.has_temp) && (dayReadings.length !== 0) && (getReadingValue('temperatura') !== null) && (
-                    //             <h1 className="self-center pl-2 text-2xl sm:text-3xl">{`${getReadingValue('temperatura')} °C`}</h1>
-                    //           )
-                    //         }
-                    //       </div>
-                    //     </div>
-
-                    //     <div className="flex flex-col items-center justify-center rounded-lg border p-2">
-                    //       <div className="font-semibold">
-                    //         Humedad
-                    //       </div>
-                    //       <div className="flex items-center justify-start">
-                    //         {
-                    //           (dayUiInfo.has_hum) && (dayReadings.length !== 0) && (getReadingValue('humedad') !== null) && (
-                    //             <h1 className="self-center pl-2 text-2xl sm:text-3xl">{`${getReadingValue('humedad')} %`}</h1>
-                    //           )
-                    //         }
-                    //       </div>
-                    //     </div>
-
-                    //     <div className="flex flex-col items-center justify-center rounded-lg border p-2">
-                    //       <div className="font-semibold">
-                    //         Presión Atmosférica
-                    //       </div>
-                    //       <div className="flex items-center justify-start">
-                    //         {
-                    //           (dayUiInfo.has_hum) && (dayReadings.length !== 0) && (getReadingValue('presión atmosférica') !== null) && (
-                    //             <h1 className="self-center pl-2 text-2xl sm:text-3xl">{`${getReadingValue('presión atmosférica')} hPa`}</h1>
-                    //           )
-                    //         }
-                    //       </div>
-                    //     </div>
-
-                    //     <div className="flex flex-col items-center justify-center rounded-lg border p-2">
-                    //       <div className="flex h-[68px] w-[68px] items-center justify-center">
-                    //         <i className={`${getWeatherIcon(selectedDate.getHours())} self-center text-2xl sm:text-5xl`} />
-                    //       </div>
-                    //     </div>
-
-                    //     <div className="flex flex-col items-center justify-center rounded-lg border p-2">
-                    //       <div className="font-semibold">
-                    //         Temperatura
-                    //       </div>
-                    //       <div className="flex items-center justify-start">
-                    //         {
-                    //           (dayUiInfo.has_temp) && (dayReadings.length !== 0) && (getReadingValue('temperatura') !== null) && (
-                    //             <h1 className="self-center pl-2 text-2xl sm:text-3xl">{`${getReadingValue('temperatura')} °C`}</h1>
-                    //           )
-                    //         }
-                    //       </div>
-                    //     </div>
-                    //   </div>
-                    // </div>
-                    <div className="flex h-full w-full bg-sky-200 px-6 pt-2">
-                      <div className="grid h-full w-full grid-cols-12 grid-rows-6 gap-2 bg-sky-400">
-                        <div className="h-full w-full bg-green-100 col-span-4 row-span-6">
-                          hehe sun
-                        </div>
+                    <div className="flex h-full w-full px-6 pt-2">
+                      <div className="grid h-full w-full grid-cols-12 grid-rows-6 gap-2">
                         {
-                          [1,2].map((v) => (
-                            <div className="h-full w-full bg-green-100 col-span-4 row-span-6">
-                              hehe
-                              {v}
+                          (type === 'meteorological') && (
+                            <div className={`${getGridSize(1)} flex h-full w-full items-center justify-center rounded-lg border`}>
+                              <i className={`${getWeatherIcon(selectedDate.getHours())} self-center text-2xl sm:text-5xl`} />
+                            </div>
+                          )
+                        }
+
+                        {
+                          dayReadings.filter((vtf) => vtf.variable_name !== 'lluvia').map((v, index) => (
+                            <div className={`${getGridSize((type === 'meteorological') ? index + 2 : index + 1)} flex h-full w-full flex-col items-center justify-center rounded-lg border`}>
+                              <div className="font-semibold">
+                                {v.variable_name}
+                              </div>
+                              <div>
+                                {
+                                  (getReadingValue(v.variable_name) !== null)
+                                    ? (
+                                      <div className="flex">
+                                        <div>
+                                          {getReadingValue(v.variable_name)}
+                                        </div>
+                                        {
+                                          (v.unit !== null) && (
+                                            <div>
+                                              &nbsp;
+                                              {v.unit}
+                                            </div>
+                                          )
+                                        }
+                                      </div>
+                                    )
+                                    : (
+                                      <i className={`${getWeatherIcon(null, null)} self-center text-gray-400`} />
+                                    )
+                                }
+                              </div>
                             </div>
                           ))
                         }
@@ -323,7 +270,17 @@ const MeteorologicalWidget = ({
                                     top: 10, right: 25, left: 25, bottom: 0,
                                   }}
                                 >
-                                  <Area type="monotone" connectNulls dataKey="value" dot={{ stroke: getChartColor('stroke'), strokeWidth: 2 }} fill={getChartColor('fill')} stroke={getChartColor('stroke')} />
+                                  <Area
+                                    type="monotone"
+                                    dataKey="value"
+                                    fill={chartColor}
+                                    stroke={colors.getDarkerColor(chartColor, 0.09)}
+                                    dot={{
+                                      stroke: colors.getDarkerColor(chartColor, 0.09),
+                                      strokeWidth: 2,
+                                    }}
+                                    connectNulls
+                                  />
                                 </AreaChart>
                               </ResponsiveContainer>
                             </div>
