@@ -4,10 +4,9 @@ import readingsService from 'src/services/readings';
 import notifications from 'src/utils/notifications';
 
 import DateWidget from './Widgets/DateWidget/DateWidget';
-import EnviromentalWidget from './Widgets/EnviromentalWidget';
-import MeteorologicalWidget from './Widgets/MeteorologicalWidget';
 import NodeInfoWidget from './Widgets/NodeInfoWidget';
 import PhotoWidget from './Widgets/PhotoWidget';
+import ReadingsWidget from './Widgets/ReadingsWidget';
 
 const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
   const [isPageLoading, setIsPageLoading] = useState(true);
@@ -141,7 +140,7 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
           </div>
 
           <div className="relative col-span-5 col-start-1 row-span-2">
-            <MeteorologicalWidget
+            <ReadingsWidget
               type="meteorological"
               dayReadings={dayReadings.filter((dr) => dr.type === 'Meteorológica')}
               dayUiInfo={dayUiInfo}
@@ -151,7 +150,7 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
           </div>
 
           <div className="relative col-span-5 row-span-2">
-            <EnviromentalWidget
+            <ReadingsWidget
               type="enviromental"
               dayReadings={dayReadings.filter((dr) => dr.type === 'Ambiental')}
               dayUiInfo={dayUiInfo}
@@ -235,7 +234,7 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
             </div>
 
             <div className="relative h-[290px]">
-              <MeteorologicalWidget
+              <ReadingsWidget
                 dayReadings={dayReadings.filter((dr) => dr.type === 'Meteorológica')}
                 hasRainSensor={selectedNode.rain}
                 selectedDate={selectedDate}

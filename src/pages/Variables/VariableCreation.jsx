@@ -3,7 +3,7 @@ import { React, useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 
 import {
-  Button, Divider, Heading, TextInput, ToggleButton,
+  Button, ColorInput, Divider, Heading, TextInput, ToggleButton,
 } from 'src/components';
 import variablesService from 'src/services/variables';
 import notifications from 'src/utils/notifications';
@@ -17,6 +17,7 @@ const VariableCreation = ({ updateVariables, changeView }) => {
   const [name, setName] = useState('');
   const [variableValueType, setVariableValueType] = useState('Numérico');
   const [unit, setUnit] = useState('');
+  const [color, setColor] = useState('#000000');
 
   const getVariableTypes = async () => {
     try {
@@ -53,6 +54,7 @@ const VariableCreation = ({ updateVariables, changeView }) => {
         variableValueType: variableValueTypes.find(
           (vvt) => vvt.type === variableValueType,
         ).variable_value_type_id,
+        color,
       };
 
       if (variableValueType === 'Numérico') {
@@ -70,6 +72,7 @@ const VariableCreation = ({ updateVariables, changeView }) => {
       setName('');
       setVariableValueType('Numérico');
       setUnit('');
+      setColor('#000000');
       updateVariables();
     } catch (err) {
       notifications.error(err);
@@ -126,7 +129,7 @@ const VariableCreation = ({ updateVariables, changeView }) => {
             }}
           />
 
-          <div className={`${(variableValueType === 'Numérico') ? 'flex space-x-5' : 'w-full'}`}>
+          <div className="flex space-x-5">
             <div className={`${(variableValueType === 'Numérico') ? 'w-3/4' : 'w-full'}`}>
               <TextInput
                 id="name"
@@ -140,7 +143,7 @@ const VariableCreation = ({ updateVariables, changeView }) => {
 
             {
               (variableValueType === 'Numérico') && (
-                <div className="w-1/4">
+                <div className="w-fit">
                   <TextInput
                     id="unit"
                     type="text"
@@ -152,8 +155,16 @@ const VariableCreation = ({ updateVariables, changeView }) => {
                 </div>
               )
             }
-          </div>
 
+            <div className="w-fit">
+              <ColorInput
+                id="color"
+                labelText="Color"
+                value={color}
+                setValue={setColor}
+              />
+            </div>
+          </div>
         </form>
       </div>
 

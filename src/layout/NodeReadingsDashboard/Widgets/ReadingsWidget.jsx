@@ -10,11 +10,10 @@ const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sab'];
 
 const Divider = () => <div className="text-gray-300">&nbsp;|&nbsp;</div>;
 
-const MeteorologicalWidget = ({
+const ReadingsWidget = ({
   type, dayReadings, dayUiInfo, selectedDate, changeDate,
 }) => {
   const [selectedVariable, setSelectedVariable] = useState('Resumen');
-  const chartColor = '#FEF08A';
 
   // Graph scroll
   const centerRefGraph = useRef(null);
@@ -178,12 +177,10 @@ const MeteorologicalWidget = ({
                             type="button"
                             onClick={() => setSelectedVariable(index)}
                           >
-                            {v.variable_name}
+                            {(v.unit !== null) ? `${v.variable_name} (${v.unit})` : `${v.variable_name}`}
                           </button>
 
-                          {
-                              (dayReadings.filter((vv) => vv.variable_name !== 'lluvia').length - 1 !== index) && (<Divider />)
-                          }
+                          {(dayReadings.filter((vv) => vv.variable_name !== 'lluvia').length - 1 !== index) && (<Divider />)}
                         </div>
                       ),
                     )
@@ -273,10 +270,16 @@ const MeteorologicalWidget = ({
                                   <Area
                                     type="monotone"
                                     dataKey="value"
-                                    fill={chartColor}
-                                    stroke={colors.getDarkerColor(chartColor, 0.09)}
+                                    fill={dayReadings[selectedVariable].color}
+                                    stroke={colors.getDarkerColor(
+                                      dayReadings[selectedVariable].color,
+                                      0.09,
+                                    )}
                                     dot={{
-                                      stroke: colors.getDarkerColor(chartColor, 0.09),
+                                      stroke: colors.getDarkerColor(
+                                        dayReadings[selectedVariable].color,
+                                        0.09,
+                                      ),
                                       strokeWidth: 2,
                                     }}
                                     connectNulls
@@ -301,7 +304,7 @@ const MeteorologicalWidget = ({
                                       <i className={`${getWeatherIcon(average.time, average.value)} self-center text-lg`} />
 
                                       <div className="h-[16px] self-center whitespace-nowrap text-xs">
-                                        {`${(average.time === 'sunrise' || average.time === 'sunset' || average.value === null) ? '' : `${average.value} ${dayReadings[selectedVariable].unit}`}`}
+                                        {`${(average.time === 'sunrise' || average.time === 'sunset' || average.value === null) ? '' : `${average.value}`}`}
                                       </div>
                                     </div>
                                   ))
@@ -362,4 +365,4 @@ const MeteorologicalWidget = ({
   );
 };
 
-export default MeteorologicalWidget;
+export default ReadingsWidget;

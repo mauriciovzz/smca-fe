@@ -3,7 +3,7 @@ import { React, useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 
 import {
-  Button, Divider, Heading, Label, TextInput,
+  Button, ColorInput, Divider, Heading, Label, TextInput,
 } from 'src/components';
 import { ConfirmationDialog } from 'src/layout';
 import variablesService from 'src/services/variables';
@@ -18,6 +18,7 @@ const VariableManagement = ({ selectedVariable, updateVariables, changeView }) =
   const [variableValueType, setVariableValueType] = useState(selectedVariable.value_type);
   const [name, setName] = useState(selectedVariable.name);
   const [unit, setUnit] = useState(selectedVariable.unit);
+  const [color, setColor] = useState(selectedVariable.color);
 
   const setData = () => {
     setIsEditable(false);
@@ -27,6 +28,7 @@ const VariableManagement = ({ selectedVariable, updateVariables, changeView }) =
     setVariableValueType(selectedVariable.value_type);
     setName(selectedVariable.name);
     setUnit(selectedVariable.unit);
+    setColor(selectedVariable.color);
   };
 
   useEffect(() => {
@@ -35,7 +37,10 @@ const VariableManagement = ({ selectedVariable, updateVariables, changeView }) =
 
   const handleUpdate = async () => {
     try {
-      const requestData = { name };
+      const requestData = {
+        name,
+        color,
+      };
 
       if (variableValueType === 'Numérico') {
         requestData.unit = unit;
@@ -105,18 +110,31 @@ const VariableManagement = ({ selectedVariable, updateVariables, changeView }) =
             disabled={!isEditable}
           />
 
-          {
-            (variableValueType === 'Numérico') && (
-              <TextInput
-                id="unit"
-                type="text"
-                labelText="Unidad"
-                value={unit}
-                setValue={setUnit}
+          <div className="flex space-x-5">
+            {
+              (variableValueType === 'Numérico') && (
+                <TextInput
+                  id="unit"
+                  type="text"
+                  labelText="Unidad"
+                  value={unit}
+                  setValue={setUnit}
+                  disabled={!isEditable}
+                />
+              )
+            }
+
+            <div className="w-full">
+              <ColorInput
+                id="color"
+                labelText="Color"
+                value={color}
+                setValue={setColor}
                 disabled={!isEditable}
               />
-            )
-          }
+            </div>
+          </div>
+
         </form>
       </div>
 
