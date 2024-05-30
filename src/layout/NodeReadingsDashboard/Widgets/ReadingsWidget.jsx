@@ -8,7 +8,7 @@ import colors from 'src/utils/colors';
 
 const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sab'];
 
-const Divider = () => <div className="text-gray-300">&nbsp;|&nbsp;</div>;
+const Divider = () => <div className="ml-2 border-l" />;
 
 const ReadingsWidget = ({
   type, dayReadings, dayUiInfo, selectedDate, changeDate,
@@ -121,7 +121,7 @@ const ReadingsWidget = ({
 
   return (dayReadings !== undefined) && (dayUiInfo !== undefined) && (
     <div className="absolute flex h-full w-full flex-col rounded-xl bg-white p-5 shadow">
-      <div className="px-2 pb-2 sm:px-6">
+      <div className="pb-2 sm:px-6">
         <div className="text-2xl sm:text-4xl">
           {(type === 'meteorological') ? 'Tiempo' : 'Contaminantes'}
         </div>
@@ -134,7 +134,7 @@ const ReadingsWidget = ({
               <div className="border-t px-2 py-1 text-xs sm:px-7 sm:text-sm" />
 
               <div className="flex h-full w-full items-center justify-center">
-                <b>
+                <b className="w-2/3 text-center sm:w-full">
                   No existen lecturas realizadas en esta fecha
                 </b>
               </div>
@@ -142,58 +142,61 @@ const ReadingsWidget = ({
           )
           : (
             <>
-              <div className="flex w-full border-y py-1 text-xs sm:text-sm">
-                <div className="flex w-[28px] justify-center">
+              <div className="flex w-full border-y py-1 text-sm">
+                <div
+                  className="mr-1 hidden w-[31px] items-center justify-center rounded-lg hover:bg-graydetails sm:flex"
+                  onMouseEnter={() => updateVarListRepeater(-20)}
+                  onMouseLeave={() => clearInterval(varListRepeater)}
+                >
                   <img
                     src={control}
                     alt="left var list scroll"
-                    className="hidden h-[20px] w-[20px] self-center sm:flex"
-                    onMouseEnter={() => updateVarListRepeater(-20)}
-                    onMouseLeave={() => clearInterval(varListRepeater)}
+                    className=" h-[20px] w-[20px]"
                   />
                 </div>
 
-                <div ref={centerRefVarList} className="hide-scrollbar flex w-full overflow-scroll scroll-smooth">
-                  <div className="flex">
+                <div ref={centerRefVarList} className="flex w-full overflow-auto scroll-smooth pb-1 sm:hide-scrollbar sm:pb-0">
+                  <div className="flex items-center">
                     <button
-                      className={`${(selectedVariable === 'Resumen') && 'font-semibold'} whitespace-nowrap`}
+                      className={`${(selectedVariable === 'Resumen') ? 'bg-graydetails' : 'hover:bg-graydetails'} whitespace-nowrap rounded-lg px-2 py-1`}
                       type="button"
                       onClick={() => setSelectedVariable('Resumen')}
                     >
                       Resumen
                     </button>
-                    <Divider />
                   </div>
 
                   {
                     dayReadings.filter((v) => v.variable_name !== 'lluvia').map(
                       (v, index) => (
                         <div
-                          key={v.variable_id}
+                          key={v.name}
                           className="flex"
                         >
+                          <Divider />
+
                           <button
-                            className={`${(index === selectedVariable) && 'font-semibold'} whitespace-nowrap`}
+                            className={`${(index === selectedVariable) ? 'bg-graydetails' : 'hover:bg-graydetails'} ml-2 whitespace-nowrap rounded-lg px-2 py-1`}
                             type="button"
                             onClick={() => setSelectedVariable(index)}
                           >
                             {(v.unit !== null) ? `${v.variable_name} (${v.unit})` : `${v.variable_name}`}
                           </button>
-
-                          {(dayReadings.filter((vv) => vv.variable_name !== 'lluvia').length - 1 !== index) && (<Divider />)}
                         </div>
                       ),
                     )
                   }
                 </div>
 
-                <div className="flex w-[28px] justify-center">
+                <div
+                  className="ml-1 hidden w-[31px] items-center justify-center rounded-lg hover:bg-graydetails sm:flex"
+                  onMouseEnter={() => updateVarListRepeater(20)}
+                  onMouseLeave={() => clearInterval(varListRepeater)}
+                >
                   <img
                     src={control}
-                    alt="right var list scroll"
-                    className="hidden h-[20px] w-[20px] rotate-180 self-center sm:flex"
-                    onMouseEnter={() => updateVarListRepeater(20)}
-                    onMouseLeave={() => clearInterval(varListRepeater)}
+                    alt="left var list scroll"
+                    className=" h-[20px] w-[20px] rotate-180"
                   />
                 </div>
               </div>
@@ -201,8 +204,8 @@ const ReadingsWidget = ({
               {
                 (selectedVariable === 'Resumen')
                   ? (
-                    <div className="flex h-full w-full px-6 pt-2">
-                      <div className="grid h-full w-full grid-cols-12 grid-rows-6 gap-2">
+                    <div className="flex h-full w-full pt-2 sm:px-6">
+                      <div className="grid h-full w-full grid-cols-12 grid-rows-6 gap-2 text-sm sm:text-base">
                         {
                           (type === 'meteorological') && (
                             <div className={`${getGridSize(1)} flex h-full w-full items-center justify-center rounded-lg border`}>
@@ -213,7 +216,7 @@ const ReadingsWidget = ({
 
                         {
                           dayReadings.filter((vtf) => vtf.variable_name !== 'lluvia').map((v, index) => (
-                            <div className={`${getGridSize((type === 'meteorological') ? index + 2 : index + 1)} flex h-full w-full flex-col items-center justify-center rounded-lg border`}>
+                            <div key={v.variable_id} className={`${getGridSize((type === 'meteorological') ? index + 2 : index + 1)} flex h-full w-full flex-col items-center justify-center rounded-lg border`}>
                               <div className="font-semibold">
                                 {v.variable_name}
                               </div>
@@ -252,12 +255,12 @@ const ReadingsWidget = ({
                         <img
                           src={control}
                           alt="left graph scroll"
-                          className="hidden h-[28px] w-[28px] self-center sm:flex"
+                          className="mr-1 hidden h-[28px] w-[28px] self-center rounded-lg hover:bg-graydetails sm:flex"
                           onMouseEnter={() => updateGraphRepeater(-20)}
                           onMouseLeave={() => clearInterval(graphRepeater)}
                         />
 
-                        <div ref={centerRefGraph} className="hide-scrollbar flex overflow-scroll scroll-smooth pt-1">
+                        <div ref={centerRefGraph} className="flex overflow-auto scroll-smooth sm:hide-scrollbar ">
                           <div className="flex h-full flex-col">
                             <div className="flex grow">
                               <ResponsiveContainer width="100%" height="100%">
@@ -295,7 +298,7 @@ const ReadingsWidget = ({
                                   .map((average) => (
                                     <div
                                       key={average.time}
-                                      className={`${(average.time === selectedDate.getHours()) && 'font-semibold shadow'} flex h-[60px] w-[50px] flex-col justify-center space-y-1`}
+                                      className={`${(average.time === selectedDate.getHours()) && 'rounded-lg border font-semibold'} flex h-[60px] w-[50px] flex-col justify-center space-y-1`}
                                     >
                                       <div className="self-center whitespace-nowrap text-xs">
                                         {getReadingTime(average.time)}
@@ -311,44 +314,45 @@ const ReadingsWidget = ({
                               }
                             </div>
                           </div>
-
                         </div>
 
                         <img
                           src={control}
                           alt="right graph scroll"
-                          className="hidden h-[28px] w-[28px] rotate-180 self-center sm:flex"
+                          className="ml-1 hidden h-[28px] w-[28px] rotate-180 self-center rounded-lg hover:bg-graydetails sm:flex"
                           onMouseEnter={() => updateGraphRepeater(20)}
                           onMouseLeave={() => clearInterval(graphRepeater)}
                         />
                       </div>
 
-                      <div className="flex justify-evenly border-t pt-2">
+                      <div className="grid grid-cols-7 gap-2 border-t pt-2">
                         {
                           dayReadings[selectedVariable].weekData.map((day) => (
                             <button
                               type="button"
                               key={day.day}
-                              className="flex flex-col"
+                              className="flex flex-col items-center justify-center rounded-lg p-1 hover:bg-graydetails"
                               onClick={() => changeDate(new Date(day.weekDay))}
                             >
-                              <div className="self-center text-xs font-bold">
+                              <div className="text-xs font-bold">
                                 {dayNames[day.day]}
                               </div>
                               {
                                 (day.max)
                                   ? (
-                                    <div className="flex pt-1 text-xs">
+                                    <div className="flex flex-col pt-1 text-xs sm:flex-row">
                                       <div>
-                                        {`${day.max}`}
+                                        {day.max}
                                       </div>
-                                      <div className="pl-1 text-gray-400">
-                                        {`${day.min}`}
+                                      <div className="text-gray-400 sm:pl-1">
+                                        {day.min}
                                       </div>
                                     </div>
                                   )
                                   : (
-                                    <i className="wi wi-na self-center text-base" />
+                                    <div className="flex h-full w-full items-center justify-center">
+                                      <i className="wi wi-na text-base" />
+                                    </div>
                                   )
                               }
                             </button>

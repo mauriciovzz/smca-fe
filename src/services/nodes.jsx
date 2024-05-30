@@ -37,6 +37,11 @@ const getComponents = async (workspaceId, nodeId) => {
   return request.data;
 };
 
+const getPublicNodeComponents = async (workspaceId, nodeId) => {
+  const request = await axios.get(`${baseUrl}/publicNodeComponents/${workspaceId}/${nodeId}`);
+  return request.data;
+};
+
 const getConfigFile = async (workspaceId, nodeId) => {
   const request = await axios.get(`${baseUrl}/getConfigFile/${workspaceId}/${nodeId}`, {
     headers: {
@@ -96,6 +101,7 @@ export default {
   getAccountNodes,
   getWorkspaceNodes,
   getComponents,
+  getPublicNodeComponents,
   getConfigFile,
   create,
   updateName,

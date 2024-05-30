@@ -1,5 +1,6 @@
 import { React, useState, useEffect } from 'react';
 
+import nodesService from 'src/services/nodes';
 import readingsService from 'src/services/readings';
 import notifications from 'src/utils/notifications';
 
@@ -14,6 +15,7 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
   const [selectedDate, setSelectedDate] = useState(new Date(2024, 3, 2));
   const [dayUiInfo, setDayUiInfo] = useState({});
   const [dayReadings, setDayReadings] = useState([]);
+  const [nodeComponents, setNodeCOmponents] = useState(null);
 
   const changeDate = (newDate, newHour) => {
     const currentDate = newDate || selectedDate;
@@ -71,9 +73,34 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
     }
   };
 
+  const getPublicNodeComponents = async () => {
+    try {
+      const response = await nodesService.getComponents(
+        selectedNode.workspace_id,
+        selectedNode.node_id,
+      );
+      setNodeCOmponents(response);
+    } catch (err) {
+      notifications.error(err);
+    }
+  };
+
+  const getPrivateComponents = async () => {
+    try {
+      const response = await nodesService.getComponents(
+        selectedNode.workspace_id,
+        selectedNode.node_id,
+      );
+      setNodeCOmponents(response);
+    } catch (err) {
+      notifications.error(err);
+    }
+  };
+
   const getPublicNodeReadings = async () => {
     try {
       getUiInfo();
+      getPublicNodeComponents();
 
       const response = await readingsService.getPublicNodeReadings(
         selectedNode.node_id,
@@ -91,6 +118,7 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
   const getPrivateNodeReadings = async () => {
     try {
       getUiInfo();
+      getPrivateComponents();
 
       const response = await readingsService.getPrivateNodeReadings(
         selectedNode.node_id,
@@ -99,6 +127,7 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
       );
 
       setDayReadings(response.map((v) => ({ ...v, dayAverages: parseAverages(v.dayAverages) })));
+      setIsPageLoading(false);
     } catch (err) {
       notifications.error(err);
     }
@@ -118,9 +147,11 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
       {/* Desktop */}
       <div className="hidden h-full w-full sm:flex">
         <div className="grid h-full w-full  grid-cols-10 grid-rows-3 gap-4">
+
           <div className="col-span-5 row-span-1">
             <NodeInfoWidget
               selectedNode={selectedNode}
+              nodeComponents={nodeComponents}
               setIsOpen={setIsOpen}
             />
           </div>
@@ -163,93 +194,54 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
       </div>
 
       {/* Mobile */}
-      {/* <div className="flex h-full w-full sm:hidden">
+      <div className="flex h-full w-full sm:hidden">
         <div className="hide-scrollbar flex w-full flex-col overflow-scroll scroll-smooth">
           <div className="inline-block space-y-4">
 
-            <div className="flex h-[50px] space-x-4 ">
-
-              <div className="flex grow items-center justify-center rounded-xl bg-white shadow">
-                <button
-                  type="button"
-                  onClick={() => setIsOpen(false)}
-                >
-                  <img
-                    src={close}
-                    alt="close button"
-                    className="h-[28px] w-[28px]"
-                  />
-                </button>
-              </div>
-
-              <div className="flex grow items-center justify-center rounded-xl bg-white shadow ">
-                <button
-                  type="button"
-                  onClick={() => setSelectedDate(new Date())}
-                >
-                  <img
-                    src={refresh}
-                    alt="close button"
-                    className="h-[28px] w-[28px]"
-                  />
-                </button>
-              </div>
-
+            <div className="relative h-[330px]">
+              <NodeInfoWidget
+                selectedNode={selectedNode}
+                nodeComponents={nodeComponents}
+                setIsOpen={setIsOpen}
+              />
             </div>
 
-            <div className="relative h-[140px]">
-              <NodeInfoWidget selectedNode={selectedNode} />
+            <div className="sticky top-0 z-[100] flex h-fit ">
+              <DateWidget
+                selectedNode={selectedNode}
+                selectedDate={selectedDate}
+                changeDate={changeDate}
+              />
             </div>
 
-            {selectedNode.camera && (
-              <div className="relative flex h-[140px]">
-                <PhotoWidget selectedNode={selectedNode} />
+            {(true) && (
+              <div className="relative h-fit">
+                <PhotoWidget />
               </div>
             )}
 
-            <div className="flex h-[140px] flex-col items-center justify-center r
-            ounded-xl bg-white px-4 py-2 text-xl font-medium shadow">
-              <div>
-                {dayNames[selectedDate.getDay()]}
-                <br />
-              </div>
-              <div>
-                {`${selectedDate.getDate()} de ${monthNames[selectedDate.getMonth()]}`}
-                <br />
-              </div>
-              <div>
-                {formatTime(selectedDate)}
-              </div>
-            </div>
-
-            <div className="flex h-[140px] items-center
-            overflow-hidden rounded-xl bg-white px-10 text-xs shadow">
-              <Calendar
-                onChange={changeDate}
-                value={selectedDate}
-                minDate={new Date(selectedNode.start_date)}
-                maxDate={new Date()}
-                locale="es-VE"
-              />
-            </div>
-
-            <div className="relative h-[290px]">
+            <div className="relative h-[330px]">
               <ReadingsWidget
+                type="meteorological"
                 dayReadings={dayReadings.filter((dr) => dr.type === 'Meteorológica')}
-                hasRainSensor={selectedNode.rain}
+                dayUiInfo={dayUiInfo}
                 selectedDate={selectedDate}
+                changeDate={changeDate}
               />
             </div>
 
-            <div className="relative h-[290px]">
-              <EnviromentalWidget
+            <div className="relative h-[330px]">
+              <ReadingsWidget
+                type="enviromental"
                 dayReadings={dayReadings.filter((dr) => dr.type === 'Ambiental')}
+                dayUiInfo={dayUiInfo}
                 selectedDate={selectedDate}
+                changeDate={changeDate}
               />
             </div>
           </div>
         </div>
-      </div> */}
+      </div>
     </div>
   );
 };
