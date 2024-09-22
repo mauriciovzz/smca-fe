@@ -32,8 +32,8 @@ const getWorkspaceNodes = async (workspaceId) => {
   return request.data;
 };
 
-const getComponents = async (workspaceId, nodeId) => {
-  const request = await axios.get(`${baseUrl}/${workspaceId}/${nodeId}`);
+const getPrivateNodeComponents = async (workspaceId, nodeId) => {
+  const request = await axios.get(`${baseUrl}/privateNodeComponents/${workspaceId}/${nodeId}`);
   return request.data;
 };
 
@@ -100,7 +100,7 @@ export default {
   getPublicNodes,
   getAccountNodes,
   getWorkspaceNodes,
-  getComponents,
+  getPrivateNodeComponents,
   getPublicNodeComponents,
   getConfigFile,
   create,

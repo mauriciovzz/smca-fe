@@ -16,7 +16,7 @@ const NodeManagement = ({ selectedNode, updateNodes, changeView }) => {
 
   const getNodeComponents = async () => {
     try {
-      const response = await nodesService.getComponents(
+      const response = await nodesService.getPrivateNodeComponents(
         selectedWorkspace.workspace_id,
         selectedNode.node_id,
       );

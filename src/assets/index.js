@@ -18,6 +18,7 @@ import control from 'src/assets/icons/control.svg';
 import download from 'src/assets/icons/download.svg';
 import errorIcon from 'src/assets/icons/errorIcon.svg';
 import help from 'src/assets/icons/help.svg';
+import imageIcon from 'src/assets/icons/imageIcon.svg';
 import info from 'src/assets/icons/info.svg';
 import locationIcon from 'src/assets/icons/locationIcon.svg';
 import loginIcon from 'src/assets/icons/loginIcon.svg';
@@ -58,6 +59,7 @@ export {
   download,
   errorIcon,
   help,
+  imageIcon,
   info,
   locationIcon,
   loginIcon,

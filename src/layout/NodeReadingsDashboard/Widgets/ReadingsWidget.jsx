@@ -11,7 +11,7 @@ const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sab'];
 const Divider = () => <div className="ml-2 border-l" />;
 
 const ReadingsWidget = ({
-  type, dayReadings, dayUiInfo, selectedDate, changeDate,
+  type, dayReadings, selectedDate, changeDate,
 }) => {
   const [selectedVariable, setSelectedVariable] = useState('Resumen');
 
@@ -48,20 +48,24 @@ const ReadingsWidget = ({
     return `${hours} ${ampm}`;
   };
 
+  const checkForRainSensor = () => dayReadings
+    .map((v) => v.variable_name)
+    .includes('lluvia');
+
   const getWeatherIcon = (hour, data) => {
     if (hour === 'sunrise') return 'wi wi-sunrise text-yellow-400';
     if (hour === 'sunset') return 'wi wi-sunset text-orange-400';
     if (data === null) return 'wi wi-na text-gray-400';
 
     if (hour > 5 && hour < 18) {
-      if (dayUiInfo.has_rain) {
+      if (checkForRainSensor()) {
         if (getReadingValue('lluvia', hour)) return 'wi wi-day-showers text-orange-700';
       }
       return 'wi wi-day-sunny text-yellow-400';
     }
 
     const phase = Moon.lunarPhase(selectedDate);
-    if (dayUiInfo.has_rain) {
+    if (checkForRainSensor()) {
       if (getReadingValue('lluvia', hour)) {
         if (phase === 'New' || phase === 'Full') return 'wi wi-night-showers text-sky-700';
         return 'wi wi-night-alt-showers text-sky-700';
@@ -119,7 +123,7 @@ const ReadingsWidget = ({
     return `${rows} ${cols}`;
   };
 
-  return (dayReadings !== undefined) && (dayUiInfo !== undefined) && (
+  return (dayReadings !== undefined) && (
     <div className="absolute flex h-full w-full flex-col rounded-xl bg-white p-5 shadow">
       <div className="pb-2 sm:px-6">
         <div className="text-2xl sm:text-4xl">
