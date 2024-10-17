@@ -20,7 +20,7 @@ const SensorSelection = ({
   );
 
   return (
-    <div className="relative flex h-full w-full flex-col rounded-lg border bg-white p-2.5">
+    <div className="relative flex size-full flex-col rounded-lg border bg-white p-2.5">
       <SelectionBar
         text="Selecionar Sensores"
         leftAction={leftButtonClick}
@@ -29,9 +29,9 @@ const SensorSelection = ({
 
       <Divider changePadding="p-[5px]" />
 
-      <div className="flex h-full w-full flex-col space-y-2.5">
-        <div className="relative h-full w-full">
-          <ul className="small-scrollbar absolute flex h-full w-full flex-col overflow-hidden overflow-y-scroll rounded-lg border bg-background">
+      <div className="flex size-full flex-col space-y-2.5">
+        <div className="relative size-full">
+          <ul className="small-scrollbar absolute flex size-full flex-col overflow-hidden overflow-y-scroll rounded-lg border bg-background">
             {
               sensors
                 .map((sensor) => (
@@ -39,7 +39,7 @@ const SensorSelection = ({
                     key={sensor.component_id}
                     className={`${selectedComponents.map((sc) => sc.component_id).includes(sensor.component_id) ? 'bg-sky-200' : 'bg-white'} h-fit w-full border-b p-5 shadow`}
                   >
-                    <div className="flex h-full w-full flex-col">
+                    <div className="flex size-full flex-col">
                       <div className="text-left font-semibold">
                         {sensor.name}
                       </div>
@@ -63,7 +63,7 @@ const SensorSelection = ({
                                 <img
                                   src={isVariableCheked(sensor, variable)}
                                   alt="check icon"
-                                  className="h-[24px] w-[24px]"
+                                  className="size-[24px]"
                                 />
                               </button>
                             </li>
@@ -93,7 +93,7 @@ const SensorSelection = ({
 
       {
         isComCreOpen && (
-          <div className="absolute left-0 top-0 h-full w-full">
+          <div className="absolute left-0 top-0 size-full">
             <ComponentCreation
               updateComponents={updateComponents}
               changeView={() => setIsComCreOpen(false)}

@@ -24,7 +24,7 @@ const VariableList = ({ variables, selectVariable, changeView }) => {
                 <img
                   src={addIcon}
                   alt="add user"
-                  className="h-[25px] w-[25px] sm:h-[36px] sm:w-[36px]"
+                  className="size-[25px] sm:size-[36px]"
                 />
               </button>
             )
@@ -33,8 +33,8 @@ const VariableList = ({ variables, selectVariable, changeView }) => {
 
         <Divider />
 
-        <div className="relative h-full w-full">
-          <ul className="small-scrollbar absolute flex h-full w-full flex-col overflow-hidden overflow-y-scroll rounded-lg border bg-background">
+        <div className="relative size-full">
+          <ul className="small-scrollbar absolute flex size-full flex-col overflow-hidden overflow-y-scroll rounded-lg border bg-background">
             {
               variables
                 .map((variable) => (

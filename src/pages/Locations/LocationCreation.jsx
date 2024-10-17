@@ -14,8 +14,8 @@ const mapCenter = ['8.322376', '-62.689662'];
 const SelectionMap = ({
   coordinates, setCoordenates, recenter, isScreenSM, changeView,
 }) => (
-  <div className="flex h-full w-full flex-col space-y-5 overflow-hidden rounded-lg bg-white p-5 shadow">
-    <div className="relative flex h-full w-full overflow-hidden rounded-lg shadow">
+  <div className="flex size-full flex-col space-y-5 overflow-hidden rounded-lg bg-white p-5 shadow">
+    <div className="relative flex size-full overflow-hidden rounded-lg shadow">
       <Map
         markersQuantity="one"
         coordinates={coordinates}
@@ -57,10 +57,11 @@ const LocationCreation = ({ updateLocations, changeView }) => {
       const response = await locationsService.create(
         selectedWorkspace.workspace_id,
         {
-          name,
-          location,
           lat: coordinates.lat,
           long: coordinates.long,
+          name,
+          location,
+          isVisible: false,
         },
       );
 
@@ -76,8 +77,8 @@ const LocationCreation = ({ updateLocations, changeView }) => {
   };
 
   return (
-    <div className="relative grid h-full w-full grid-cols-1 grid-rows-1 gap-5 sm:grid sm:grid-cols-2 sm:grid-rows-1">
-      <div className="flex h-full w-full flex-col rounded-lg bg-white p-5 shadow">
+    <div className="relative grid size-full grid-cols-1 grid-rows-1 gap-5 sm:grid sm:grid-cols-2 sm:grid-rows-1">
+      <div className="flex size-full flex-col rounded-lg bg-white p-5 shadow">
         <div className="flex grow flex-col">
           <Heading
             text="Agregar Ubicación"
@@ -120,7 +121,7 @@ const LocationCreation = ({ updateLocations, changeView }) => {
                       <img
                         src={nodeIcon}
                         alt="node icon"
-                        className="h-[34px] w-[34px]"
+                        className="size-[34px]"
                       />
                     </button>
                   </div>
@@ -168,7 +169,7 @@ const LocationCreation = ({ updateLocations, changeView }) => {
 
       {
         (isScreenSM) && (isMapOpen) && (
-          <div className="absolute h-full w-full">
+          <div className="absolute size-full">
             <SelectionMap
               coordinates={coordinates}
               setCoordenates={setCoordenates}

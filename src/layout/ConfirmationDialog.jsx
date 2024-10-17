@@ -3,9 +3,9 @@ import React from 'react';
 const ConfirmationDialog = ({
   title, description, onConfirm, onDecline,
 }) => (
-  <div className="absolute left-0 top-0 flex h-full w-full items-center justify-center rounded-lg bg-white/25 backdrop-blur-sm">
+  <div className="absolute left-0 top-0 flex size-full items-center justify-center rounded-lg bg-white/25 backdrop-blur-sm">
 
-    <div className="h-fit w-[75%] space-y-4 rounded-lg bg-white p-4 shadow">
+    <div className="h-fit w-3/4 space-y-4 rounded-lg bg-white p-4 shadow">
       <h1 className="font-bold">
         {title}
       </h1>

@@ -25,7 +25,7 @@ const Heading = ({ text, hasButton, onButtonClick }) => {
             <img
               src={isScreenSM ? control : close}
               alt={isScreenSM ? 'control' : 'close'}
-              className="h-[25px] w-[25px] sm:h-[30px] sm:w-[30px]"
+              className="size-[25px] sm:size-[30px]"
             />
           </button>
         </div>

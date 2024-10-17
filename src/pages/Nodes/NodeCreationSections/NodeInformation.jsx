@@ -7,7 +7,7 @@ import {
 const NodeInformation = ({
   name, setName, type, setType, leftButtonClick, rightButtonClick,
 }) => (
-  <div className="relative flex h-full w-full flex-col rounded-lg border bg-white p-2.5">
+  <div className="relative flex size-full flex-col rounded-lg border bg-white p-2.5">
     <SelectionBar
       text="Información del Nodo"
       leftAction={leftButtonClick}

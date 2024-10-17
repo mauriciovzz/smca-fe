@@ -12,7 +12,7 @@ import UpdateVisibility from './UpdateVisibility';
 const OverviewButton = ({ title, onClick }) => (
   <button
     type="button"
-    className="flex h-full w-full items-center justify-center rounded-lg border p-2.5 text-lg font-medium shadow hover:bg-background"
+    className="flex size-full items-center justify-center rounded-lg border p-2.5 text-lg font-medium shadow hover:bg-background"
     onClick={() => onClick()}
   >
     {title}
@@ -152,15 +152,15 @@ const ManagementMenu = ({
   };
 
   return (
-    <div className="relative flex h-full w-full bg-background sm:grid sm:grid-cols-2 sm:grid-rows-1 sm:gap-5">
-      <div className="hidden h-full w-full bg-background sm:flex">
+    <div className="relative flex size-full bg-background sm:grid sm:grid-cols-2 sm:grid-rows-1 sm:gap-5">
+      <div className="hidden size-full bg-background sm:flex">
         <Menu
           changeView={changeView}
           setView={setView}
         />
       </div>
 
-      <div className="flex h-full w-full bg-background">
+      <div className="flex size-full bg-background">
         {renderView()}
       </div>
     </div>

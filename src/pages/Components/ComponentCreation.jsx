@@ -88,7 +88,7 @@ const ComponentCreation = ({ updateComponents, changeView }) => {
   };
 
   return (
-    <div className="relative flex h-full w-full flex-col rounded-lg bg-white p-5 shadow">
+    <div className="relative flex size-full flex-col rounded-lg bg-white p-5 shadow">
       <div className="flex grow flex-col">
         <Heading
           text="Agregar Componente"
@@ -148,8 +148,8 @@ const ComponentCreation = ({ updateComponents, changeView }) => {
               <div className="h-full">
                 <Label text="Variables del componente" />
 
-                <div className="relative h-full w-full">
-                  <ul className="small-scrollbar absolute flex h-full w-full flex-col overflow-hidden overflow-y-scroll rounded-lg border bg-background">
+                <div className="relative size-full">
+                  <ul className="small-scrollbar absolute flex size-full flex-col overflow-hidden overflow-y-scroll rounded-lg border bg-background">
                     {
                       variables.map((variable) => (
                         <li
@@ -207,7 +207,7 @@ const ComponentCreation = ({ updateComponents, changeView }) => {
 
       {
         isVarCreOpen && (
-          <div className="absolute left-0 top-0 h-full w-full">
+          <div className="absolute left-0 top-0 size-full">
             <VariableCreation
               updateVariables={() => getVariables()}
               changeView={() => setIsVarCreOpen(false)}

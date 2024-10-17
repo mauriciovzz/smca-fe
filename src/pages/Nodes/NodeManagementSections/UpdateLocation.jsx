@@ -16,8 +16,8 @@ import NodeSuccessMessage from '../NodeSuccessMessage';
 const MarkersMap = ({
   locations, selectLocation, isScreenSM, changeView,
 }) => (
-  <div className="flex h-full w-full flex-col space-y-5 overflow-hidden rounded-lg bg-white p-5 shadow">
-    <div className="relative flex h-full w-full overflow-hidden rounded-lg shadow">
+  <div className="flex size-full flex-col space-y-5 overflow-hidden rounded-lg bg-white p-5 shadow">
+    <div className="relative flex size-full overflow-hidden rounded-lg shadow">
       <Map
         markerList={locations}
         onMarkerClick={selectLocation}
@@ -65,8 +65,8 @@ const LocationList = ({
   return (
     <>
       <div className="flex grow flex-col">
-        <div className="relative h-full w-full">
-          <ul className="small-scrollbar absolute flex h-full w-full flex-col overflow-hidden overflow-y-scroll rounded-lg border bg-background">
+        <div className="relative size-full">
+          <ul className="small-scrollbar absolute flex size-full flex-col overflow-hidden overflow-y-scroll rounded-lg border bg-background">
             {
               freeLocations
                 .map((loc) => (
@@ -79,7 +79,7 @@ const LocationList = ({
                       onClick={() => setLocation(loc.location_id)}
                       className="flex h-fit w-full space-x-5"
                     >
-                      <div className="flex h-full w-full flex-col">
+                      <div className="flex size-full flex-col">
                         <div className="text-left font-medium">
                           {loc.name}
                         </div>
@@ -132,7 +132,7 @@ const LocationList = ({
 
       {
         (isScreenSM) && (isMapOpen) && (
-          <div className="absolute left-0 top-0 h-full w-full">
+          <div className="absolute left-0 top-0 size-full">
             <MarkersMap
               locations={freeLocations}
               selectLocation={selectMarker}
@@ -146,7 +146,7 @@ const LocationList = ({
 
       {
         isLocCreOpen && (
-          <div className="absolute left-0 top-0 h-full w-full">
+          <div className="absolute left-0 top-0 size-full">
             <LocationCreation
               updateLocations={() => updateLocations()}
               changeView={() => setIsLocCreOpen(false)}
@@ -218,7 +218,7 @@ const LocationSelection = ({ selectedNode, updateNodes, changeView }) => {
   };
 
   return (
-    <div className="relative flex h-full w-full flex-col rounded-lg border bg-white p-5">
+    <div className="relative flex size-full flex-col rounded-lg border bg-white p-5">
       <Heading
         text="Actualizar Ubicación"
         hasButton

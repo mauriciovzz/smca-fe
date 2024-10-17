@@ -278,8 +278,8 @@ const NodeCreation = ({ updateNodes, changeView }) => {
 
   return (
 
-    <div className="relative flex h-full w-full bg-background sm:grid sm:grid-cols-2 sm:grid-rows-1 sm:gap-5">
-      <div className="flex h-full w-full flex-col rounded-lg bg-white p-5 shadow">
+    <div className="relative flex size-full bg-background sm:grid sm:grid-cols-2 sm:grid-rows-1 sm:gap-5">
+      <div className="flex size-full flex-col rounded-lg bg-white p-5 shadow">
         <div className="flex grow flex-col">
           <Heading
             text="Agregar Nodo"
@@ -293,7 +293,7 @@ const NodeCreation = ({ updateNodes, changeView }) => {
         </div>
       </div>
 
-      <div className="hidden h-full w-full bg-background sm:flex">
+      <div className="hidden size-full bg-background sm:flex">
         <NewNodeOverview
           name={name}
           type={type}

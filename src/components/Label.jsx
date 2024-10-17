@@ -1,7 +1,7 @@
 import React from 'react';
 
-const Label = ({ text }) => (
-  <h2 className="mb-2 text-sm font-bold leading-none text-black">
+const Label = ({ text, noBottomMargin }) => (
+  <h2 className={`${noBottomMargin ? '' : 'mb-2'} text-sm font-bold leading-none text-black`}>
     {text}
   </h2>
 );

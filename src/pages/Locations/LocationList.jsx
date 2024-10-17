@@ -10,8 +10,8 @@ import {
 const MarkersMap = ({
   locations, selectLocation, isScreenSM, changeView,
 }) => (
-  <div className="flex h-full w-full flex-col space-y-5 overflow-hidden rounded-lg bg-white p-5 shadow">
-    <div className="relative flex h-full w-full overflow-hidden rounded-lg shadow">
+  <div className="flex size-full flex-col space-y-5 overflow-hidden rounded-lg bg-white p-5 shadow">
+    <div className="relative flex size-full overflow-hidden rounded-lg shadow">
       <Map
         markerList={locations}
         onMarkerClick={selectLocation}
@@ -51,8 +51,8 @@ const LocationList = ({ locations, selectLocation, changeView }) => {
   const isScreenSM = (window.innerWidth <= 640);
 
   return (
-    <div className="relative grid h-full w-full grid-cols-1 grid-rows-1 gap-5 sm:grid sm:grid-cols-2 sm:grid-rows-1">
-      <div className="flex h-full w-full flex-col rounded-lg bg-white p-5 shadow">
+    <div className="relative grid size-full grid-cols-1 grid-rows-1 gap-5 sm:grid sm:grid-cols-2 sm:grid-rows-1">
+      <div className="flex size-full flex-col rounded-lg bg-white p-5 shadow">
         <div className="flex grow flex-col">
           <div className="flex justify-between">
             <Heading text="Ubicaciones" />
@@ -67,7 +67,7 @@ const LocationList = ({ locations, selectLocation, changeView }) => {
                   <img
                     src={addIcon}
                     alt="add icon"
-                    className="h-[25px] w-[25px] sm:h-[36px] sm:w-[36px]"
+                    className="size-[25px] sm:size-[36px]"
                   />
                 </button>
               )
@@ -76,8 +76,8 @@ const LocationList = ({ locations, selectLocation, changeView }) => {
 
           <Divider />
 
-          <div className="relative h-full w-full">
-            <ul className="small-scrollbar absolute flex h-full w-full flex-col overflow-hidden overflow-y-scroll rounded-lg border bg-background">
+          <div className="relative size-full">
+            <ul className="small-scrollbar absolute flex size-full flex-col overflow-hidden overflow-y-scroll rounded-lg border bg-background">
               {
                 locations
                   .map((location) => (
@@ -90,7 +90,7 @@ const LocationList = ({ locations, selectLocation, changeView }) => {
                         onClick={() => selectLocation(location)}
                         className="flex h-fit w-full space-x-5"
                       >
-                        <div className="flex h-full w-full flex-col">
+                        <div className="flex size-full flex-col">
                           <LocationTakenLabel isTaken={location.is_taken} />
                           <div className="text-left font-medium">
                             {location.name}
@@ -127,7 +127,7 @@ const LocationList = ({ locations, selectLocation, changeView }) => {
 
       {
         (isScreenSM) && (isMapOpen) && (
-          <div className="absolute h-full w-full">
+          <div className="absolute size-full">
             <MarkersMap
               locations={locations}
               selectLocation={selectLocation}

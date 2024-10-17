@@ -16,12 +16,12 @@ const ArrowButton = ({ direction, onClick }) => (
   <button
     type="button"
     onClick={onClick}
-    className="flex h-[30px] w-[30px] items-center justify-center rounded-lg hover:bg-graydetails"
+    className="flex size-[30px] items-center justify-center rounded-lg hover:bg-graydetails"
   >
     <img
       src={control}
       alt="arrow button"
-      className={`${(direction === 'right') && 'rotate-180'} h-[20px] w-[20px]`}
+      className={`${(direction === 'right') && 'rotate-180'} size-[20px]`}
     />
   </button>
 );
@@ -76,7 +76,7 @@ const DateWidget = ({ selectedNode, selectedDate, changeDate }) => {
     switch (dateView) {
       case 'calendar':
         return (
-          <div className="h-full w-full text-xs leading-none">
+          <div className="size-full text-xs leading-none">
             <Calendar
               value={selectedDate}
               onChange={(newDate) => changeDate(newDate)}
@@ -93,7 +93,7 @@ const DateWidget = ({ selectedNode, selectedDate, changeDate }) => {
         );
       default:
         return (
-          <div className="flex h-full w-full flex-col justify-center">
+          <div className="flex size-full flex-col justify-center">
             <div className="flex h-[65%] w-full border-b pb-5">
               <div className="flex w-1/6 items-center justify-center">
                 {
@@ -155,45 +155,45 @@ const DateWidget = ({ selectedNode, selectedDate, changeDate }) => {
   };
 
   return (
-    <div className="flex h-full w-full rounded-xl bg-white p-5 text-lg font-medium shadow">
-      <div ref={ref} className="flex h-full w-full items-center justify-center pr-5">
+    <div className="flex size-full rounded-xl bg-white p-5 text-lg font-medium shadow">
+      <div ref={ref} className="flex size-full items-center justify-center pr-5">
         {renderDateView()}
       </div>
 
       <div className="flex flex-col justify-evenly border-l pl-5">
         <button
           type="button"
-          className={`${(dateView === null) && 'bg-graydetails'} flex h-[35px] w-[35px] items-center justify-center rounded-lg hover:bg-graydetails`}
+          className={`${(dateView === null) && 'bg-graydetails'} flex size-[35px] items-center justify-center rounded-lg hover:bg-graydetails`}
           onClick={() => seDateView(null)}
         >
           <img
             src={calendarDayIcon}
             alt="calendar button"
-            className="h-[28px] w-[28px]"
+            className="size-[28px]"
           />
         </button>
 
         <button
           type="button"
-          className={`${(dateView === 'calendar') && 'bg-graydetails'} flex h-[35px] w-[35px] items-center justify-center rounded-lg hover:bg-graydetails`}
+          className={`${(dateView === 'calendar') && 'bg-graydetails'} flex size-[35px] items-center justify-center rounded-lg hover:bg-graydetails`}
           onClick={() => seDateView('calendar')}
         >
           <img
             src={calendarIcon}
             alt="calendar button"
-            className="h-[28px] w-[28px]"
+            className="size-[28px]"
           />
         </button>
 
         <button
           type="button"
-          className="flex h-[35px] w-[35px] items-center justify-center rounded-lg hover:bg-graydetails"
+          className="flex size-[35px] items-center justify-center rounded-lg hover:bg-graydetails"
           onClick={() => onResetClick()}
         >
           <img
             src={refresh}
             alt="refresh button"
-            className="h-[28px] w-[28px]"
+            className="size-[28px]"
           />
         </button>
       </div>

@@ -11,7 +11,7 @@ const ComponentSelection = ({
   const [isComCreOpen, setIsComCreOpen] = useState(false);
 
   return (
-    <div className="relative flex h-full w-full flex-col rounded-lg border bg-white p-2.5">
+    <div className="relative flex size-full flex-col rounded-lg border bg-white p-2.5">
       <SelectionBar
         text={text}
         rightAction={rightButtonClick}
@@ -20,9 +20,9 @@ const ComponentSelection = ({
 
       <Divider changePadding="p-[5px]" />
 
-      <div className="flex h-full w-full flex-col space-y-2.5">
-        <div className="relative h-full w-full">
-          <ul className="small-scrollbar absolute flex h-full w-full flex-col overflow-hidden overflow-y-scroll rounded-lg border bg-background">
+      <div className="flex size-full flex-col space-y-2.5">
+        <div className="relative size-full">
+          <ul className="small-scrollbar absolute flex size-full flex-col overflow-hidden overflow-y-scroll rounded-lg border bg-background">
             {
               components
                 .map((component) => (
@@ -35,7 +35,7 @@ const ComponentSelection = ({
                       onClick={() => selectComponent(component)}
                       className="flex h-fit w-full space-x-5"
                     >
-                      <div className="flex h-full w-full font-semibold">
+                      <div className="flex size-full font-semibold">
                         {component.name}
                       </div>
                     </button>
@@ -61,7 +61,7 @@ const ComponentSelection = ({
 
       {
         isComCreOpen && (
-          <div className="absolute left-0 top-0 h-full w-full">
+          <div className="absolute left-0 top-0 size-full">
             <ComponentCreation
               updateComponents={updateComponents}
               changeView={() => setIsComCreOpen(false)}

@@ -134,7 +134,7 @@ const Map = ({
       maxBoundsViscosity={0.75}
       scrollWheelZoom
       attributionControl={false}
-      className={`${!isNotFullScreen && 'fixed top-0 '} z-0 h-full w-full`}
+      className={`${!isNotFullScreen && 'fixed top-0 '} z-0 size-full`}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

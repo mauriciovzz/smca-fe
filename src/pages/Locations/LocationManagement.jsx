@@ -11,8 +11,8 @@ import locationsService from 'src/services/locations';
 import notifications from 'src/utils/notifications';
 
 const LocationInMap = ({ coordinates, isScreenSM, changeView }) => (
-  <div className="flex h-full w-full flex-col space-y-5 overflow-hidden rounded-lg bg-white p-5 shadow">
-    <div className="relative flex h-full w-full overflow-hidden rounded-lg shadow">
+  <div className="flex size-full flex-col space-y-5 overflow-hidden rounded-lg bg-white p-5 shadow">
+    <div className="relative flex size-full overflow-hidden rounded-lg shadow">
       <Map
         markersQuantity="oneToShow"
         coordinates={coordinates}
@@ -93,8 +93,8 @@ const LocationManagement = ({ selectedLocation, updateLocations, changeView }) =
   };
 
   return (
-    <div className=" grid h-full w-full grid-cols-1 grid-rows-1 gap-5 sm:grid sm:grid-cols-2 sm:grid-rows-1">
-      <div className="relative flex h-full w-full flex-col rounded-lg bg-white p-5 shadow">
+    <div className=" grid size-full grid-cols-1 grid-rows-1 gap-5 sm:grid sm:grid-cols-2 sm:grid-rows-1">
+      <div className="relative flex size-full flex-col rounded-lg bg-white p-5 shadow">
         <div className="flex grow flex-col">
           <Heading
             text="Ubicación"
@@ -138,7 +138,7 @@ const LocationManagement = ({ selectedLocation, updateLocations, changeView }) =
                       <img
                         src={nodeIcon}
                         alt="node icon"
-                        className="h-[34px] w-[34px]"
+                        className="size-[34px]"
                       />
                     </button>
                   </div>
@@ -208,7 +208,7 @@ const LocationManagement = ({ selectedLocation, updateLocations, changeView }) =
 
       {
         (isScreenSM) && (isMapOpen) && (
-          <div className="absolute h-full w-full">
+          <div className="absolute size-full">
             <LocationInMap
               coordinates={locationCoordinates}
               isScreenSM={isScreenSM}

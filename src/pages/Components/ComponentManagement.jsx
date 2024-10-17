@@ -185,7 +185,7 @@ const ComponentManagement = ({ selectedComponent, updateComponents, changeView }
                             />
                           </div>
 
-                          <div className="flex h-full w-full space-x-5">
+                          <div className="flex size-full space-x-5">
                             <Badge value={componentType} width="w-full" />
                             <DatasheetButton link={datasheetLink} />
                           </div>
@@ -221,8 +221,8 @@ const ComponentManagement = ({ selectedComponent, updateComponents, changeView }
               <div className="h-full">
                 <Label text="Variables del componente" />
 
-                <div className="relative h-full w-full">
-                  <ul className="small-scrollbar absolute flex h-full w-full flex-col overflow-hidden overflow-y-scroll rounded-lg border bg-background">
+                <div className="relative size-full">
+                  <ul className="small-scrollbar absolute flex size-full flex-col overflow-hidden overflow-y-scroll rounded-lg border bg-background">
                     {
                       (isEditable ? variables : componentVariables).map((variable) => (
                         <li
@@ -311,7 +311,7 @@ const ComponentManagement = ({ selectedComponent, updateComponents, changeView }
 
       {
         isVarCreOpen && (
-          <div className="absolute left-0 top-0 h-full w-full">
+          <div className="absolute left-0 top-0 size-full">
             <VariableCreation
               updateVariables={() => getVariables()}
               changeView={() => setIsVarCreOpen(false)}

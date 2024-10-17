@@ -80,7 +80,7 @@ const VariableCreation = ({ updateVariables, changeView }) => {
   };
 
   return (
-    <div className="flex h-full w-full flex-col rounded-lg bg-white p-5 shadow">
+    <div className="flex size-full flex-col rounded-lg bg-white p-5 shadow">
       <div className="flex grow flex-col">
         <Heading
           text="Agregar Variable"

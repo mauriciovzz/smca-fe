@@ -1,53 +1,17 @@
-import { React, useState, useContext } from 'react';
+import { React, useState } from 'react';
 
 import { Link, NavLink } from 'react-router-dom';
 
 import {
-  accountIcon, close, help, info, loginIcon, logoutIcon, map, menu, workspacesIcon,
+  accountIcon, close, helpIcon, infoIcon, loginIcon, logoutIcon, mapIcon, menu, workspacesIcon,
 } from 'src/assets';
 import { BackdropFilter } from 'src/components';
-import { AuthContext } from 'src/context/authProvider';
 
-const navLinks = [
-  {
-    title: 'Mapa',
-    route: '/',
-    src: map,
-    alt: 'map',
-    needsAuth: false,
-  },
-  {
-    title: 'Información',
-    route: '/informacion',
-    src: info,
-    alt: 'info',
-    needsAuth: false,
-  },
-  {
-    title: 'FAQ',
-    route: '/faq',
-    src: help,
-    alt: 'help',
-    needsAuth: false,
-  },
+import useAuth from '../hooks/useAuth';
 
-  {
-    title: 'Espacios',
-    route: '/espacios-de-trabajo',
-    src: workspacesIcon,
-    alt: 'workspaces',
-    needsAuth: true,
-  },
-  {
-    title: 'Cuenta',
-    route: '/cuenta',
-    src: accountIcon,
-    alt: 'accountIcon',
-    needsAuth: true,
-  },
-];
-
-const NavBar = ({ auth, logout, onClick }) => {
+const Bar = ({
+  navLinks, auth, logout, onClick,
+}) => {
   const buttonColor = (isActive) => {
     if (auth) return 'bg-main hover:bg-main-dark';
     return (isActive) ? 'bg-main-dark' : 'bg-main hover:bg-main-dark';
@@ -75,14 +39,12 @@ const NavBar = ({ auth, logout, onClick }) => {
         <NavLink
           className={({ isActive }) => (`${buttonColor(isActive)} rounded-lg p-2 font-medium text-white`)}
           to={auth ? '/' : '/iniciar-sesion'}
-          onClick={
-            auth
-              ? () => {
-                logout();
-                onClick();
-              }
-              : () => onClick()
-          }
+          onClick={auth
+            ? () => {
+              onClick();
+              logout();
+            }
+            : null}
         >
           {auth ? 'Cerrar sesión' : 'Iniciar sesión'}
         </NavLink>
@@ -91,7 +53,9 @@ const NavBar = ({ auth, logout, onClick }) => {
   );
 };
 
-const NavMenu = ({ auth, logout, onClick }) => {
+const Menu = ({
+  navLinks, auth, logout, onClick,
+}) => {
   const buttonBackground = (isActive) => {
     if (auth) return '';
     return (isActive) && 'bg-background';
@@ -103,7 +67,7 @@ const NavMenu = ({ auth, logout, onClick }) => {
         navLinks
           .filter(auth ? () => true : (link) => !link.needsAuth)
           .map((link) => (
-            <li className="h-full w-full" key={link.alt}>
+            <li className="size-full" key={link.alt}>
               <NavLink
                 className={({ isActive }) => (`${isActive && 'bg-background'} flex h-full w-full flex-col items-center justify-center gap-2.5 rounded-lg`)}
                 to={link.route}
@@ -112,7 +76,7 @@ const NavMenu = ({ auth, logout, onClick }) => {
                 <img
                   src={link.src}
                   alt={link.alt}
-                  className="h-[35px] w-[35px]"
+                  className="size-[35px]"
                 />
                 <span className="text-xs text-slate-500">
                   {link.title}
@@ -122,7 +86,7 @@ const NavMenu = ({ auth, logout, onClick }) => {
           ))
       }
 
-      <li className="h-full w-full">
+      <li className="size-full">
         <NavLink
           className={({ isActive }) => (`${buttonBackground(isActive)} flex h-full w-full flex-col items-center justify-center gap-2.5 rounded-lg`)}
           to={auth ? '/' : '/iniciar-sesion'}
@@ -130,8 +94,8 @@ const NavMenu = ({ auth, logout, onClick }) => {
           onClick={
             auth
               ? () => {
-                logout();
                 onClick();
+                logout();
               }
               : () => onClick()
           }
@@ -139,7 +103,7 @@ const NavMenu = ({ auth, logout, onClick }) => {
           <img
             src={auth ? logoutIcon : loginIcon}
             alt={auth ? 'logout' : 'login'}
-            className="h-[35px] w-[35px]"
+            className="size-[35px]"
           />
           <span className="text-xs text-slate-500">
             {auth ? 'Cerrar Sesión' : 'Iniciar Sesión'}
@@ -151,8 +115,46 @@ const NavMenu = ({ auth, logout, onClick }) => {
 };
 
 const Navbar = () => {
-  const { auth, logout } = useContext(AuthContext);
+  const { auth, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const navLinks = [
+    {
+      title: 'Mapa',
+      route: '/',
+      src: mapIcon,
+      alt: 'map',
+      needsAuth: false,
+    },
+    {
+      title: 'Información',
+      route: '/informacion',
+      src: infoIcon,
+      alt: 'info',
+      needsAuth: false,
+    },
+    {
+      title: 'FAQ',
+      route: '/faq',
+      src: helpIcon,
+      alt: 'help',
+      needsAuth: false,
+    },
+    {
+      title: 'Espacios',
+      route: '/espacios',
+      src: workspacesIcon,
+      alt: 'workspaces',
+      needsAuth: true,
+    },
+    {
+      title: 'Cuenta',
+      route: '/cuenta',
+      src: accountIcon,
+      alt: 'accountIcon',
+      needsAuth: true,
+    },
+  ];
 
   return (
     <>
@@ -179,13 +181,14 @@ const Navbar = () => {
               <img
                 src={isMenuOpen ? close : menu}
                 alt="drop down menu button"
-                className="h-[25px] w-[25px]"
+                className="size-[25px]"
               />
             </button>
           </div>
 
           <ul className="hidden w-fit flex-row items-center gap-10 sm:flex">
-            <NavBar
+            <Bar
+              navLinks={navLinks}
               auth={auth}
               logout={logout}
               onClick={() => setIsMenuOpen(false)}
@@ -193,7 +196,8 @@ const Navbar = () => {
           </ul>
 
           <ul className={`${isMenuOpen ? 'grid' : 'hidden'} ${auth ? 'grid-cols-3' : 'grid-cols-2'} h-[201px] w-full grid-rows-2 justify-items-center gap-5 pt-5 sm:hidden`}>
-            <NavMenu
+            <Menu
+              navLinks={navLinks}
               auth={auth}
               logout={logout}
               onClick={() => setIsMenuOpen(false)}

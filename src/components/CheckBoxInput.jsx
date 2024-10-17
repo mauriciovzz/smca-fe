@@ -6,7 +6,7 @@ const CheckBoxInput = ({ labelText, value, setValue }) => (
       <input
         id="checkBoxInput"
         type="checkbox"
-        className="h-4 w-4 rounded border-gray-300 bg-gray-50 text-main focus:ring-main-alt"
+        className="size-4 rounded border-gray-300 bg-gray-50 text-main focus:ring-main-alt"
         checked={value}
         onChange={() => setValue(!value)}
       />

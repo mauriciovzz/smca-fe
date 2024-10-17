@@ -50,7 +50,7 @@ const WorkspaceButton = ({ workspace, enterWorkspace }) => {
           <img
             src={workspace.is_admin ? adminIcon : userIcon}
             alt={workspace.is_admin ? 'admin' : 'user'}
-            className="h-[25px] w-[25px]"
+            className="size-[25px]"
           />
         </div>
 
@@ -58,7 +58,7 @@ const WorkspaceButton = ({ workspace, enterWorkspace }) => {
           <img
             src={usersIcon}
             alt="users"
-            className="h-[25px] w-[25px]"
+            className="size-[25px]"
           />
 
           <span className="text-sm">
@@ -70,7 +70,7 @@ const WorkspaceButton = ({ workspace, enterWorkspace }) => {
           <img
             src={nodeIcon}
             alt="nodes"
-            className="h-[25px] w-[25px]"
+            className="size-[25px]"
           />
 
           <span className="text-sm">
@@ -85,7 +85,7 @@ const WorkspaceButton = ({ workspace, enterWorkspace }) => {
 const WorkspaceList = ({
   workspaces, invitations, changeView, enterWorkspace,
 }) => (
-  <div className="flex h-full w-full flex-col rounded-lg bg-white p-5 shadow">
+  <div className="flex size-full flex-col rounded-lg bg-white p-5 shadow">
     <div className="flex justify-between">
       <Heading text="Espacios de Trabajo" />
 
@@ -96,8 +96,8 @@ const WorkspaceList = ({
       >
         {
           !(invitations.length === 0) && (
-            <div className="absolute -right-2.5 -top-1.5 flex h-[20px] w-[20px] items-center justify-center rounded-xl bg-red-500 shadow sm:h-[25px] sm:w-[25px]">
-              <span className="h-fit w-fit text-xs font-bold text-white">
+            <div className="absolute -right-2.5 -top-1.5 flex size-[20px] items-center justify-center rounded-xl bg-red-500 shadow sm:size-[25px]">
+              <span className="size-fit text-xs font-bold text-white">
                 {invitations.length}
               </span>
             </div>
@@ -107,7 +107,7 @@ const WorkspaceList = ({
         <img
           src={bellIcon}
           alt="bell"
-          className="h-[25px] w-[25px] sm:h-[36px] sm:w-[36px]"
+          className="size-[25px] sm:size-[36px]"
         />
       </button>
     </div>
@@ -115,8 +115,8 @@ const WorkspaceList = ({
     <Divider />
 
     <div className="relative h-full">
-      <ul className={`small-scrollbar absolute flex h-full w-full flex-col justify-start space-y-5 overflow-y-scroll rounded-lg border bg-background p-5 shadow
-                    sm:inline-grid sm:grid-cols-layout sm:justify-center sm:gap-5 sm:space-y-0`}
+      <ul className={`small-scrollbar absolute flex size-full flex-col justify-start space-y-5 overflow-y-scroll rounded-lg border bg-background p-5 shadow sm:inline-grid
+                    sm:grid-cols-layout sm:justify-center sm:gap-5 sm:space-y-0`}
       >
         {
           workspaces
@@ -138,7 +138,7 @@ const WorkspaceList = ({
             <img
               src={addIconWhite}
               alt="add"
-              className="h-[50px] w-[50px]"
+              className="size-[50px]"
             />
           </button>
         </li>
@@ -164,7 +164,7 @@ const WorkspaceCreation = ({ updateWorkspaces, changeView }) => {
   };
 
   return (
-    <div className="flex h-full w-full flex-col rounded-lg bg-white p-5 shadow">
+    <div className="flex size-full flex-col rounded-lg bg-white p-5 shadow">
       <div className="flex grow flex-col">
         <Heading
           text="Agregar Espacio"
@@ -217,7 +217,7 @@ const WorkspaceInvitations = ({
   };
 
   return (
-    <div className="flex h-full w-full flex-col rounded-lg bg-white p-5 shadow">
+    <div className="flex size-full flex-col rounded-lg bg-white p-5 shadow">
       <Heading
         text="Invitaciones"
         hasButton
@@ -226,8 +226,8 @@ const WorkspaceInvitations = ({
 
       <Divider />
 
-      <div className="relative h-full w-full space-y-5 overflow-hidden">
-        <ul className="small-scrollbar absolute flex h-full w-full flex-col overflow-hidden overflow-y-scroll rounded-lg border bg-background">
+      <div className="relative size-full space-y-5 overflow-hidden">
+        <ul className="small-scrollbar absolute flex size-full flex-col overflow-hidden overflow-y-scroll rounded-lg border bg-background">
           {
             (invitations.length !== 0)
               ? (

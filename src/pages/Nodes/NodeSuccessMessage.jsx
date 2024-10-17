@@ -10,7 +10,7 @@ const NodeSuccessMessage = ({ title, includeCodeMessage, close }) => (
         <img
           src={successIcon}
           alt="success icon"
-          className="h-[24px] w-[24px]"
+          className="size-[24px]"
         />
         <div className="text-center font-bold">
           {title}

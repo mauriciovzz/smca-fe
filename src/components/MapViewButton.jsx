@@ -17,7 +17,7 @@ const MapViewButton = ({ text, onClick, padding }) => (
     <img
       src={nodeIcon}
       alt="node icon"
-      className="h-[24px] w-[24px]"
+      className="size-[24px]"
     />
   </button>
 );

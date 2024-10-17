@@ -1,34 +1,34 @@
-import { React, useState, useContext } from 'react';
+import { React, useState } from 'react';
 
 import { Link, useNavigate } from 'react-router-dom';
 
 import {
   BackdropFilter, Button, CheckBoxInput, Divider, Heading, Map, TextInput,
 } from 'src/components';
-import { AuthContext } from 'src/context/authProvider';
-import accountService from 'src/services/accounts';
 import notifications from 'src/utils/notifications';
 
+import useAuth from '../hooks/useAuth';
+
 const Login = () => {
-  const { login } = useContext(AuthContext);
+  const { login } = useAuth();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+
   const navigate = useNavigate();
 
-  const handleSubmit = async (event) => {
+  const handleLoginSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      const response = await accountService.login({
-        email, password, rememberMe,
-      });
-      login(response);
-    } catch (err) {
-      if (err.response.data.error === 'Su cuenta no se encuentra verificada.') {
-        navigate('/verificar/cuenta/reenviar-enlace/', { state: { email } });
+      await login({ email, password, rememberMe });
+      navigate('/');
+    } catch (error) {
+      if (error.response.data.message === 'Su cuenta no se encuentra verificada.') {
+        navigate('/reenviar-enlace-verificacion/', { state: { email } });
       } else {
-        notifications.error(err);
+        notifications.error(error);
       }
     }
   };
@@ -36,12 +36,12 @@ const Login = () => {
   return (
     <>
       <div className="z-20 flex grow space-y-5 px-5 pb-5 sm:items-center sm:justify-center">
-        <div className="h-fit w-full rounded-lg bg-white p-5 shadow sm:h-fit sm:w-fit">
+        <div className="h-fit w-full rounded-lg bg-white p-5 shadow sm:size-fit">
           <Heading text="Iniciar Sesión" />
 
           <Divider />
 
-          <form onSubmit={handleSubmit} id="form" className="space-y-5">
+          <form onSubmit={handleLoginSubmit} id="form" className="space-y-5">
             <TextInput
               id="email"
               type="email"

@@ -25,7 +25,7 @@ const NewComponentsOverview = ({
   );
 
   return (
-    <div className="relative flex h-full w-full flex-col rounded-lg border bg-white p-2.5">
+    <div className="relative flex size-full flex-col rounded-lg border bg-white p-2.5">
       <SelectionBar
         text="Confirmar Cambios"
         leftAction={leftButtonClick}
@@ -33,10 +33,10 @@ const NewComponentsOverview = ({
 
       <Divider changePadding="p-[5px]" />
 
-      <div className="flex h-full w-full flex-col space-y-2.5">
+      <div className="flex size-full flex-col space-y-2.5">
         <div className="flex grow flex-col">
           <div className="relative flex grow overflow-hidden rounded-lg border">
-            <ul className="small-scrollbar absolute flex h-full w-full flex-col overflow-hidden overflow-y-scroll bg-background">
+            <ul className="small-scrollbar absolute flex size-full flex-col overflow-hidden overflow-y-scroll bg-background">
               {
                 nodeComponents
                   .sort((a, b) => (
@@ -48,7 +48,7 @@ const NewComponentsOverview = ({
                       key={component.component_id}
                       className="h-fit w-full border-b bg-white p-2.5 shadow"
                     >
-                      <div className="flex h-full w-full flex-col">
+                      <div className="flex size-full flex-col">
                         <div className="flex w-full items-center justify-between">
                           <div className="h-fit w-3/4 break-words font-medium">
                             {component.name}
@@ -294,7 +294,7 @@ const UpdateComponents = ({
   };
 
   return (
-    <div className="flex h-full w-full flex-col rounded-lg bg-white p-5 shadow">
+    <div className="flex size-full flex-col rounded-lg bg-white p-5 shadow">
       <div className="flex grow flex-col">
         <Heading
           text="Actualizar Componentes"

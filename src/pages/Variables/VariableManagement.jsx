@@ -76,7 +76,7 @@ const VariableManagement = ({ selectedVariable, updateVariables, changeView }) =
   };
 
   return (
-    <div className="relative flex h-full w-full flex-col overflow-hidden rounded-lg bg-white p-5 shadow">
+    <div className="relative flex size-full flex-col overflow-hidden rounded-lg bg-white p-5 shadow">
       <div className="flex grow flex-col">
         <Heading
           text="Variable"

@@ -124,7 +124,7 @@ const ReadingsWidget = ({
   };
 
   return (dayReadings !== undefined) && (
-    <div className="absolute flex h-full w-full flex-col rounded-xl bg-white p-5 shadow">
+    <div className="absolute flex size-full flex-col rounded-xl bg-white p-5 shadow">
       <div className="pb-2 sm:px-6">
         <div className="text-2xl sm:text-4xl">
           {(type === 'meteorological') ? 'Tiempo' : 'Contaminantes'}
@@ -134,10 +134,10 @@ const ReadingsWidget = ({
       {
         (dayReadings.length === 0)
           ? (
-            <div className="flex h-full w-full flex-col">
+            <div className="flex size-full flex-col">
               <div className="border-t px-2 py-1 text-xs sm:px-7 sm:text-sm" />
 
-              <div className="flex h-full w-full items-center justify-center">
+              <div className="flex size-full items-center justify-center">
                 <b className="w-2/3 text-center sm:w-full">
                   No existen lecturas realizadas en esta fecha
                 </b>
@@ -155,7 +155,7 @@ const ReadingsWidget = ({
                   <img
                     src={control}
                     alt="left var list scroll"
-                    className=" h-[20px] w-[20px]"
+                    className=" size-[20px]"
                   />
                 </div>
 
@@ -200,7 +200,7 @@ const ReadingsWidget = ({
                   <img
                     src={control}
                     alt="left var list scroll"
-                    className=" h-[20px] w-[20px] rotate-180"
+                    className=" size-[20px] rotate-180"
                   />
                 </div>
               </div>
@@ -208,11 +208,11 @@ const ReadingsWidget = ({
               {
                 (selectedVariable === 'Resumen')
                   ? (
-                    <div className="flex h-full w-full pt-2 sm:px-6">
-                      <div className="grid h-full w-full grid-cols-12 grid-rows-6 gap-2 text-sm sm:text-base">
+                    <div className="flex size-full pt-2 sm:px-6">
+                      <div className="grid size-full grid-cols-12 grid-rows-6 gap-2 text-sm sm:text-base">
                         {
                           (type === 'meteorological') && (
-                            <div className={`${getGridSize(1)} flex h-full w-full items-center justify-center rounded-lg border`}>
+                            <div className={`${getGridSize(1)} flex size-full items-center justify-center rounded-lg border`}>
                               <i className={`${getWeatherIcon(selectedDate.getHours())} self-center text-2xl sm:text-5xl`} />
                             </div>
                           )
@@ -220,7 +220,7 @@ const ReadingsWidget = ({
 
                         {
                           dayReadings.filter((vtf) => vtf.variable_name !== 'lluvia').map((v, index) => (
-                            <div key={v.variable_id} className={`${getGridSize((type === 'meteorological') ? index + 2 : index + 1)} flex h-full w-full flex-col items-center justify-center rounded-lg border`}>
+                            <div key={v.variable_id} className={`${getGridSize((type === 'meteorological') ? index + 2 : index + 1)} flex size-full flex-col items-center justify-center rounded-lg border`}>
                               <div className="font-semibold">
                                 {v.variable_name}
                               </div>
@@ -259,7 +259,7 @@ const ReadingsWidget = ({
                         <img
                           src={control}
                           alt="left graph scroll"
-                          className="mr-1 hidden h-[28px] w-[28px] self-center rounded-lg hover:bg-graydetails sm:flex"
+                          className="mr-1 hidden size-[28px] self-center rounded-lg hover:bg-graydetails sm:flex"
                           onMouseEnter={() => updateGraphRepeater(-20)}
                           onMouseLeave={() => clearInterval(graphRepeater)}
                         />
@@ -323,7 +323,7 @@ const ReadingsWidget = ({
                         <img
                           src={control}
                           alt="right graph scroll"
-                          className="ml-1 hidden h-[28px] w-[28px] rotate-180 self-center rounded-lg hover:bg-graydetails sm:flex"
+                          className="ml-1 hidden size-[28px] rotate-180 self-center rounded-lg hover:bg-graydetails sm:flex"
                           onMouseEnter={() => updateGraphRepeater(20)}
                           onMouseLeave={() => clearInterval(graphRepeater)}
                         />
@@ -354,7 +354,7 @@ const ReadingsWidget = ({
                                     </div>
                                   )
                                   : (
-                                    <div className="flex h-full w-full items-center justify-center">
+                                    <div className="flex size-full items-center justify-center">
                                       <i className="wi wi-na text-base" />
                                     </div>
                                   )

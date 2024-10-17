@@ -5,29 +5,33 @@ import { Link } from 'react-router-dom';
 import {
   BackdropFilter, Button, Divider, Heading, Map, TextInput,
 } from 'src/components';
-import { EmailSend } from 'src/layout';
 import accountService from 'src/services/accounts';
 import notifications from 'src/utils/notifications';
 
+import EmailSentResponse from '../components/EmailSentResponse';
+
 const Register = () => {
   const [requestMade, setRequestMade] = useState(false);
+
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
 
-  const handleSubmit = async (event) => {
+  const [requestResponse, setRequestResponse] = useState(null);
+
+  const handleCreateAccountSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      const response = await accountService.register({
+      const response = await accountService.create({
         firstName, lastName, email, password,
       });
-      setMessage(response);
-      setRequestMade(!requestMade);
-    } catch (err) {
-      notifications.error(err);
+
+      setRequestResponse(response);
+      setRequestMade(true);
+    } catch (error) {
+      notifications.error(error);
     }
   };
 
@@ -37,12 +41,12 @@ const Register = () => {
         {
           !requestMade
             ? (
-              <div className="h-fit w-full rounded-lg bg-white p-5 shadow sm:h-fit sm:w-fit">
+              <div className="h-fit w-full rounded-lg bg-white p-5 shadow sm:size-fit">
                 <Heading text="Registro" />
 
                 <Divider />
 
-                <form id="form" onSubmit={handleSubmit} className="space-y-5">
+                <form id="form" onSubmit={handleCreateAccountSubmit} className="space-y-5">
                   <div className="flex flex-col gap-5 sm:flex-row">
                     <TextInput
                       id="firstName"
@@ -97,7 +101,7 @@ const Register = () => {
               </div>
             )
             : (
-              <EmailSend type="account" email={email} message={message} />
+              <EmailSentResponse requestResponse={requestResponse} />
             )
         }
       </div>

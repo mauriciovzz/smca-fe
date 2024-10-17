@@ -5,28 +5,31 @@ import { useNavigate } from 'react-router-dom';
 import {
   BackdropFilter, Button, Divider, Heading, Map, TextInput,
 } from 'src/components';
-import { EmailSend } from 'src/layout';
 import accountService from 'src/services/accounts';
 import notifications from 'src/utils/notifications';
+
+import EmailSentResponse from '../components/EmailSentResponse';
 
 const PasswordRecover = () => {
   const [email, setEmail] = useState('');
   const [wasSuccessful, setWasSuccessful] = useState(false);
-  const [message, setMessage] = useState('');
+
+  const [requestResponse, setRequestResponse] = useState(null);
+
   const navigate = useNavigate();
 
-  const handleSubmit = async (event) => {
+  const handlePasswordRecoverSubmit = async (event) => {
     event.preventDefault();
 
     try {
       const response = await accountService.recoverPassword({ email });
-      setMessage(response);
+      setRequestResponse(response);
       setWasSuccessful(!wasSuccessful);
-    } catch (err) {
-      if (err.response.data.error === 'Su cuenta no se encuentra verificada.') {
-        navigate('/verificar/cuenta/reenviar-enlace/', { state: { email } });
+    } catch (error) {
+      if (error.response.data.message === 'Su cuenta no se encuentra verificada.') {
+        navigate('/reenviar-enlace-verificacion/', { state: { email } });
       } else {
-        notifications.error(err);
+        notifications.error(error);
       }
     }
   };
@@ -37,12 +40,12 @@ const PasswordRecover = () => {
         {
           !wasSuccessful
             ? (
-              <div className="h-fit w-full rounded-lg bg-white p-5 shadow sm:h-fit sm:w-fit">
+              <div className="h-fit w-full rounded-lg bg-white p-5 shadow sm:size-fit">
                 <Heading text="Recuperar Contraseña" />
 
                 <Divider />
 
-                <form id="form" onSubmit={handleSubmit} className="space-y-5">
+                <form id="form" onSubmit={handlePasswordRecoverSubmit} className="space-y-5">
                   <p className="text-justify text-sm font-light">
                     {'Ingrese el correo electrónico de su cuenta y le enviaremos '}
                     <br className="hidden sm:flex" />
@@ -67,7 +70,7 @@ const PasswordRecover = () => {
               </div>
             )
             : (
-              <EmailSend type="password" email={email} message={message} />
+              <EmailSentResponse requestResponse={requestResponse} />
             )
         }
       </div>

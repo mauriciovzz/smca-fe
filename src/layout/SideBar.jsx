@@ -3,7 +3,7 @@ import { React, useState } from 'react';
 import { NavLink, useOutletContext } from 'react-router-dom';
 
 import {
-  airWave, control, locationIcon, map, memory,
+  airWave, control, locationIcon, mapIcon, memory,
   nodeIcon, reports, settings, usersIcon, workspacesIcon,
 } from 'src/assets';
 
@@ -17,7 +17,7 @@ const NavLinkItem = ({ link, isMenuOpen, setView }) => (
     <img
       src={link.src}
       alt={link.alt}
-      className="h-[24px] w-[24px]"
+      className="size-[24px]"
     />
     <span className={`${!isMenuOpen && 'hidden'} mx-2 w-[90px] origin-left text-slate-500 duration-200`}>
       {link.title}
@@ -33,7 +33,7 @@ const SideBar = ({ workspaceId }) => {
     {
       title: 'Mapa',
       route: `/espacios-de-trabajo/${workspaceId}`,
-      src: map,
+      src: mapIcon,
       alt: 'map',
       order: 'order-1',
     },

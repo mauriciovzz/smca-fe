@@ -3,7 +3,7 @@ import {
 } from 'react';
 
 import { Badge, Map } from 'src/components';
-import { AuthContext } from 'src/context/authProvider';
+import { AuthContext } from 'src/context/AuthProvider';
 import { NodeReadingsDashboard } from 'src/layout';
 import nodesService from 'src/services/nodes';
 import notifications from 'src/utils/notifications';
@@ -50,7 +50,7 @@ const Home = () => {
         onMarkerClick={selectNode}
         markerPopup={(node) => (
           <div className="flex w-full flex-col">
-            <div className="flex h-full w-full flex-col">
+            <div className="flex size-full flex-col">
               <div className="text-left font-semibold">
                 {node.node_name}
               </div>

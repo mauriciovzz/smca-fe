@@ -20,8 +20,8 @@ const NodeInformationWidget = ({ selectedNode, nodeComponents, setIsOpen }) => {
     switch (infoView) {
       case 'componentsInfo':
         return (
-          <div className="relative flex h-full w-full">
-            <div className="absolute flex h-full w-full">
+          <div className="relative flex size-full">
+            <div className="absolute flex size-full">
               <div
                 className="mr-2 hidden w-[31px] justify-center rounded-lg hover:bg-graydetails sm:flex"
                 onMouseEnter={() => updateRepeater(-20)}
@@ -30,11 +30,11 @@ const NodeInformationWidget = ({ selectedNode, nodeComponents, setIsOpen }) => {
                 <img
                   src={control}
                   alt="left var list scroll"
-                  className=" h-[20px] w-[20px] self-center"
+                  className=" size-[20px] self-center"
                 />
               </div>
 
-              <div ref={centerRef} className="flex h-full w-full space-x-2 overflow-auto scroll-smooth whitespace-nowrap pb-2 sm:hide-scrollbar sm:pb-0">
+              <div ref={centerRef} className="flex size-full space-x-2 overflow-auto scroll-smooth whitespace-nowrap pb-2 sm:hide-scrollbar sm:pb-0">
                 {
                   nodeComponents.map(
                     (c) => (
@@ -86,7 +86,7 @@ const NodeInformationWidget = ({ selectedNode, nodeComponents, setIsOpen }) => {
                 <img
                   src={control}
                   alt="right var list scroll"
-                  className="hidden h-[20px] w-[20px] rotate-180 self-center sm:flex"
+                  className="hidden size-[20px] rotate-180 self-center sm:flex"
                 />
               </div>
             </div>
@@ -94,12 +94,12 @@ const NodeInformationWidget = ({ selectedNode, nodeComponents, setIsOpen }) => {
         );
       default:
         return (
-          <div className="flex h-full w-full flex-col">
-            <div className="flex h-full w-full items-center gap-5 pb-2">
+          <div className="flex size-full flex-col">
+            <div className="flex size-full items-center gap-5 pb-2">
               <img
                 src={locationIcon}
                 alt="location info button"
-                className="h-[28px] w-[28px]"
+                className="size-[28px]"
               />
               <div>
                 <div className="font-semibold leading-none">
@@ -126,51 +126,51 @@ const NodeInformationWidget = ({ selectedNode, nodeComponents, setIsOpen }) => {
   };
 
   return (
-    <div className="flex h-full w-full flex-col rounded-xl bg-white p-5 shadow sm:flex-row">
+    <div className="flex size-full flex-col rounded-xl bg-white p-5 shadow sm:flex-row">
       <div className="flex justify-evenly border-b pb-2 sm:flex-col sm:border-b-0 sm:border-r sm:pb-0 sm:pr-5">
         <button
           type="button"
-          className="flex h-[35px] w-[35px] items-center justify-center rounded-lg hover:bg-graydetails"
+          className="flex size-[35px] items-center justify-center rounded-lg hover:bg-graydetails"
           onClick={() => setIsOpen(false)}
         >
           <img
             src={control}
             alt="go back button"
-            className="h-[28px] w-[28px]"
+            className="size-[28px]"
           />
         </button>
 
         <button
           type="button"
-          className={`${(infoView === null) && 'bg-graydetails'} flex h-[35px] w-[35px] items-center justify-center rounded-lg hover:bg-graydetails`}
+          className={`${(infoView === null) && 'bg-graydetails'} flex size-[35px] items-center justify-center rounded-lg hover:bg-graydetails`}
           onClick={() => setInfoView(null)}
         >
           <img
             src={nodeIcon}
             alt="node info button"
-            className="h-[28px] w-[28px]"
+            className="size-[28px]"
           />
         </button>
 
         <button
           type="button"
-          className={`${(infoView === 'componentsInfo') && 'bg-graydetails'} flex h-[35px] w-[35px] items-center justify-center rounded-lg hover:bg-graydetails`}
+          className={`${(infoView === 'componentsInfo') && 'bg-graydetails'} flex size-[35px] items-center justify-center rounded-lg hover:bg-graydetails`}
           onClick={() => setInfoView('componentsInfo')}
         >
           <img
             src={memory}
             alt="components info button"
-            className="h-[28px] w-[28px]"
+            className="size-[28px]"
           />
         </button>
       </div>
 
-      <div className="flex h-full w-full flex-col pt-2 sm:pl-5 sm:pt-0">
+      <div className="flex size-full flex-col pt-2 sm:pl-5 sm:pt-0">
         <div className="w-full border-b pb-2 text-center text-3xl sm:text-left">
           {selectedNode.node_name}
         </div>
 
-        <div className="flex h-full w-full items-center justify-center pt-2">
+        <div className="flex size-full items-center justify-center pt-2">
           {renderInfoView()}
         </div>
       </div>

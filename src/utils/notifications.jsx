@@ -16,7 +16,7 @@ const info = (message) => {
 };
 
 const error = (err) => {
-  if (err.response.data.error !== 'TokenExpiredError') toast.error(err.response.data.error, config);
+  if (err.response.data.message !== 'TokenExpiredError') toast.error(err.response.data.message, config);
 };
 
 const errorMsg = (message) => {

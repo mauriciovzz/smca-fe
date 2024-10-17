@@ -56,7 +56,7 @@ const NodeManagement = ({ selectedNode, updateNodes, changeView }) => {
   };
 
   return (
-    <div className="flex h-full w-full bg-background">
+    <div className="flex size-full bg-background">
       {renderView()}
     </div>
   );

@@ -135,7 +135,7 @@ const EnviromentalWidget = ({
   };
 
   return (dayReadings !== undefined) && (
-    <div className="absolute flex h-full w-full flex-col rounded-xl bg-white p-5 shadow">
+    <div className="absolute flex size-full flex-col rounded-xl bg-white p-5 shadow">
       <div className="px-2 pb-2 sm:px-6">
         <div className="text-2xl sm:text-4xl">
           Contaminantes
@@ -145,10 +145,10 @@ const EnviromentalWidget = ({
       {
         (dayReadings.length === 0)
           ? (
-            <div className="flex h-full w-full flex-col">
+            <div className="flex size-full flex-col">
               <div className="border-t px-2 py-1 text-xs sm:px-7 sm:text-sm" />
 
-              <div className="flex h-full w-full items-center justify-center">
+              <div className="flex size-full items-center justify-center">
                 <b>
                   No existen lecturas realizadas en esta fecha
                 </b>
@@ -162,7 +162,7 @@ const EnviromentalWidget = ({
                   <img
                     src={control}
                     alt="left var list scroll"
-                    className="hidden h-[20px] w-[20px] self-center sm:flex"
+                    className="hidden size-[20px] self-center sm:flex"
                     onMouseEnter={() => updateVarListRepeater(-20)}
                     onMouseLeave={() => clearInterval(varListRepeater)}
                   />
@@ -208,7 +208,7 @@ const EnviromentalWidget = ({
                   <img
                     src={control}
                     alt="right var list scroll"
-                    className="hidden h-[20px] w-[20px] rotate-180 self-center sm:flex"
+                    className="hidden size-[20px] rotate-180 self-center sm:flex"
                     onMouseEnter={() => updateVarListRepeater(20)}
                     onMouseLeave={() => clearInterval(varListRepeater)}
                   />
@@ -218,11 +218,11 @@ const EnviromentalWidget = ({
               {
                 (selectedVariable === 'Resumen')
                   ? (
-                    <div className="flex h-full w-full px-6 pt-2">
-                      <div className="grid h-full w-full grid-cols-12 grid-rows-6 gap-2">
+                    <div className="flex size-full px-6 pt-2">
+                      <div className="grid size-full grid-cols-12 grid-rows-6 gap-2">
                         {
                           dayReadings.filter((vv) => vv.variable_name !== 'lluvia').map((v, index) => (
-                            <div className={`${getGridSize(index + 1)} flex h-full w-full flex-col items-center justify-center rounded-lg border`}>
+                            <div className={`${getGridSize(index + 1)} flex size-full flex-col items-center justify-center rounded-lg border`}>
                               <div className="font-semibold">
                                 {v.variable_name}
                               </div>
@@ -261,7 +261,7 @@ const EnviromentalWidget = ({
                         <img
                           src={control}
                           alt="left graph scroll"
-                          className="hidden h-[28px] w-[28px] self-center sm:flex"
+                          className="hidden size-[28px] self-center sm:flex"
                           onMouseEnter={() => updateGraphRepeater(-20)}
                           onMouseLeave={() => clearInterval(graphRepeater)}
                         />
@@ -323,7 +323,7 @@ const EnviromentalWidget = ({
                         <img
                           src={control}
                           alt="right graph scroll"
-                          className="hidden h-[28px] w-[28px] rotate-180 self-center sm:flex"
+                          className="hidden size-[28px] rotate-180 self-center sm:flex"
                           onMouseEnter={() => updateGraphRepeater(20)}
                           onMouseLeave={() => clearInterval(graphRepeater)}
                         />

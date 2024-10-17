@@ -1,14 +1,20 @@
+import { React, useState } from 'react';
+
 import {
-  React, useState, useContext,
-} from 'react';
+  useLoaderData,
+} from 'react-router-dom';
 
 import { control } from 'src/assets';
 import {
   Button, Divider, Heading, Label, TextInput,
 } from 'src/components';
-import { AuthContext } from 'src/context/authProvider';
-import accountService from 'src/services/accounts';
+import accountsService from 'src/services/accounts';
 import notifications from 'src/utils/notifications';
+
+export const loader = async (accountId) => {
+  const response = await accountsService.get(accountId);
+  return response;
+};
 
 const OverviewButton = ({
   title, value, isFirst, onClick,
@@ -28,13 +34,13 @@ const OverviewButton = ({
     <img
       src={control}
       alt="control arrow"
-      className="h-[28px] w-[28px] rotate-180 self-center"
+      className="size-[28px] rotate-180 self-center"
     />
   </button>
 );
 
 const AccountOverview = ({ changeView }) => {
-  const { auth } = useContext(AuthContext);
+  const accountData = useLoaderData();
 
   return (
     <div className="flex grow flex-col rounded-lg bg-white p-5 shadow">
@@ -45,13 +51,13 @@ const AccountOverview = ({ changeView }) => {
       <div className="flex grow flex-col divide-y">
         <OverviewButton
           title="Nombre"
-          value={`${auth.firstName} ${auth.lastName}`}
+          value={`${accountData.firstName} ${accountData.lastName}`}
           isFirst
           onClick={() => changeView('UpdateName')}
         />
         <OverviewButton
           title="Correo Electrónico"
-          value={auth.email}
+          value={accountData.email}
           onClick={() => changeView('UpdateEmail')}
         />
         <OverviewButton
@@ -65,18 +71,19 @@ const AccountOverview = ({ changeView }) => {
   );
 };
 
-const UpdateName = ({ resetView }) => {
-  const { auth, setAuth } = useContext(AuthContext);
-  const [firstName, setFirstName] = useState(auth.firstName);
-  const [lastName, setLastName] = useState(auth.lastName);
+const UpdateName = ({
+  accountId, fn, ln, resetView, updateData,
+}) => {
+  const [firstName, setFirstName] = useState(fn);
+  const [lastName, setLastName] = useState(ln);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      const response = await accountService.updateName({ firstName, lastName });
+      const response = await accountsService.updateName(accountId, { firstName, lastName });
       notifications.success(response);
-      setAuth({ ...auth, firstName, lastName });
+      updateData();
     } catch (err) {
       notifications.error(err);
     }
@@ -120,8 +127,7 @@ const UpdateName = ({ resetView }) => {
   );
 };
 
-const UpdateEmail = ({ resetView }) => {
-  const { auth } = useContext(AuthContext);
+const UpdateEmail = ({ accountId, em, resetView }) => {
   const [password, setPassword] = useState('');
   const [newEmail, setNewEmail] = useState('');
 
@@ -129,7 +135,7 @@ const UpdateEmail = ({ resetView }) => {
     event.preventDefault();
 
     try {
-      const response = await accountService.updateEmail({ newEmail, password });
+      const response = await accountsService.updateEmail(accountId, { newEmail, password });
       notifications.success(response);
     } catch (err) {
       notifications.error(err);
@@ -152,7 +158,7 @@ const UpdateEmail = ({ resetView }) => {
             id="email"
             type="email"
             labelText="Correo electrónico actual"
-            value={auth.email}
+            value={em}
             disabled
           />
           <TextInput
@@ -184,7 +190,7 @@ const UpdateEmail = ({ resetView }) => {
   );
 };
 
-const UpdatePassword = ({ resetView }) => {
+const UpdatePassword = ({ accountId, resetView }) => {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [repeatNewPassword, setRepeatNewPassword] = useState('');
@@ -192,13 +198,18 @@ const UpdatePassword = ({ resetView }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    try {
-      const response = await accountService.updatePassword({
-        currentPassword, newPassword, repeatNewPassword,
-      });
-      notifications.success(response);
-    } catch (err) {
-      notifications.error(err);
+    if (newPassword !== repeatNewPassword) {
+      notifications.error('Los campos \'Nueva contraseña\' y \'Repetir nueva contraseña\' deben de coincidir.');
+    } else {
+      try {
+        const response = await accountsService.updatePassword(
+          accountId,
+          { currentPassword, newPassword, repeatNewPassword },
+        );
+        notifications.success(response);
+      } catch (err) {
+        notifications.error(err);
+      }
     }
   };
 

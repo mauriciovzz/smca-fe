@@ -11,8 +11,8 @@ import DeleteNode from './DeleteNode';
 import NodeCodeInfo from './NodeCodeInfo';
 
 const LocationInMap = ({ coordinates, isScreenSM, changeView }) => (
-  <div className="flex h-full w-full flex-col space-y-5 overflow-hidden rounded-lg bg-white p-5 shadow">
-    <div className="relative flex h-full w-full overflow-hidden rounded-lg shadow">
+  <div className="flex size-full flex-col space-y-5 overflow-hidden rounded-lg bg-white p-5 shadow">
+    <div className="relative flex size-full overflow-hidden rounded-lg shadow">
       <Map
         markersQuantity="oneToShow"
         coordinates={coordinates}
@@ -48,7 +48,7 @@ const Overview = ({
 
       <Divider />
 
-      <div className="flex h-full w-full flex-col space-y-5">
+      <div className="flex size-full flex-col space-y-5">
         <div className="flex h-fit w-full flex-col items-center justify-center text-center">
           <div className="flex h-fit w-full items-center justify-center text-center font-semibold">
             {selectedNode.node_name}
@@ -74,7 +74,7 @@ const Overview = ({
                     <img
                       src={nodeIcon}
                       alt="node icon"
-                      className="h-[25px] w-[25px] self-center"
+                      className="size-[25px] self-center"
                     />
                   </button>
                 </div>
@@ -102,7 +102,7 @@ const Overview = ({
 
         <div className="flex grow flex-col">
           <div className="relative flex grow overflow-hidden rounded-lg border">
-            <ul className="small-scrollbar absolute flex h-full w-full flex-col overflow-hidden overflow-y-scroll bg-background">
+            <ul className="small-scrollbar absolute flex size-full flex-col overflow-hidden overflow-y-scroll bg-background">
               {
                 nodeComponents
                   .map((component) => (
@@ -110,7 +110,7 @@ const Overview = ({
                       key={component.component_id}
                       className="h-fit w-full border-b bg-white p-2.5 shadow"
                     >
-                      <div className="flex h-full w-full flex-col">
+                      <div className="flex size-full flex-col">
                         <div className="flex w-full items-center justify-between">
                           <div className="h-fit w-3/4 break-words font-medium">
                             {component.name}
@@ -266,8 +266,8 @@ const NodeOverview = ({
   };
 
   return (
-    <div className="relative flex h-full w-full bg-background sm:grid sm:grid-cols-2 sm:grid-rows-1 sm:gap-5">
-      <div className="hidden h-full w-full bg-background sm:flex">
+    <div className="relative flex size-full bg-background sm:grid sm:grid-cols-2 sm:grid-rows-1 sm:gap-5">
+      <div className="hidden size-full bg-background sm:flex">
         <Overview
           selectedWorkspace={selectedWorkspace}
           selectedNode={selectedNode}
@@ -280,13 +280,13 @@ const NodeOverview = ({
         />
       </div>
 
-      <div className="flex h-full w-full bg-background">
+      <div className="flex size-full bg-background">
         {renderView()}
       </div>
 
       {
         (isScreenSM) && (isMapOpen) && (
-          <div className="absolute h-full w-full">
+          <div className="absolute size-full">
             <LocationInMap
               coordinates={{ lat: selectedNode.lat, long: selectedNode.long }}
               isScreenSM={isScreenSM}

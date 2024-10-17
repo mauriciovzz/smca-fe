@@ -3,7 +3,7 @@ import { React, useState } from 'react';
 import { NavLink, useOutletContext } from 'react-router-dom';
 
 import {
-  airWave, close, locationIcon, map, memory, menu,
+  airWave, close, locationIcon, mapIcon, memory, menu,
   nodeIcon, reports, settings, usersIcon, workspacesIcon,
 } from 'src/assets';
 import { BackdropFilter } from 'src/components';
@@ -16,7 +16,7 @@ const BottomBar = ({ workspaceId }) => {
     {
       title: 'Mapa',
       route: `/espacios-de-trabajo/${workspaceId}`,
-      src: map,
+      src: mapIcon,
       alt: 'map',
       barOrder: 'order-3',
       menuOrder: 'order-1',
@@ -90,12 +90,12 @@ const BottomBar = ({ workspaceId }) => {
   return (
     <>
       <div className={`${isMenuOpen && 'absolute bottom-0 left-0 p-5'} w-full bg-transparent`}>
-        <nav className={`${isMenuOpen ? 'z-[70] divide-y' : 'z-[20]'} relative flex h-full w-full flex-col items-center justify-between rounded-lg bg-white px-5 shadow`}>
+        <nav className={`${isMenuOpen ? 'z-[70] divide-y' : 'z-20'} relative flex size-full flex-col items-center justify-between rounded-lg bg-white px-5 shadow`}>
           <ul className={`${isMenuOpen ? 'flex' : 'hidden'} grid h-[320px] w-full grid-cols-3 grid-rows-3 justify-items-center gap-5 py-5`}>
             {
               navLinks
                 .map((link) => (
-                  <li key={link.alt} className={`${link.menuOrder} h-full w-full`}>
+                  <li key={link.alt} className={`${link.menuOrder} size-full`}>
                     <NavLink
                       className={({ isActive }) => (`${isActive && 'bg-background'} flex h-full w-full flex-col items-center justify-center gap-2.5 rounded-lg`)}
                       onClick={() => onBarClick(link.alt)}
@@ -105,7 +105,7 @@ const BottomBar = ({ workspaceId }) => {
                       <img
                         src={link.src}
                         alt={link.alt}
-                        className="h-[35px] w-[35px]"
+                        className="size-[35px]"
                       />
                       <span className="text-xs text-slate-500">
                         {link.title}
@@ -131,7 +131,7 @@ const BottomBar = ({ workspaceId }) => {
                       <img
                         src={link.src}
                         alt={link.alt}
-                        className="h-[20px] w-[20px]"
+                        className="size-[20px]"
                       />
                     </NavLink>
                   </li>
@@ -140,13 +140,13 @@ const BottomBar = ({ workspaceId }) => {
 
             <button
               type="button"
-              className="order-last flex h-fit w-fit flex-col items-center rounded-md p-2.5"
+              className="order-last flex size-fit flex-col items-center rounded-md p-2.5"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               <img
                 src={isMenuOpen ? close : menu}
                 alt={isMenuOpen ? 'close' : 'menu'}
-                className="h-[20px] w-[20px]"
+                className="size-[20px]"
               />
             </button>
           </ul>

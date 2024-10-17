@@ -144,11 +144,11 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
   }, [selectedDate]);
 
   return (!isPageLoading) && (
-    <div className="absolute z-[100] h-full w-full bg-white/25 p-5 backdrop-blur-sm">
+    <div className="absolute z-[100] size-full bg-white/25 p-5 backdrop-blur-sm">
       {
         (window.innerWidth <= 640)
           ? (
-            <div className="flex h-full w-full sm:hidden">
+            <div className="flex size-full sm:hidden">
               <div className="hide-scrollbar flex w-full flex-col overflow-scroll scroll-smooth">
                 <div className="inline-block space-y-4">
 
@@ -199,8 +199,8 @@ const nodeReadingsDashboard = ({ selectedNode, setIsOpen }) => {
             </div>
           )
           : (
-            <div className="flex h-full w-full">
-              <div className="grid h-full w-full grid-cols-10 grid-rows-3 gap-4">
+            <div className="flex size-full">
+              <div className="grid size-full grid-cols-10 grid-rows-3 gap-4">
 
                 <div className="col-span-5 row-span-1">
                   <NodeInfoWidget

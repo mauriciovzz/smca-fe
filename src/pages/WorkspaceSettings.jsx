@@ -13,12 +13,12 @@ const SettingsOverview = ({ onClick }) => {
   const { selectedWorkspace } = useOutletContext();
 
   return (
-    <div className="flex h-full w-full flex-col rounded-lg bg-white p-5 shadow">
+    <div className="flex size-full flex-col rounded-lg bg-white p-5 shadow">
       <Heading text="Ajustes" />
 
       <Divider />
 
-      <div className="flex h-full w-full flex-col divide-y">
+      <div className="flex size-full flex-col divide-y">
         <button
           type="button"
           className={`${selectedWorkspace.is_admin && 'hover:bg-background'} flex w-full justify-between pb-5`}
@@ -34,7 +34,7 @@ const SettingsOverview = ({ onClick }) => {
           <img
             src={control}
             alt="control arrow"
-            className={`${!selectedWorkspace.is_admin && 'hidden'} h-[28px] w-[28px] rotate-180 self-center`}
+            className={`${!selectedWorkspace.is_admin && 'hidden'} size-[28px] rotate-180 self-center`}
           />
         </button>
 
@@ -46,14 +46,14 @@ const SettingsOverview = ({ onClick }) => {
           <div className="flex w-1/2 flex-col items-start sm:w-1/3">
             <Label text="Color" />
             <div className="h-[24px] w-full rounded-lg border p-0.5">
-              <div className="h-full w-full rounded-lg" style={{ backgroundColor: selectedWorkspace.color }} />
+              <div className="size-full rounded-lg" style={{ backgroundColor: selectedWorkspace.color }} />
             </div>
           </div>
 
           <img
             src={control}
             alt="control arrow"
-            className={`${!selectedWorkspace.is_admin && 'hidden'} h-[28px] w-[28px] rotate-180 self-center`}
+            className={`${!selectedWorkspace.is_admin && 'hidden'} size-[28px] rotate-180 self-center`}
           />
         </button>
 
@@ -67,7 +67,7 @@ const SettingsOverview = ({ onClick }) => {
           <img
             src={control}
             alt="control arrow"
-            className="h-[28px] w-[28px] rotate-180 self-center"
+            className="size-[28px] rotate-180 self-center"
           />
         </button>
 
@@ -83,7 +83,7 @@ const SettingsOverview = ({ onClick }) => {
               <img
                 src={control}
                 alt="control arrow"
-                className="h-[28px] w-[28px] rotate-180"
+                className="size-[28px] rotate-180"
               />
             </button>
           )
@@ -327,7 +327,7 @@ const WorkspaceSettings = () => {
               <SettingsOverview onClick={(value) => setView(value)} />
             )
             : (
-              <div className="flex h-full w-full flex-col items-center justify-center rounded-lg bg-white font-medium shadow">
+              <div className="flex size-full flex-col items-center justify-center rounded-lg bg-white font-medium shadow">
                 <span>Selecciona una opción para realizar cambios.</span>
               </div>
             )
@@ -336,12 +336,12 @@ const WorkspaceSettings = () => {
   };
 
   return (
-    <div className="flex h-full w-full bg-background sm:grid sm:grid-cols-2 sm:grid-rows-1 sm:gap-5">
-      <div className="hidden h-full w-full bg-background sm:flex">
+    <div className="flex size-full bg-background sm:grid sm:grid-cols-2 sm:grid-rows-1 sm:gap-5">
+      <div className="hidden size-full bg-background sm:flex">
         <SettingsOverview onClick={(value) => setView(value)} />
       </div>
 
-      <div className="flex h-full w-full bg-background">
+      <div className="flex size-full bg-background">
         {renderView()}
       </div>
     </div>
