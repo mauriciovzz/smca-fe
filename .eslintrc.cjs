@@ -25,6 +25,7 @@ module.exports = {
   rules: {
     'react/function-component-definition': [2, { namedComponents: 'arrow-function' }],
     'react/prop-types': [0],
+     curly: [0],
     'implicit-arrow-linebreak': [2, 'beside'],
     'import/no-extraneous-dependencies': [2, { devDependencies: true }],
     'tailwindcss/no-custom-classname': [1, { whitelist: ['wi', 'wi-na'] }],
@@ -32,6 +33,7 @@ module.exports = {
     'react/jsx-props-no-spreading': [0],
     'no-param-reassign': [2, { props: false }],
     'no-unused-expressions': [1, { allowTernary: true }],
+    'nonblock-statement-body-position': [2, 'below'], 
     'import/order': [
       2,
       {

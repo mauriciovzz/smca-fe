@@ -1,4 +1,3 @@
-// useScreenWidth.js
 import { useState, useEffect } from 'react';
 
 const useScreenWidth = () => {
@@ -16,7 +15,7 @@ const useScreenWidth = () => {
     };
   }, []);
 
-  return screenWidth;
+  return screenWidth <= 640;
 };
 
 export default useScreenWidth;
