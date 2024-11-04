@@ -2,7 +2,7 @@ import { React, useState, useEffect } from 'react';
 
 import { useOutletContext } from 'react-router-dom';
 
-import { Map } from 'src/components';
+import { MapBase } from 'src/components';
 import { NodeReadingsDashboard } from 'src/layout';
 import nodesService from 'src/services/nodes';
 import notificationHelper from 'src/utils/notificationHelper';
@@ -34,7 +34,7 @@ const WorkspaceMap = () => {
 
   return (
     <>
-      <Map
+      <MapBase
         markerList={nodes}
         onMarkerClick={selectNode}
         markerPopup={(node) => (

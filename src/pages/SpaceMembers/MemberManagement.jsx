@@ -1,10 +1,10 @@
-import { React } from 'react';
+import { React, useState } from 'react';
 
 import { useOutletContext, useNavigate, useParams } from 'react-router-dom';
 
-import { Button, ToggleSwitch } from 'src/components/inputs';
+import { Button, ConfirmationDialog, ToggleSwitch } from 'src/components/inputs';
 import { Divider, Heading, Label } from 'src/components/ui';
-import spacesService from 'src/services/spaces';
+import membersService from 'src/services/members';
 import notificationHelper from 'src/utils/notificationHelper';
 
 const MemberManagement = () => {
@@ -15,9 +15,11 @@ const MemberManagement = () => {
   const selectedMember = membersData.find((m) => m.account_id === parseInt(accountId, 10));
   const navigate = useNavigate();
 
+  const [isConDiaOpen, setIsConDiaOpen] = useState(false);
+
   const updateMemberRole = async () => {
     try {
-      const response = await spacesService.updateMemberRole(
+      const response = await membersService.updateMemberRole(
         spaceData.space_id,
         selectedMember.account_id,
       );
@@ -34,7 +36,7 @@ const MemberManagement = () => {
 
   const memberRemoval = async () => {
     try {
-      const response = await spacesService.removeMember(
+      const response = await membersService.removeMember(
         spaceData.space_id,
         selectedMember.account_id,
       );
@@ -51,7 +53,7 @@ const MemberManagement = () => {
   };
 
   return (
-    <div className="flex grow flex-col rounded-lg bg-white p-5 shadow">
+    <div className="relative flex grow flex-col rounded-lg bg-white p-5 shadow">
       <div className="flex grow flex-col">
         <Heading
           text="Miembro"
@@ -87,7 +89,6 @@ const MemberManagement = () => {
 
           <div className="py-5 text-left">
             <ToggleSwitch
-              labelText="rol"
               selectedOption={selectedMember.is_admin}
               leftOption={{
                 title: 'Usuario',
@@ -116,12 +117,23 @@ const MemberManagement = () => {
             <Button
               text="Remover"
               isTypeButton
-              onClick={() => memberRemoval()}
+              onClick={() => setIsConDiaOpen(true)}
               color="red"
             />
           </div>
         )
       }
+
+      {
+          isConDiaOpen && (
+          <ConfirmationDialog
+            title="Remover Usuario del Espacio"
+            description={`Estas seguro de querer remover a "${selectedMember.first_name} ${selectedMember.last_name}" del espacio?`}
+            onDecline={{ text: 'Cancelar', action: () => setIsConDiaOpen(false) }}
+            onConfirm={{ text: 'Remover', action: () => memberRemoval() }}
+          />
+          )
+        }
 
     </div>
   );

@@ -3,8 +3,8 @@ import { React, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 import { errorIcon, successIcon } from 'src/assets';
-import { BackdropBlur, Map } from 'src/components/backdrop';
 import { Button, TextInput } from 'src/components/inputs';
+import { BlurEffect, MapBase } from 'src/components/maps';
 import { Divider, Heading } from 'src/components/ui';
 import accountService from 'src/services/accounts';
 import notificationHelper from 'src/utils/notificationHelper';
@@ -135,8 +135,8 @@ const PasswordReset = () => {
         }
       </div>
 
-      <BackdropBlur index="z-10" />
-      <Map />
+      <BlurEffect index="z-10" />
+      <MapBase />
     </>
 
   );

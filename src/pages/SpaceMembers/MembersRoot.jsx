@@ -5,7 +5,7 @@ import {
 } from 'react-router-dom';
 
 import useScreenWidth from 'src/hooks/useScreenWidth';
-import spacesService from 'src/services/spaces';
+import membersService from 'src/services/members';
 import notificationHelper from 'src/utils/notificationHelper';
 
 import MembersOverview from './MembersOverview';
@@ -16,7 +16,8 @@ export const membersLoader = async (auth, params, loaderErrors) => {
   }
 
   try {
-    const membersData = await spacesService.getMembers(params.spaceId);
+    const membersData = await membersService.getMembers(params.spaceId);
+
     return membersData;
   } catch (error) {
     const errorMessage = error.response.data.message;

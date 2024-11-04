@@ -3,8 +3,8 @@ import { React, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { mailIcon } from 'src/assets';
-import { BackdropBlur, Map } from 'src/components/backdrop';
 import { Button, TextInput } from 'src/components/inputs';
+import { BlurEffect, MapBase } from 'src/components/maps';
 import { EmailSent } from 'src/components/messages';
 import { Divider } from 'src/components/ui';
 import accountService from 'src/services/accounts';
@@ -14,9 +14,7 @@ const ResendVerificationLink = () => {
   const { state } = useLocation();
 
   const [email, setEmail] = useState(state?.email ? state.email : null);
-
   const [requestMade, setRequestMade] = useState(false);
-
   const [requestResponse, setRequestResponse] = useState(null);
 
   const handleResendVerificationLink = async (event) => {
@@ -83,8 +81,8 @@ const ResendVerificationLink = () => {
         }
       </div>
 
-      <BackdropBlur index="z-10" />
-      <Map />
+      <BlurEffect index="z-10" />
+      <MapBase />
     </>
   );
 };

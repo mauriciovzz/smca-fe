@@ -111,7 +111,9 @@ const Root = () => {
 
   const errorHandler = (error, revalidator) => {
     const errorMessage = error.response.data.message;
-    notificationHelper.errorMsg(errorMessage);
+
+    if (errorMessage !== 'Acceso no autorizado (No AT).')
+      notificationHelper.errorMsg(errorMessage);
 
     if (errorMessage === 'La sesión ha expirado.') {
       navigate('/iniciar-sesion');
@@ -130,7 +132,10 @@ const Root = () => {
     if (errorMessage === 'Acceso no autorizado.') {
       navigate('/espacios');
     }
-
+    if (errorMessage === 'La ubicación indicada no se encuentra registrada.') {
+      revalidator();
+      return '..';
+    }
     return null;
   };
 

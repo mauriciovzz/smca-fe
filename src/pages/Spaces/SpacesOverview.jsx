@@ -104,7 +104,7 @@ const SpaceOverview = ({ spacesData, invitationsCount }) => (
         <li>
           <Link
             className="flex h-fit w-full flex-col items-center gap-2.5 rounded-lg bg-main p-5 shadow-lg hover:bg-main-dark sm:w-[230px]"
-            to="crear"
+            to="agregar"
           >
             <p className="h-[25px] w-full overflow-hidden break-words font-semibold text-white">
               Agregar Espacio

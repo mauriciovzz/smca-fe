@@ -62,7 +62,7 @@ const MapEvents = ({ setCoordenates }) => {
   return false;
 };
 
-const Map = ({
+const MapBase = ({
   markerList, onMarkerClick, markerPopup, markersQuantity,
   coordinates, setCoordenates, recenter,
   zoomControl, isNotFullScreen,
@@ -156,4 +156,4 @@ const Map = ({
   );
 };
 
-export default Map;
+export default MapBase;

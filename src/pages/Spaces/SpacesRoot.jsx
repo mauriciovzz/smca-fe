@@ -5,6 +5,7 @@ import {
 } from 'react-router-dom';
 
 import useScreenWidth from 'src/hooks/useScreenWidth';
+import invitationsService from 'src/services/invitations';
 import spacesService from 'src/services/spaces';
 import notificationHelper from 'src/utils/notificationHelper';
 
@@ -17,7 +18,7 @@ export const spacesLoader = async (auth, loaderErrors) => {
 
   try {
     const spacesData = await spacesService.getAll();
-    const invitationsData = await spacesService.getInvitations(auth.accountId);
+    const invitationsData = await invitationsService.getInvitations(auth.accountId);
 
     return { spacesData, invitationsData };
   } catch (error) {
@@ -45,16 +46,15 @@ const SpacesRoot = () => {
 
   const updateSpaceRoot = () => revalidator.revalidate();
 
+  const handleRenderOutlet = () => {
+    if (isScreenSmall || outlet)
+      return 'col-span-1 flex grow bg-background';
+
+    return 'hidden';
+  };
+
   const renderOutlet = () => {
     if (isScreenSmall) {
-      if (outlet)
-        return (
-          <Outlet context={{
-            spacesData, invitationsData, updateSpaceRoot, errorHandler,
-          }}
-          />
-        );
-    } else {
       if (outlet)
         return (
           <Outlet context={{
@@ -65,7 +65,15 @@ const SpacesRoot = () => {
 
       return <SpacesOverview spacesData={spacesData} invitationsCount={invitationsData.length} />;
     }
-    return null;
+    if (outlet)
+      return (
+        <Outlet context={{
+          spacesData, invitationsData, updateSpaceRoot, errorHandler,
+        }}
+        />
+      );
+
+    return <SpacesOverview spacesData={spacesData} invitationsCount={invitationsData.length} />;
   };
 
   return (
@@ -74,7 +82,7 @@ const SpacesRoot = () => {
         <SpacesOverview spacesData={spacesData} invitationsCount={invitationsData.length} />
       </div>
 
-      <div className={`${outlet ? 'col-span-1 flex grow bg-background' : 'hidden'}`}>
+      <div className={handleRenderOutlet()}>
         {renderOutlet()}
       </div>
     </div>

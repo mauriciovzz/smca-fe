@@ -3,7 +3,7 @@ import React from 'react';
 const ConfirmationDialog = ({
   title, description, onConfirm, onDecline,
 }) => (
-  <div className="absolute left-0 top-0 flex size-full items-center justify-center rounded-lg bg-white/25 backdrop-blur-sm">
+  <div className="absolute left-0 top-0 z-10 flex size-full items-center justify-center rounded-lg bg-white/25 backdrop-blur-sm">
 
     <div className="h-fit w-3/4 space-y-4 rounded-lg bg-white p-4 shadow">
       <h1 className="font-bold">
@@ -16,17 +16,17 @@ const ConfirmationDialog = ({
         <button
           type="button"
           className="h-[28px] w-[80px] rounded-lg bg-slate-200 font-medium hover:bg-slate-300"
-          onClick={onDecline}
+          onClick={onDecline.action}
         >
-          Cancelar
+          {onDecline.text}
         </button>
 
         <button
           type="button"
           className="h-[28px] w-[80px] rounded-lg bg-red-600 font-medium text-white hover:bg-red-500"
-          onClick={onConfirm}
+          onClick={onConfirm.action}
         >
-          Eliminar
+          {onConfirm.text}
         </button>
       </div>
     </div>

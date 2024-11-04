@@ -2,7 +2,7 @@ import { React } from 'react';
 
 import { Outlet } from 'react-router-dom';
 
-import { BackdropBlur, Map } from 'src/components/backdrop';
+import { BlurEffect, MapBase } from 'src/components/maps';
 import accountsService from 'src/services/accounts';
 
 export const accountVerificationLoader = async ({ params }) => {
@@ -21,8 +21,8 @@ const Verification = () => (
       <Outlet />
     </div>
 
-    <BackdropBlur index="z-10" />
-    <Map />
+    <BlurEffect index="z-10" />
+    <MapBase />
   </>
 );
 

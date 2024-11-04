@@ -3,7 +3,7 @@ import { React, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import {
-  airWave, arrowIcon, locationIcon, mapIcon, componentIcon,
+  variableIcon, arrowIcon, locationIcon, mapIcon, componentIcon,
   nodeIcon, reportsIcon, settingsIcon, usersIcon, spaceIcon,
 } from 'src/assets';
 
@@ -67,7 +67,7 @@ const SideBar = ({ spaceId }) => {
     {
       title: 'Variables',
       route: `/espacios/${spaceId}/variables`,
-      src: airWave,
+      src: variableIcon,
       alt: 'variables',
     },
     {

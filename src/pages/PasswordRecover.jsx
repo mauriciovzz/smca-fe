@@ -2,8 +2,8 @@ import { React, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
-import { BackdropBlur, Map } from 'src/components/backdrop';
 import { Button, TextInput } from 'src/components/inputs';
+import { BlurEffect, MapBase } from 'src/components/maps';
 import { EmailSent } from 'src/components/messages';
 import { Divider, Heading } from 'src/components/ui';
 import accountService from 'src/services/accounts';
@@ -75,8 +75,8 @@ const PasswordRecover = () => {
         }
       </div>
 
-      <BackdropBlur index="z-10" />
-      <Map />
+      <BlurEffect index="z-10" />
+      <MapBase />
     </>
   );
 };

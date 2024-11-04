@@ -1,22 +1,23 @@
 import { React, useState } from 'react';
 
-import { useOutletContext } from 'react-router-dom';
+import { useOutletContext, useNavigate } from 'react-router-dom';
 
-import { nodeIcon } from 'src/assets';
-import {
-  Button, Divider, Heading, Label, Map, TextAreaInput, TextInput,
-} from 'src/components';
+import { arrowIcon } from 'src/assets';
+import { Button, TextAreaInput, TextInput } from 'src/components/inputs';
+import { MapBase } from 'src/components/maps';
+import { Divider, Heading } from 'src/components/ui';
+import useScreenWidth from 'src/hooks/useScreenWidth';
 import locationsService from 'src/services/locations';
 import notificationHelper from 'src/utils/notificationHelper';
 
 const mapCenter = ['8.322376', '-62.689662'];
 
 const SelectionMap = ({
-  coordinates, setCoordenates, recenter, isScreenSM, changeView,
+  coordinates, setCoordenates, recenter, isScreenSmall, closeSelectionMap,
 }) => (
   <div className="flex size-full flex-col space-y-5 overflow-hidden rounded-lg bg-white p-5 shadow">
     <div className="relative flex size-full overflow-hidden rounded-lg shadow">
-      <Map
+      <MapBase
         markersQuantity="one"
         coordinates={coordinates}
         setCoordenates={setCoordenates}
@@ -25,13 +26,14 @@ const SelectionMap = ({
         isNotFullScreen
       />
     </div>
+
     {
-      (isScreenSM) && (
+      (isScreenSmall) && (
         <div className="h-fit w-full">
           <Button
             text="Regresar"
             isTypeButton
-            onClick={() => changeView()}
+            onClick={() => closeSelectionMap()}
             color="blue"
           />
         </div>
@@ -40,39 +42,46 @@ const SelectionMap = ({
   </div>
 );
 
-const LocationCreation = ({ updateLocations, changeView }) => {
-  const { selectedWorkspace } = useOutletContext();
+const LocationCreation = () => {
+  const { spaceData, updateSpaceInstanceRoot, errorHandler } = useOutletContext();
+  const isScreenSmall = useScreenWidth();
+  const navigate = useNavigate();
+
   const [isMapOpen, setIsMapOpen] = useState(false);
 
   const [name, setName] = useState('');
   const [location, setLocation] = useState('');
   const [coordinates, setCoordenates] = useState({ lat: mapCenter[0], long: mapCenter[1] });
-  const [recenter, setRecenter] = useState(false);
-  const isScreenSM = (window.innerWidth <= 640);
 
-  const handleSubmit = async (event) => {
+  const [recenter, setRecenter] = useState(false);
+
+  const handleLocationCreationSubmit = async (event) => {
     event.preventDefault();
 
     try {
       const response = await locationsService.create(
-        selectedWorkspace.workspace_id,
+        spaceData.space_id,
         {
           lat: coordinates.lat,
           long: coordinates.long,
           name,
           location,
-          isVisible: false,
         },
       );
 
       notificationHelper.success(response);
+
       setCoordenates({ lat: mapCenter[0], long: mapCenter[1] });
       setRecenter(true);
       setName('');
       setLocation('');
-      updateLocations();
-    } catch (err) {
-      notificationHelper.error(err);
+
+      updateSpaceInstanceRoot();
+    } catch (error) {
+      const goTo = errorHandler(error, updateSpaceInstanceRoot);
+
+      if (goTo)
+        navigate(goTo);
     }
   };
 
@@ -83,45 +92,43 @@ const LocationCreation = ({ updateLocations, changeView }) => {
           <Heading
             text="Agregar Ubicación"
             hasButton
-            onButtonClick={() => changeView()}
+            onButtonClick={() => navigate('..')}
           />
 
           <Divider />
 
-          <form onSubmit={handleSubmit} id="LocationCreationForm" className="space-y-5">
-            <TextInput
-              id="name"
-              type="text"
-              labelText="Nombre"
-              value={name}
-              setValue={setName}
-              autoComplete="off"
-            />
-            <TextAreaInput
-              id="address"
-              labelText="Dirección"
-              value={location}
-              setValue={(newValue) => setLocation(newValue)}
-            />
-
+          <form onSubmit={handleLocationCreationSubmit} id="LocationCreationForm" className="space-y-5">
             {
-              (isScreenSM)
+              (isScreenSmall)
                 ? (
-                  <div className="flex justify-between">
-                    <div>
-                      <Label text="Coordenadas" />
-                      <div className="flex space-x-5 text-sm">
-                        {`[${coordinates.lat},${coordinates.long}]`}
-                      </div>
+                  <div className="flex justify-between space-x-4">
+                    <div className="flex w-[90%] justify-between space-x-4">
+                      <TextInput
+                        id="lat"
+                        type="number"
+                        disabled
+                        labelText="Latitud"
+                        value={coordinates.lat}
+                        setValue={(newValue) => setCoordenates({ ...coordinates, lat: newValue })}
+                      />
+                      <TextInput
+                        id="long"
+                        type="number"
+                        disabled
+                        labelText="Longitud"
+                        value={coordinates.long}
+                        setValue={(newValue) => setCoordenates({ ...coordinates, long: newValue })}
+                      />
                     </div>
                     <button
                       type="button"
+                      className="w-[10%]"
                       onClick={() => setIsMapOpen(true)}
                     >
                       <img
-                        src={nodeIcon}
-                        alt="node icon"
-                        className="size-[34px]"
+                        src={arrowIcon}
+                        alt="arrow"
+                        className="size-[25px] rotate-180"
                       />
                     </button>
                   </div>
@@ -147,6 +154,21 @@ const LocationCreation = ({ updateLocations, changeView }) => {
                   </div>
                 )
             }
+
+            <TextInput
+              id="name"
+              type="text"
+              labelText="Nombre"
+              value={name}
+              setValue={setName}
+              autoComplete="off"
+            />
+            <TextAreaInput
+              id="address"
+              labelText="Dirección"
+              value={location}
+              setValue={(newValue) => setLocation(newValue)}
+            />
           </form>
         </div>
 
@@ -158,7 +180,7 @@ const LocationCreation = ({ updateLocations, changeView }) => {
       </div>
 
       {
-        (!isScreenSM) && (
+        (!isScreenSmall) && (
           <SelectionMap
             coordinates={coordinates}
             setCoordenates={setCoordenates}
@@ -168,17 +190,16 @@ const LocationCreation = ({ updateLocations, changeView }) => {
       }
 
       {
-        (isScreenSM) && (isMapOpen) && (
+        (isScreenSmall) && (isMapOpen) && (
           <div className="absolute size-full">
             <SelectionMap
               coordinates={coordinates}
               setCoordenates={setCoordenates}
               recenter={recenter}
-              isScreenSM={isScreenSM}
-              changeView={() => setIsMapOpen(false)}
+              isScreenSmall={isScreenSmall}
+              closeSelectionMap={() => setIsMapOpen(false)}
             />
           </div>
-
         )
       }
     </div>

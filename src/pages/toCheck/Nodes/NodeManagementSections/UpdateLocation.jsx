@@ -4,7 +4,7 @@ import { useOutletContext } from 'react-router-dom';
 
 import { addIcon } from 'src/assets';
 import {
-  Button, Divider, Heading, Map, MapViewButton,
+  Button, Divider, Heading, MapBase, MarkersMapButton,
 } from 'src/components';
 import LocationCreation from 'src/pages/Locations/LocationCreation';
 import locationsService from 'src/services/locations';
@@ -18,7 +18,7 @@ const MarkersMap = ({
 }) => (
   <div className="flex size-full flex-col space-y-5 overflow-hidden rounded-lg bg-white p-5 shadow">
     <div className="relative flex size-full overflow-hidden rounded-lg shadow">
-      <Map
+      <MapBase
         markerList={locations}
         onMarkerClick={selectLocation}
         markerPopup={
@@ -110,7 +110,7 @@ const LocationList = ({
         {
           (isScreenSM)
             ? (
-              <MapViewButton
+              <MarkersMapButton
                 text="Buscar ubicación en el mapa"
                 onClick={() => setIsMapOpen(true)}
                 padding="py-2.5"

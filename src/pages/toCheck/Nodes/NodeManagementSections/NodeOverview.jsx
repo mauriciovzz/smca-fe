@@ -4,7 +4,7 @@ import { useOutletContext } from 'react-router-dom';
 
 import { nodeIcon } from 'src/assets';
 import {
-  Badge, Button, Divider, Heading, Map,
+  Badge, Button, Divider, Heading, MapBase,
 } from 'src/components';
 
 import DeleteNode from './DeleteNode';
@@ -13,7 +13,7 @@ import NodeCodeInfo from './NodeCodeInfo';
 const LocationInMap = ({ coordinates, isScreenSM, changeView }) => (
   <div className="flex size-full flex-col space-y-5 overflow-hidden rounded-lg bg-white p-5 shadow">
     <div className="relative flex size-full overflow-hidden rounded-lg shadow">
-      <Map
+      <MapBase
         markersQuantity="oneToShow"
         coordinates={coordinates}
         isNotFullScreen

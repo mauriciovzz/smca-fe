@@ -3,10 +3,10 @@ import { React, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import {
-  airWave, closeIcon, locationIcon, mapIcon, componentIcon, menuIcon,
+  variableIcon, closeIcon, locationIcon, mapIcon, componentIcon, menuIcon,
   nodeIcon, reportsIcon, settingsIcon, usersIcon, spaceIcon,
 } from 'src/assets';
-import { BackdropBlur } from 'src/components/backdrop';
+import { BlurEffect } from 'src/components/maps';
 
 const BottomBar = ({ spaceId }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -60,7 +60,7 @@ const BottomBar = ({ spaceId }) => {
     {
       title: 'Variables',
       route: `/espacios/${spaceId}/variables`,
-      src: airWave,
+      src: variableIcon,
       alt: 'variables',
       menuOrder: 'order-7',
     },
@@ -147,7 +147,7 @@ const BottomBar = ({ spaceId }) => {
         </nav>
       </div>
 
-      {isMenuOpen && <BackdropBlur index="z-[60]" /> }
+      {isMenuOpen && <BlurEffect index="z-[60]" /> }
     </>
   );
 };

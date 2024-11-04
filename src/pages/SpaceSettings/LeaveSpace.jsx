@@ -5,7 +5,7 @@ import { useOutletContext, useNavigate } from 'react-router-dom';
 import { Button } from 'src/components/inputs';
 import { Divider, Heading } from 'src/components/ui';
 import useAuth from 'src/hooks/useAuth';
-import spacesService from 'src/services/spaces';
+import membersService from 'src/services/members';
 import notificationHelper from 'src/utils/notificationHelper';
 
 const LeaveSpace = () => {
@@ -15,7 +15,7 @@ const LeaveSpace = () => {
 
   const handleLeaveSpace = async () => {
     try {
-      const response = await spacesService.leave(
+      const response = await membersService.leaveSpace(
         spaceData.space_id,
         auth.accountId,
       );

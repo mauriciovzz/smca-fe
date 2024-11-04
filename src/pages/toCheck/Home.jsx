@@ -2,7 +2,7 @@ import {
   React, useState, useEffect, useContext,
 } from 'react';
 
-import { Badge, Map } from 'src/components';
+import { Badge, MapBase } from 'src/components';
 import { AuthContext } from 'src/context/AuthProvider';
 import { NodeReadingsDashboard } from 'src/layout';
 import nodesService from 'src/services/nodes';
@@ -45,7 +45,7 @@ const Home = () => {
 
   return (
     <>
-      <Map
+      <MapBase
         markerList={nodes}
         onMarkerClick={selectNode}
         markerPopup={(node) => (

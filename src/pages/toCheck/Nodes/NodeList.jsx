@@ -4,7 +4,7 @@ import { useOutletContext } from 'react-router-dom';
 
 import { addIcon } from 'src/assets';
 import {
-  Badge, Button, Divider, Heading, Map, MapViewButton,
+  Badge, Button, Divider, Heading, MapBase, MarkersMapButton,
 } from 'src/components';
 
 const MarkersMap = ({
@@ -12,7 +12,7 @@ const MarkersMap = ({
 }) => (
   <div className="flex size-full flex-col space-y-5 overflow-hidden rounded-lg bg-white p-5 shadow">
     <div className="relative flex size-full overflow-hidden rounded-lg shadow">
-      <Map
+      <MapBase
         markerList={nodes}
         onMarkerClick={selectNode}
         markerPopup={(node) => (
@@ -113,7 +113,7 @@ const NodeList = ({ nodes, selectNode, changeView }) => {
           </div>
           {
             (isScreenSM) && (
-              <MapViewButton text="Buscar nodo en el mapa" onClick={() => setIsMapOpen(true)} />
+              <MarkersMapButton text="Buscar nodo en el mapa" onClick={() => setIsMapOpen(true)} />
             )
           }
         </div>

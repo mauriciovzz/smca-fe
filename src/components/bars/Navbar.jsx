@@ -6,7 +6,7 @@ import {
   accountIcon, closeIcon, helpIcon, infoIcon, loginIcon,
   logoutIcon, mapIcon, menuIcon, spaceIcon,
 } from 'src/assets';
-import { BackdropBlur } from 'src/components/backdrop';
+import { BlurEffect } from 'src/components/maps';
 import useAuth from 'src/hooks/useAuth';
 
 const Bar = ({
@@ -210,7 +210,7 @@ const Navbar = ({ logout }) => {
         </nav>
       </div>
 
-      { isMenuOpen && <BackdropBlur index="z-30" /> }
+      { isMenuOpen && <BlurEffect index="z-30" /> }
     </>
   );
 };

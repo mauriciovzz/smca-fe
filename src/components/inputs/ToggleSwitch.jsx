@@ -2,23 +2,25 @@ import React from 'react';
 
 import { Divider, Label } from 'src/components/ui';
 
-const ToggleOption = ({ side, option, selectedOption }) => {
+const ToggleOption = ({
+  side, option, selectedOption, isDisabled,
+}) => {
   const getUI = () => {
     if (selectedOption === option.value) {
       if (side === 'left')
-        return `${option.color} rounded-r-2xl text-white`;
+        return `${option.color} rounded-r-lg text-white`;
 
-      return `${option.color} rounded-l-2xl text-white`;
+      return `${option.color} rounded-l-lg text-white`;
     }
-    return 'bg-white text-slate-400';
+    return `${isDisabled ? 'bg-whire' : 'bg-disabled'} text-slate-400`;
   };
 
   return (
     <button
       type="button"
       className={`${getUI()} flex w-1/2 flex-col items-center justify-center p-1`}
-      onClick={!option.onClick ? undefined : () => option.onClick()}
-      disabled={!option.onClick}
+      onClick={!isDisabled ? undefined : option.onClick}
+      disabled={!isDisabled}
     >
       <div className="text-sm">
         {option.title}
@@ -39,22 +41,24 @@ const ToggleOption = ({ side, option, selectedOption }) => {
 };
 
 const ToggleSwitch = ({
-  labelText, selectedOption, leftOption, rigthOption,
+  labelText, selectedOption, leftOption, rigthOption, isDisabled,
 }) => (
   <div>
-    <Label text={labelText} />
+    {(labelText) && <Label text={labelText} />}
 
-    <div className="flex h-fit w-full overflow-hidden rounded-2xl border-2 bg-white font-medium ">
+    <div className={`${isDisabled ? 'bg-white' : 'bg-disabled'} flex h-fit w-full overflow-hidden rounded-lg border-2 font-medium`}>
       <ToggleOption
         side="left"
         option={leftOption}
         selectedOption={selectedOption}
+        isDisabled={isDisabled}
       />
 
       <ToggleOption
         side="right"
         option={rigthOption}
         selectedOption={selectedOption}
+        isDisabled={isDisabled}
       />
     </div>
   </div>

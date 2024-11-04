@@ -4,7 +4,7 @@ import { useOutletContext, useNavigate } from 'react-router-dom';
 
 import { Button, TextInput } from 'src/components/inputs';
 import { Divider, Heading } from 'src/components/ui';
-import spacesService from 'src/services/spaces';
+import invitationsService from 'src/services/invitations';
 import notificationHelper from 'src/utils/notificationHelper';
 
 const MemberInvitation = () => {
@@ -16,7 +16,7 @@ const MemberInvitation = () => {
     event.preventDefault();
 
     try {
-      const response = await spacesService.invite(
+      const response = await invitationsService.invite(
         spaceData.space_id,
         { email },
       );
@@ -41,7 +41,7 @@ const MemberInvitation = () => {
 
         <Divider />
 
-        <form onSubmit={handleInviteSubmit} id="form" className="space-y-5">
+        <form onSubmit={handleInviteSubmit} id="inviteForm" className="space-y-5">
           <p className="text-justify text-gray-500">
             Ingrese el correo de un usuario verificado en el sistema para
             enviarle una invitación a este espacio.
@@ -60,7 +60,7 @@ const MemberInvitation = () => {
 
       <Button
         text="Invitar Usuario"
-        form="form"
+        form="inviteForm"
         color="blue"
       />
     </div>

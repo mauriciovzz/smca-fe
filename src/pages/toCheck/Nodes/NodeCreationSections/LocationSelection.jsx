@@ -2,7 +2,7 @@ import { React, useState } from 'react';
 
 import { addIcon } from 'src/assets';
 import {
-  Button, Divider, Map, SelectionBar, MapViewButton,
+  Button, Divider, MapBase, SelectionBar, MarkersMapButton,
 } from 'src/components';
 import LocationCreation from 'src/pages/Locations/LocationCreation';
 
@@ -11,7 +11,7 @@ const MarkersMap = ({
 }) => (
   <div className="flex size-full flex-col space-y-5 overflow-hidden rounded-lg bg-white p-5 shadow">
     <div className="relative flex size-full overflow-hidden rounded-lg shadow">
-      <Map
+      <MapBase
         markerList={locations}
         onMarkerClick={selectLocation}
         markerPopup={
@@ -110,7 +110,7 @@ const LocationSelection = ({
         </div>
         {
           (isScreenSM) && (
-            <MapViewButton
+            <MarkersMapButton
               text="Buscar ubicación en el mapa"
               onClick={() => setIsMapOpen(true)}
             />

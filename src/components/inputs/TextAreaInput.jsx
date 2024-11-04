@@ -9,7 +9,7 @@ const TextAreaInput = ({
     <Label text={labelText} />
     <textarea
       className={`${disabled ? 'bg-disabled' : 'bg-enabled'} 
-                    block w-full resize-none rounded-lg border border-gray-300 p-2.5 text-sm focus:border-sky-600`}
+                    block w-full resize-none rounded-lg border border-gray-300 p-2.5 text-sm focus:border-main focus:ring-main`}
       id={id}
       name={id}
       value={value}

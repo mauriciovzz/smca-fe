@@ -1,6 +1,6 @@
 import { React } from 'react';
 
-import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import { VerificationSuccess, VerificationError } from 'src/components/messages';
 import useAuth from 'src/hooks/useAuth';
@@ -17,6 +17,9 @@ import PasswordReset from 'src/pages/PasswordReset';
 import Register from 'src/pages/Register';
 import ResendVerificationLink from 'src/pages/ResendVerificationLink';
 import Root from 'src/pages/Root';
+import {
+  LocationsRoot, LocationCreation, LocationManagement, locationsLoader,
+} from 'src/pages/SpaceLocations';
 import {
   MemberManagement, MemberInvitation, MembersRoot, membersLoader,
 } from 'src/pages/SpaceMembers';
@@ -51,7 +54,6 @@ const Router = () => {
       showMessage: true,
       redirectTo: '/espacios',
     },
-
   ];
 
   const router = createBrowserRouter([
@@ -141,7 +143,7 @@ const Router = () => {
           loader: () => spacesLoader(auth, loaderErrors),
           children: [
             {
-              path: 'crear',
+              path: 'agregar',
               element: <SpacesCreation />,
             },
             {
@@ -178,6 +180,18 @@ const Router = () => {
             },
             {
               path: 'ubicaciones',
+              element: <LocationsRoot />,
+              loader: ({ params }) => locationsLoader(auth, params, loaderErrors),
+              children: [
+                {
+                  path: 'agregar',
+                  element: <LocationCreation />,
+                },
+                {
+                  path: ':locationId',
+                  element: <LocationManagement />,
+                },
+              ],
             },
             {
               path: 'componentes',
