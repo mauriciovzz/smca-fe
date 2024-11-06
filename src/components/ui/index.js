@@ -3,6 +3,7 @@ import Divider from './Divider';
 import Heading from './Heading';
 import Label from './Label';
 import LocationLabel from './LocationLabel';
+import VariableLabel from './VariableLabel';
 
 export {
   Badge,
@@ -10,4 +11,5 @@ export {
   Heading,
   Label,
   LocationLabel,
+  VariableLabel,
 };

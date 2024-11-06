@@ -14,6 +14,9 @@ module.exports = {
         // gray-detail
         graydetails: '#e5e7eb',
 
+        // slate-400
+        neutral: '#94a3b8',
+
         // sky-600
         main: '#0284c7',
         // sky-700
@@ -47,11 +50,11 @@ module.exports = {
         private: '#a3a3a3',
 
         // VARIABLE TYPES  ------------------------------
-        // cyan-600
-        meteorological: '#0891b2',
+        // blue
+        meteorological: '#0089e3',
 
-        // green-600
-        enviromental: '#16a34a',
+        // green
+        enviromental: '#00cc00',
 
         // COMPONENTS  ------------------------------
         // lime-400

@@ -136,6 +136,10 @@ const Root = () => {
       revalidator();
       return '..';
     }
+    if (errorMessage === 'La variable indicada no se encuentra registrada.') {
+      revalidator();
+      return '..';
+    }
     return null;
   };
 

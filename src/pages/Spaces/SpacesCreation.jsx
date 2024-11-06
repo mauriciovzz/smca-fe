@@ -25,7 +25,10 @@ const SpacesCreation = () => {
       notificationHelper.success(response);
       updateSpaceRoot();
     } catch (error) {
-      errorHandler(error, updateSpaceRoot);
+      const goTo = errorHandler(error, updateSpaceRoot);
+
+      if (goTo)
+        navigate(goTo);
     }
   };
 

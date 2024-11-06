@@ -7,10 +7,6 @@ const Badge = ({
     switch (value) {
       case 'admin':
         return 'bg-main';
-      case 'Meteorológica':
-        return 'bg-meteorological';
-      case 'Ambiental':
-        return 'bg-enviromental';
       case 'Placa':
         return 'bg-board';
       case 'Sensor':
@@ -44,10 +40,6 @@ const Badge = ({
 
   const getText = () => {
     switch (value) {
-      case 'Ambiental':
-        return 'amb';
-      case 'Meteorológica':
-        return 'met';
       case 'Sensor de Lluvia':
         return 'Lluvia';
       default:

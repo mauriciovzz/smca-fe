@@ -12,15 +12,15 @@ const ToggleOption = ({
 
       return `${option.color} rounded-l-lg text-white`;
     }
-    return `${isDisabled ? 'bg-whire' : 'bg-disabled'} text-slate-400`;
+    return `${isDisabled ? 'bg-disabled' : 'bg-white'} text-slate-400`;
   };
 
   return (
     <button
       type="button"
       className={`${getUI()} flex w-1/2 flex-col items-center justify-center p-1`}
-      onClick={!isDisabled ? undefined : option.onClick}
-      disabled={!isDisabled}
+      onClick={isDisabled ? undefined : option.onClick}
+      disabled={isDisabled}
     >
       <div className="text-sm">
         {option.title}
@@ -46,7 +46,7 @@ const ToggleSwitch = ({
   <div>
     {(labelText) && <Label text={labelText} />}
 
-    <div className={`${isDisabled ? 'bg-white' : 'bg-disabled'} flex h-fit w-full overflow-hidden rounded-lg border-2 font-medium`}>
+    <div className={`${isDisabled ? 'bg-disabled' : 'bg-white'} flex h-fit w-full overflow-hidden rounded-lg border-2 font-medium`}>
       <ToggleOption
         side="left"
         option={leftOption}

@@ -153,18 +153,18 @@ const LocationManagement = () => {
               labelText="Visibilidad"
               selectedOption={isVisible}
               leftOption={{
-                title: 'Publico',
+                title: 'Público',
                 value: true,
-                color: 'bg-public',
+                color: 'bg-main',
                 onClick: () => setIsVisible(true),
               }}
               rigthOption={{
                 title: 'Privado',
                 value: false,
-                color: 'bg-private',
+                color: 'bg-main',
                 onClick: () => setIsVisible(false),
               }}
-              isDisabled={isEditable}
+              isDisabled={!isEditable}
             />
           </form>
         </div>

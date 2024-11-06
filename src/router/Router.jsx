@@ -31,6 +31,9 @@ import {
   DeleteSpace, LeaveSpace, SpaceSettingsRoot, UpdateSpaceColor,
   UpdateSpaceName,
 } from 'src/pages/SpaceSettings';
+import {
+  VariablesRoot, variablesLoader, VariableCreation, VariableManagement,
+} from 'src/pages/SpaceVariables';
 import Verification, { accountVerificationLoader, newEmailVerificationLoader } from 'src/pages/Verification';
 
 import HiddenRoutes from './HiddenRoutes';
@@ -198,6 +201,18 @@ const Router = () => {
             },
             {
               path: 'variables',
+              element: <VariablesRoot />,
+              loader: ({ params }) => variablesLoader(auth, params, loaderErrors),
+              children: [
+                {
+                  path: 'agregar',
+                  element: <VariableCreation />,
+                },
+                {
+                  path: ':variableId',
+                  element: <VariableManagement />,
+                },
+              ],
             },
             {
               path: 'ajustes',

@@ -1,0 +1,147 @@
+import { React, useState } from 'react';
+
+import { useOutletContext, useNavigate } from 'react-router-dom';
+
+import {
+  Button, ColorInput, TextInput, ToggleSwitch,
+} from 'src/components/inputs';
+import { Divider, Heading } from 'src/components/ui';
+import variablesService from 'src/services/variables';
+import notificationHelper from 'src/utils/notificationHelper';
+
+const VariableCreation = () => {
+  const { spaceData, updateSpaceInstanceRoot, errorHandler } = useOutletContext();
+  const navigate = useNavigate();
+
+  const [variableType, setVariableType] = useState('enviromental');
+  const [valueType, setValueType] = useState('numerical');
+  const [name, setName] = useState('');
+  const [unit, setUnit] = useState('');
+  const [color, setColor] = useState('#0284C7');
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      const response = await variablesService.create(
+        spaceData.space_id,
+        {
+          variableType,
+          valueType,
+          name,
+          unit: (valueType === 'numerical') ? unit : null,
+          color,
+        },
+      );
+
+      notificationHelper.success(response);
+
+      setVariableType('enviromental');
+      setName('');
+      setValueType('numerical');
+      setUnit('');
+      setColor('#0284C7');
+      updateSpaceInstanceRoot();
+    } catch (error) {
+      const goTo = errorHandler(error, updateSpaceInstanceRoot);
+
+      if (goTo)
+        navigate(goTo);
+    }
+  };
+
+  return (
+    <div className="flex size-full flex-col rounded-lg bg-white p-5 shadow">
+      <div className="flex grow flex-col">
+        <Heading
+          text="Agregar Variable"
+          hasButton
+          onButtonClick={() => navigate('..')}
+        />
+
+        <Divider />
+
+        <form onSubmit={handleSubmit} id="form" className="space-y-5">
+          <ToggleSwitch
+            labelText="Tipo de Variable"
+            selectedOption={variableType}
+            leftOption={{
+              title: 'Ambiental',
+              value: 'enviromental',
+              onClick: () => setVariableType('enviromental'),
+              color: 'bg-main',
+            }}
+            rigthOption={{
+              title: 'Meteorológica',
+              value: 'meteorological',
+              onClick: () => setVariableType('meteorological'),
+              color: 'bg-main',
+            }}
+          />
+
+          <ToggleSwitch
+            labelText="Tipo de Valor"
+            selectedOption={valueType}
+            leftOption={{
+              title: 'Numérico',
+              value: 'numerical',
+              onClick: () => setValueType('numerical'),
+              color: 'bg-main',
+            }}
+            rigthOption={{
+              title: 'Presencial',
+              value: 'presential',
+              onClick: () => setValueType('presential'),
+              color: 'bg-main',
+            }}
+          />
+
+          <div className="flex space-x-2.5">
+            <div className="flex-1">
+              <TextInput
+                id="name"
+                type="text"
+                labelText="Nombre"
+                value={name}
+                setValue={setName}
+                autoComplete="off"
+              />
+            </div>
+
+            {
+              (valueType === 'numerical') && (
+                <div className="w-[100px]">
+                  <TextInput
+                    id="unit"
+                    type="text"
+                    labelText="Unidad"
+                    value={unit}
+                    setValue={setUnit}
+                    autoComplete="off"
+                  />
+                </div>
+              )
+            }
+
+            <div className="w-[40px]">
+              <ColorInput
+                id="color"
+                labelText="Color"
+                value={color}
+                setValue={setColor}
+              />
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <Button
+        text="Agregar Variable"
+        form="form"
+        color="blue"
+      />
+    </div>
+  );
+};
+
+export default VariableCreation;

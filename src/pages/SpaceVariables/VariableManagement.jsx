@@ -1,21 +1,25 @@
 import { React, useEffect, useState } from 'react';
 
-import { useOutletContext } from 'react-router-dom';
+import { useOutletContext, useParams, useNavigate } from 'react-router-dom';
 
 import {
-  Button, ColorInput, Divider, Heading, Label, TextInput,
-} from 'src/components';
-import { ConfirmationDialog } from 'src/layout';
+  Button, ConfirmationDialog, ColorInput, TextInput,
+} from 'src/components/inputs';
+import { Divider, Heading } from 'src/components/ui';
 import variablesService from 'src/services/variables';
 import notificationHelper from 'src/utils/notificationHelper';
 
-const VariableManagement = ({ selectedVariable, updateVariables, changeView }) => {
-  const { selectedWorkspace } = useOutletContext();
+const VariableManagement = () => {
+  const { variableId } = useParams();
+  const {
+    spaceData, variablesData, updateSpaceInstanceRoot, errorHandler,
+  } = useOutletContext();
+  const selectedVariable = variablesData.find((v) => v.variable_id === parseInt(variableId, 10));
+  const navigate = useNavigate();
+
   const [isEditable, setIsEditable] = useState(false);
   const [isConDiaOpen, setIsConDiaOpen] = useState(false);
 
-  const [variableType, setVariableType] = useState(selectedVariable.type);
-  const [variableValueType, setVariableValueType] = useState(selectedVariable.value_type);
   const [name, setName] = useState(selectedVariable.name);
   const [unit, setUnit] = useState(selectedVariable.unit);
   const [color, setColor] = useState(selectedVariable.color);
@@ -24,8 +28,6 @@ const VariableManagement = ({ selectedVariable, updateVariables, changeView }) =
     setIsEditable(false);
     setIsConDiaOpen(false);
 
-    setVariableType(selectedVariable.type);
-    setVariableValueType(selectedVariable.value_type);
     setName(selectedVariable.name);
     setUnit(selectedVariable.unit);
     setColor(selectedVariable.color);
@@ -33,45 +35,50 @@ const VariableManagement = ({ selectedVariable, updateVariables, changeView }) =
 
   useEffect(() => {
     setData();
-  }, [selectedVariable]);
+  }, [variableId]);
 
-  const handleUpdate = async () => {
+  const handleUpdate = async (event) => {
+    event.preventDefault();
+
     try {
-      const requestData = {
-        name,
-        color,
-      };
-
-      if (variableValueType === 'Numérico') {
-        requestData.unit = unit;
-      }
-
       const response = await variablesService.update(
-        selectedWorkspace.workspace_id,
+        spaceData.space_id,
         selectedVariable.variable_id,
-        requestData,
+        {
+          name,
+          unit: (selectedVariable.value_type === 'numerical') ? unit : null,
+          color,
+        },
       );
 
       notificationHelper.success(response);
-      updateVariables();
+
+      updateSpaceInstanceRoot();
       setIsEditable(!isEditable);
-    } catch (err) {
-      notificationHelper.error(err);
+    } catch (error) {
+      const goTo = errorHandler(error, updateSpaceInstanceRoot);
+
+      if (goTo)
+        navigate(goTo);
     }
   };
 
   const handleRemove = async () => {
     try {
       const response = await variablesService.remove(
-        selectedWorkspace.workspace_id,
+        spaceData.space_id,
         selectedVariable.variable_id,
       );
 
       notificationHelper.success(response);
-      updateVariables();
-      changeView();
-    } catch (err) {
-      notificationHelper.error(err);
+
+      updateSpaceInstanceRoot();
+      navigate('..');
+    } catch (error) {
+      const goTo = errorHandler(error, updateSpaceInstanceRoot);
+
+      if (goTo)
+        navigate(goTo);
     }
   };
 
@@ -81,24 +88,27 @@ const VariableManagement = ({ selectedVariable, updateVariables, changeView }) =
         <Heading
           text="Variable"
           hasButton
-          onButtonClick={() => changeView()}
+          onButtonClick={() => navigate('..')}
         />
 
         <Divider />
 
-        <form className="flex flex-col gap-5">
-          <div className="flex h-fit w-full flex-col">
-            <Label text="Tipo de Variable" />
-            <div className={`${(variableType === 'Meteorológica') ? 'bg-meteorological' : 'bg-enviromental'} flex h-[38px] w-full items-center justify-center rounded-xl font-medium text-white`}>
-              {variableType}
-            </div>
-          </div>
-
-          <div className="flex h-fit w-full flex-col">
-            <Label text="Tipo de Valor" />
-            <div className="flex h-[38px] w-full items-center justify-center rounded-xl bg-indoor font-medium text-white">
-              {variableValueType}
-            </div>
+        <form className="flex flex-col gap-5" onSubmit={handleUpdate} id="form">
+          <div className="flex space-x-2.5">
+            <TextInput
+              id="variableType"
+              type="text"
+              labelText="Tipo de Variable"
+              value={selectedVariable.variable_type === 'enviromental' ? 'ambiental' : 'meteorológica'}
+              disabled
+            />
+            <TextInput
+              id="ValueType"
+              type="text"
+              labelText="Tipo de Valor"
+              value={selectedVariable.value_type === 'numerical' ? 'numérico' : 'presencial'}
+              disabled
+            />
           </div>
 
           <TextInput
@@ -112,7 +122,7 @@ const VariableManagement = ({ selectedVariable, updateVariables, changeView }) =
 
           <div className="flex space-x-5">
             {
-              (variableValueType === 'Numérico') && (
+              (selectedVariable.value_type === 'numerical') && (
                 <TextInput
                   id="unit"
                   type="text"
@@ -139,14 +149,29 @@ const VariableManagement = ({ selectedVariable, updateVariables, changeView }) =
       </div>
 
       {
-        (selectedWorkspace.is_admin) && (
+        (spaceData.is_admin) && (
           <div className="flex w-full gap-2.5">
-            <Button
-              text={isEditable ? 'Guardar' : 'Modificar'}
-              isTypeButton
-              onClick={isEditable ? () => handleUpdate() : () => setIsEditable(!isEditable)}
-              color="blue"
-            />
+            {
+              isEditable
+                ? (
+                  <Button
+                    key="save button"
+                    text="Guardar"
+                    form="form"
+                    color="blue"
+                  />
+                )
+                : (
+                  <Button
+                    key="edit button"
+                    text="Modificar"
+                    isTypeButton
+                    onClick={() => setIsEditable(true)}
+                    color="blue"
+                  />
+                )
+            }
+
             <Button
               text={isEditable ? 'Cancelar' : 'Eliminar'}
               isTypeButton
@@ -162,8 +187,8 @@ const VariableManagement = ({ selectedVariable, updateVariables, changeView }) =
         <ConfirmationDialog
           title="Eliminar Variable"
           description={`Estas seguro de querer eliminar la variable "${name}"?`}
-          onDecline={() => setIsConDiaOpen(false)}
-          onConfirm={() => handleRemove()}
+          onDecline={{ text: 'Cancelar', action: () => setIsConDiaOpen(false) }}
+          onConfirm={{ text: 'Eliminar', action: () => handleRemove() }}
         />
         )
       }

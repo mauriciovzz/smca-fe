@@ -2,8 +2,8 @@ import { React, useState } from 'react';
 
 import { Link, useNavigate, useOutletContext } from 'react-router-dom';
 
-import { BlurEffect, MapBase } from 'src/components/maps';
 import { Button, CheckBoxInput, TextInput } from 'src/components/inputs';
+import { BlurEffect, MapBase } from 'src/components/maps';
 import { Divider, Heading } from 'src/components/ui';
 import notificationHelper from 'src/utils/notificationHelper';
 
