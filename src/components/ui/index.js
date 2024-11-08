@@ -1,4 +1,5 @@
 import Badge from './Badge';
+import ComponentLabel from './ComponentLabel';
 import Divider from './Divider';
 import Heading from './Heading';
 import Label from './Label';
@@ -7,6 +8,7 @@ import VariableLabel from './VariableLabel';
 
 export {
   Badge,
+  ComponentLabel,
   Divider,
   Heading,
   Label,

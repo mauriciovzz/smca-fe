@@ -7,18 +7,25 @@ const Badge = ({
     switch (value) {
       case 'admin':
         return 'bg-main';
-      case 'Placa':
+
+      case 'enviromental':
+        return 'bg-enviromental';
+      case 'meteorological':
+        return 'bg-meteorological';
+
+      case 'board':
         return 'bg-board';
-      case 'Sensor':
+      case 'sensor':
         return 'bg-sensor';
-      case 'Sensor de Lluvia':
-        return 'bg-rain-sensor';
-      case 'Camara':
+      case 'rain_detector':
+        return 'bg-rain';
+      case 'camera':
         return 'bg-camera';
-      case 'Pantalla':
+      case 'screen':
         return 'bg-screen';
-      case 'Otro':
+      case 'other':
         return 'bg-other';
+
       case 'Activo':
         return 'bg-active';
       case 'Inactivo':
@@ -40,8 +47,24 @@ const Badge = ({
 
   const getText = () => {
     switch (value) {
-      case 'Sensor de Lluvia':
-        return 'Lluvia';
+      case 'enviromental':
+        return 'amb';
+      case 'meteorological':
+        return 'met';
+
+      case 'board':
+        return 'placa';
+      case 'sensor':
+        return 'sensor';
+      case 'rain_detector':
+        return 'detector de lluvia';
+      case 'camera':
+        return 'camara';
+      case 'screen':
+        return 'pantalla';
+      case 'other':
+        return 'otro';
+
       default:
         return value;
     }
@@ -53,7 +76,7 @@ const Badge = ({
       ${!height ? 'h-[24px]' : height} 
       ${!width ? 'w-[60px]' : width} 
       ${!rounded ? 'rounded-3xl' : rounded} 
-      flex items-center justify-center self-center rounded-3xl text-xs font-semibold text-white
+      flex items-center justify-center self-center rounded-3xl text-center text-sm font-medium text-white
     `}
     >
       <div>

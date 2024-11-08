@@ -140,6 +140,13 @@ const Root = () => {
       revalidator();
       return '..';
     }
+    if (errorMessage === 'El componente indicado no se encuentra registrado.') {
+      revalidator();
+      return '..';
+    }
+    if (errorMessage === 'Una de las variables agregadas no se encuentra registrada.') {
+      revalidator();
+    }
     return null;
   };
 

@@ -22,6 +22,7 @@ import mailIcon from 'src/assets/icons/mailIcon.svg';
 import mapIcon from 'src/assets/icons/mapIcon.svg';
 import menuIcon from 'src/assets/icons/menuIcon.svg';
 import nodeIcon from 'src/assets/icons/nodeIcon.svg';
+import pasteIcon from 'src/assets/icons/pasteIcon.svg';
 import privateLocationIcon from 'src/assets/icons/privateLocationIcon.svg';
 import publicLocationIcon from 'src/assets/icons/publicLocationIcon.svg';
 import refresh from 'src/assets/icons/refresh.svg';
@@ -64,6 +65,7 @@ export {
   componentIcon,
   menuIcon,
   nodeIcon,
+  pasteIcon,
   privateLocationIcon,
   publicLocationIcon,
   refresh,

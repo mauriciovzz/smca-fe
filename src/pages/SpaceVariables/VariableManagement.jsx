@@ -94,7 +94,7 @@ const VariableManagement = () => {
         <Divider />
 
         <form className="flex flex-col gap-5" onSubmit={handleUpdate} id="form">
-          <div className="flex space-x-2.5">
+          <div className="flex gap-5">
             <TextInput
               id="variableType"
               type="text"

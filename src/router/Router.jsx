@@ -18,6 +18,9 @@ import Register from 'src/pages/Register';
 import ResendVerificationLink from 'src/pages/ResendVerificationLink';
 import Root from 'src/pages/Root';
 import {
+  ComponentsRoot, ComponentCreation, ComponentManagement, componentsLoader,
+} from 'src/pages/SpaceComponents';
+import {
   LocationsRoot, LocationCreation, LocationManagement, locationsLoader,
 } from 'src/pages/SpaceLocations';
 import {
@@ -198,6 +201,20 @@ const Router = () => {
             },
             {
               path: 'componentes',
+              element: <ComponentsRoot />,
+              loader: ({ params }) => componentsLoader(auth, params, loaderErrors),
+              children: [
+                {
+                  path: 'agregar',
+                  element: <ComponentCreation />,
+                  loader: ({ params }) => variablesLoader(auth, params, loaderErrors),
+                },
+                {
+                  path: ':componentId',
+                  element: <ComponentManagement />,
+                  loader: ({ params }) => variablesLoader(auth, params, loaderErrors),
+                },
+              ],
             },
             {
               path: 'variables',

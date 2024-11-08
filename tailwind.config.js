@@ -57,18 +57,12 @@ module.exports = {
         enviromental: '#00cc00',
 
         // COMPONENTS  ------------------------------
-        // lime-400
-        board: '#a3e635',
-        // teal-400
-        sensor: '#2dd4bf',
-        // blue-400
-        'rain-sensor': '#60a5fa',
-        // purple-400
-        camera: '#c084fc',
-        // rose-400
-        screen: '#fb7185',
-        // zinc-400
+        board: '#005EAA',
+        screen: '#046307',
+        rain: '#53789E',
         other: '#a1a1aa',
+        sensor: '#026159',
+        camera: '#7A8DA4',
       },
       gridTemplateColumns: {
         layout: 'repeat(auto-fit, 230px);',

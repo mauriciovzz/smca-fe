@@ -9,7 +9,7 @@ import { Divider, Heading } from 'src/components/ui';
 import variablesService from 'src/services/variables';
 import notificationHelper from 'src/utils/notificationHelper';
 
-const VariableCreation = () => {
+const VariableCreation = ({ onClose }) => {
   const { spaceData, updateSpaceInstanceRoot, errorHandler } = useOutletContext();
   const navigate = useNavigate();
 
@@ -56,7 +56,7 @@ const VariableCreation = () => {
         <Heading
           text="Agregar Variable"
           hasButton
-          onButtonClick={() => navigate('..')}
+          onButtonClick={onClose ? () => onClose() : () => navigate('..')}
         />
 
         <Divider />
