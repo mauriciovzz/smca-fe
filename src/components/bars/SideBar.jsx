@@ -25,7 +25,7 @@ const NavLinkItem = ({ link, isMenuOpen }) => (
 );
 
 const SideBar = ({ spaceId }) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(true);
 
   const navLinks = [
     {

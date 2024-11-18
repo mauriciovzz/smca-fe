@@ -1,6 +1,6 @@
 import { React, useState } from 'react';
 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { addIcon, privateLocationIcon, publicLocationIcon } from 'src/assets';
 import { Button } from 'src/components/inputs';
@@ -11,6 +11,7 @@ import useScreenWidth from 'src/hooks/useScreenWidth';
 const LocationsOverview = ({ locationsData, spaceData }) => {
   const [isMapOpen, setIsMapOpen] = useState(false);
   const isScreenSmall = useScreenWidth();
+  const navigate = useNavigate();
 
   return (
     <div className="relative grid size-full grid-cols-1 grid-rows-1 gap-5 sm:grid sm:grid-cols-2 sm:grid-rows-1">
@@ -73,23 +74,31 @@ const LocationsOverview = ({ locationsData, spaceData }) => {
               </ul>
             </div>
 
-            {
-              (isScreenSmall) && (
-                <Button
-                  text="Buscar Ubicación en el Mapa"
-                  isTypeButton
-                  onClick={() => setIsMapOpen(true)}
-                  color="blue"
-                />
-              )
-            }
+            {(isScreenSmall) && (
+              <Button
+                text="Buscar Ubicación en el Mapa"
+                isTypeButton
+                onClick={() => setIsMapOpen(true)}
+                color="blue"
+              />
+            )}
           </div>
         </div>
       </div>
 
       {
         (!isScreenSmall) && (
-          <MarkersMap locationsData={locationsData} />
+          <MarkersMap
+            markers={locationsData}
+            onMarkerClick={(l) => navigate(`${l.location_id}`)}
+            markerPopUp={(l) => (
+              <>
+                <b>{l.name}</b>
+                <br />
+                {l.location}
+              </>
+            )}
+          />
         )
       }
 
@@ -97,8 +106,16 @@ const LocationsOverview = ({ locationsData, spaceData }) => {
         (isScreenSmall) && (isMapOpen) && (
           <div className="absolute size-full">
             <MarkersMap
-              locationsData={locationsData}
+              markers={locationsData}
               isScreenSmall={isScreenSmall}
+              onMarkerClick={(location) => navigate(`${location.location_id}`)}
+              markerPopUp={(l) => (
+                <>
+                  <b>{l.name}</b>
+                  <br />
+                  {l.location}
+                </>
+              )}
               closeMarkersMap={() => setIsMapOpen(false)}
             />
           </div>

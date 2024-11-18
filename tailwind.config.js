@@ -26,39 +26,26 @@ module.exports = {
 
         // slate-150
         disabled: '#EDF2F7',
-        // slate-50
         enabled: '#f8fafc',
 
         // NODE STATES ------------------------------
-        // lime-500
-        active: '#84cc16',
-        // yellow-400
-        inactive: '#facc15',
-        // red-600
-        terminated: '#dc2626',
+        active: '#07bc0c',
+        inactive: '#dc2626',
 
         // NODE TYPES  ------------------------------
-        // sky-400
         outdoor: '#38bdf8',
-        // neutral-400
         indoor: '#a3a3a3',
 
         // NODE Visibility  ------------------------------
-        // sky-400
         public: '#38bdf8',
-        // neutral-400
         private: '#a3a3a3',
 
         // VARIABLE TYPES  ------------------------------
-        // blue
         meteorological: '#0089e3',
-
-        // green
         enviromental: '#00cc00',
 
         // COMPONENTS  ------------------------------
         board: '#005EAA',
-        screen: '#046307',
         rain: '#53789E',
         other: '#a1a1aa',
         sensor: '#026159',

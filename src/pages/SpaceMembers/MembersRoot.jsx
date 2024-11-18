@@ -42,13 +42,13 @@ const NoOptionSelected = () => (
 );
 
 const MembersRoot = () => {
-  const { spaceData, updateSpaceInstanceRoot, errorHandler } = useOutletContext();
+  const { spaceData, updateSelectedSpaceRoot, errorHandler } = useOutletContext();
   const outlet = useOutlet();
   const isScreenSmall = useScreenWidth();
   const membersData = useLoaderData();
 
   useEffect(() => {
-    updateSpaceInstanceRoot();
+    updateSelectedSpaceRoot();
   }, []);
 
   const renderOutlet = () => {
@@ -56,7 +56,7 @@ const MembersRoot = () => {
       if (outlet) {
         return (
           <Outlet context={{
-            spaceData, membersData, updateSpaceInstanceRoot, errorHandler,
+            spaceData, membersData, updateSelectedSpaceRoot, errorHandler,
           }}
           />
         );
@@ -67,7 +67,7 @@ const MembersRoot = () => {
     if (outlet) {
       return (
         <Outlet context={{
-          spaceData, membersData, updateSpaceInstanceRoot, errorHandler,
+          spaceData, membersData, updateSelectedSpaceRoot, errorHandler,
         }}
         />
       );

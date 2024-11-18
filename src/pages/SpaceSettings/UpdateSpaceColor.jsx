@@ -8,7 +8,7 @@ import spacesService from 'src/services/spaces';
 import notificationHelper from 'src/utils/notificationHelper';
 
 const UpdateSpaceColor = () => {
-  const { spaceData, updateSpaceInstanceRoot, errorHandler } = useOutletContext();
+  const { spaceData, updateSelectedSpaceRoot, errorHandler } = useOutletContext();
   const [newColor, setNewColor] = useState(spaceData.color);
   const navigate = useNavigate();
 
@@ -22,9 +22,9 @@ const UpdateSpaceColor = () => {
       );
 
       notificationHelper.success(response);
-      updateSpaceInstanceRoot();
+      updateSelectedSpaceRoot();
     } catch (error) {
-      const goTo = errorHandler(error, updateSpaceInstanceRoot);
+      const goTo = errorHandler(error, updateSelectedSpaceRoot);
 
       if (goTo)
         navigate(goTo);

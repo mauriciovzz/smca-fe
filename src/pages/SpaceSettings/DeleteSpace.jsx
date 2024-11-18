@@ -8,7 +8,7 @@ import spacesService from 'src/services/spaces';
 import notificationHelper from 'src/utils/notificationHelper';
 
 const DeleteSpace = () => {
-  const { spaceData, updateSpaceInstanceRoot, errorHandler } = useOutletContext();
+  const { spaceData, updateSelectedSpaceRoot, errorHandler } = useOutletContext();
   const navigate = useNavigate();
 
   const [spaceName, setSpaceName] = useState('');
@@ -21,7 +21,7 @@ const DeleteSpace = () => {
         notificationHelper.success(response);
         navigate('/espacios');
       } catch (error) {
-        const goTo = errorHandler(error, updateSpaceInstanceRoot);
+        const goTo = errorHandler(error, updateSelectedSpaceRoot);
 
         if (goTo)
           navigate(goTo);

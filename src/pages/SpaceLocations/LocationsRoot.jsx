@@ -35,19 +35,19 @@ export const locationsLoader = async (auth, params, loaderErrors) => {
 };
 
 const LocationsRoot = () => {
-  const { spaceData, updateSpaceInstanceRoot, errorHandler } = useOutletContext();
+  const { spaceData, updateSelectedSpaceRoot, errorHandler } = useOutletContext();
   const outlet = useOutlet();
   const locationsData = useLoaderData();
 
   useEffect(() => {
-    updateSpaceInstanceRoot();
+    updateSelectedSpaceRoot();
   }, []);
 
   const renderOutlet = () => {
     if (outlet) {
       return (
         <Outlet context={{
-          spaceData, locationsData, updateSpaceInstanceRoot, errorHandler,
+          spaceData, locationsData, updateSelectedSpaceRoot, errorHandler,
         }}
         />
       );

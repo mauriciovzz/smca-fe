@@ -5,63 +5,16 @@ import { useOutletContext, useParams, useNavigate } from 'react-router-dom';
 import {
   Button, ConfirmationDialog, TextAreaInput, TextInput, ToggleSwitch,
 } from 'src/components/inputs';
-import { MapBase } from 'src/components/maps';
+import { MarkerMap } from 'src/components/maps';
 import { Divider, Heading } from 'src/components/ui';
 import useScreenWidth from 'src/hooks/useScreenWidth';
 import locationsService from 'src/services/locations';
 import notificationHelper from 'src/utils/notificationHelper';
 
-const LocationInMap = ({ coordinates, isScreenSmall, closeLocationMap }) => (
-  <div className="flex size-full flex-col overflow-hidden rounded-lg bg-white p-5 shadow">
-    <Heading text="Posición en el Mapa" />
-    <Divider />
-
-    <div className="relative flex size-full flex-col space-y-5 overflow-hidden">
-      <div className="relative flex size-full overflow-hidden rounded-lg shadow">
-        <MapBase
-          markersQuantity="oneToShow"
-          coordinates={coordinates}
-          isNotFullScreen
-        />
-      </div>
-
-      <div className="flex justify-between space-x-4">
-        <TextInput
-          id="lat"
-          type="number"
-          labelText="Latitud"
-          value={coordinates.lat}
-          disabled
-        />
-        <TextInput
-          id="long"
-          type="number"
-          labelText="Longitud"
-          value={coordinates.long}
-          disabled
-        />
-      </div>
-
-      {
-        (isScreenSmall) && (
-          <div className="h-fit w-full">
-            <Button
-              text="Regresar"
-              isTypeButton
-              onClick={() => closeLocationMap()}
-              color="blue"
-            />
-          </div>
-        )
-      }
-    </div>
-  </div>
-);
-
 const LocationManagement = () => {
   const { locationId } = useParams();
   const {
-    spaceData, locationsData, updateSpaceInstanceRoot, errorHandler,
+    spaceData, locationsData, updateSelectedSpaceRoot, errorHandler,
   } = useOutletContext();
   const selectedLocation = locationsData.find((l) => l.location_id === parseInt(locationId, 10));
   const isScreenSmall = useScreenWidth();
@@ -93,10 +46,10 @@ const LocationManagement = () => {
       );
 
       notificationHelper.success(response);
-      updateSpaceInstanceRoot();
+      updateSelectedSpaceRoot();
       setIsEditable(!isEditable);
     } catch (error) {
-      const goTo = errorHandler(error, updateSpaceInstanceRoot);
+      const goTo = errorHandler(error, updateSelectedSpaceRoot);
 
       if (goTo)
         navigate(goTo);
@@ -111,10 +64,10 @@ const LocationManagement = () => {
       );
 
       notificationHelper.success(response);
-      updateSpaceInstanceRoot();
+      updateSelectedSpaceRoot();
       navigate('..');
     } catch (error) {
-      const goTo = errorHandler(error, updateSpaceInstanceRoot);
+      const goTo = errorHandler(error, updateSelectedSpaceRoot);
 
       if (goTo)
         navigate(goTo);
@@ -172,10 +125,10 @@ const LocationManagement = () => {
         {
           (isScreenSmall) && (
             <Button
-              text="Ver Posición en el Mapa"
+              text="Ver en el Mapa"
               isTypeButton
               onClick={() => setIsMapOpen(true)}
-              color="blue"
+              color="gray"
             />
           )
         }
@@ -199,35 +152,29 @@ const LocationManagement = () => {
           )
         }
 
-        {
-          isConDiaOpen && (
+        {(isConDiaOpen) && (
           <ConfirmationDialog
             title="Eliminar Ubicación del Espacio"
             description={`Estas seguro de querer eliminar la ubicación "${name}"?`}
             onDecline={{ text: 'Cancelar', action: () => setIsConDiaOpen(false) }}
             onConfirm={{ text: 'Eliminar', action: () => handleRemove() }}
           />
-          )
-        }
+        )}
       </div>
 
-      {
-        (!isScreenSmall) && (
-          <LocationInMap coordinates={{ lat: selectedLocation.lat, long: selectedLocation.long }} />
-        )
-      }
+      {(!isScreenSmall) && (
+        <MarkerMap marker={selectedLocation} />
+      )}
 
-      {
-        (isScreenSmall) && (isMapOpen) && (
-          <div className="absolute size-full">
-            <LocationInMap
-              coordinates={{ lat: selectedLocation.lat, long: selectedLocation.long }}
-              isScreenSmall={isScreenSmall}
-              closeLocationMap={() => setIsMapOpen(false)}
-            />
-          </div>
-        )
-      }
+      {(isScreenSmall) && (isMapOpen) && (
+        <div className="absolute size-full">
+          <MarkerMap
+            marker={selectedLocation}
+            isScreenSmall={isScreenSmall}
+            closeLocationMap={() => setIsMapOpen(false)}
+          />
+        </div>
+      )}
     </div>
   );
 };

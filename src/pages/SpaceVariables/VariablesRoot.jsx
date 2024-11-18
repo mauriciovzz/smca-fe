@@ -43,13 +43,13 @@ const NoOptionSelected = () => (
 );
 
 const VariablesRoot = () => {
-  const { spaceData, updateSpaceInstanceRoot, errorHandler } = useOutletContext();
+  const { spaceData, updateSelectedSpaceRoot, errorHandler } = useOutletContext();
   const outlet = useOutlet();
   const isScreenSmall = useScreenWidth();
   const variablesData = useLoaderData();
 
   useEffect(() => {
-    updateSpaceInstanceRoot();
+    updateSelectedSpaceRoot();
   }, []);
 
   const renderOutlet = () => {
@@ -57,7 +57,7 @@ const VariablesRoot = () => {
       if (outlet) {
         return (
           <Outlet context={{
-            spaceData, variablesData, updateSpaceInstanceRoot, errorHandler,
+            spaceData, variablesData, updateSelectedSpaceRoot, errorHandler,
           }}
           />
         );
@@ -68,7 +68,7 @@ const VariablesRoot = () => {
     if (outlet) {
       return (
         <Outlet context={{
-          spaceData, variablesData, updateSpaceInstanceRoot, errorHandler,
+          spaceData, variablesData, updateSelectedSpaceRoot, errorHandler,
         }}
         />
       );

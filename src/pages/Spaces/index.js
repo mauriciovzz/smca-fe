@@ -1,12 +1,12 @@
-import SpaceInstanceRoot, { spaceInstanceLoader } from './SpaceInstanceRoot';
+import SelectedSpaceRoot, { selectedSpaceLoader } from './SelectedSpaceRoot';
 import SpacesCreation from './SpacesCreation';
 import SpacesInvitations from './SpacesInvitations';
 import SpacesOverview from './SpacesOverview';
 import SpacesRoot, { spacesLoader } from './SpacesRoot';
 
 export {
-  SpaceInstanceRoot,
-  spaceInstanceLoader,
+  SelectedSpaceRoot,
+  selectedSpaceLoader,
   SpacesCreation,
   SpacesInvitations,
   SpacesOverview,

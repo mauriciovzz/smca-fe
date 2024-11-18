@@ -1,0 +1,307 @@
+import { React, useState } from 'react';
+
+import { useOutletContext, useNavigate, useLoaderData } from 'react-router-dom';
+
+import { Button, AddNewItemButton, ToggleSwitch } from 'src/components/inputs';
+import { MarkersMap, MapBase } from 'src/components/maps';
+import { Label, Divider, Heading } from 'src/components/ui';
+import LocationCreation from 'src/pages/SpaceLocations/LocationCreation';
+import locationsService from 'src/services/locations';
+import nodesService from 'src/services/nodes';
+import notificationHelper from 'src/utils/notificationHelper';
+
+const InfoItem = ({ text, value, width }) => (
+  <div className={`${width} flex flex-col`}>
+    <span className="text-xs font-bold">{text}</span>
+    <span className="text-sm font-light">{value}</span>
+  </div>
+);
+
+const ChangeLocation = ({ setView }) => {
+  const {
+    spaceData, selectedNode, updateSelectedSpaceRoot, errorHandler,
+  } = useOutletContext();
+  const { locationsData } = useLoaderData();
+  const freeLocations = locationsData.filter((loc) => !loc.is_taken);
+  const navigate = useNavigate();
+
+  const [isMapOpen, setIsMapOpen] = useState(false);
+  const [isLocCreOpen, setIsLocCreOpen] = useState(false);
+
+  const [location, setLocation] = useState(selectedNode.location_id);
+
+  const handleLocationUpdate = async () => {
+    try {
+      const response = await nodesService.updateLocation(
+        spaceData.space_id,
+        selectedNode.node_id,
+        { location },
+      );
+
+      notificationHelper.success(response);
+      updateSelectedSpaceRoot();
+      setView('CurrentLocation');
+    } catch (error) {
+      const goTo = errorHandler(error, updateSelectedSpaceRoot);
+
+      if (goTo)
+        navigate(goTo);
+    }
+  };
+
+  const selectMarker = (loc) => {
+    setLocation(loc);
+    setIsMapOpen(false);
+  };
+
+  return (
+    <div className="relative flex size-full flex-col rounded-lg border bg-white p-5">
+      <Heading
+        text="Actualizar Ubicación"
+        hasButton
+        onButtonClick={() => navigate('..')}
+      />
+
+      <Divider />
+
+      <div className="flex size-full flex-col gap-5">
+        <div className="flex grow flex-col">
+          <Label text="Ubicaciones Disponibles" />
+          <div className="relative flex grow flex-col">
+            <ul className="small-scrollbar absolute flex size-full flex-col overflow-hidden overflow-y-scroll rounded-lg border bg-background">
+              {freeLocations.map((loc) => (
+                <li
+                  key={loc.location_id}
+                  className={`${loc.location_id === location ? 'bg-main text-white' : 'bg-white hover:bg-slate-100'} h-fit w-full border-b p-2.5 shadow`}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setLocation(loc.location_id)}
+                    className="flex h-fit w-full space-x-5 text-left"
+                  >
+                    <div className="flex size-full flex-col">
+                      <div className="font-medium">
+                        {loc.name}
+                      </div>
+                      <div className="text-xs">
+                        {loc.location}
+                      </div>
+                    </div>
+                  </button>
+                </li>
+              ))}
+
+              <li
+                className={`
+                  ${location === null ? 'bg-main text-white' : 'bg-white hover:bg-slate-100'}
+                   h-fit w-full border-b p-2.5 shadow
+                `}
+              >
+                <button
+                  type="button"
+                  onClick={() => setLocation(null)}
+                  className="flex h-fit w-full font-medium"
+                >
+                  sin ubicación
+                </button>
+              </li>
+
+              <AddNewItemButton
+                text="Agregar Ubicación"
+                onClick={() => setIsLocCreOpen(true)}
+              />
+            </ul>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-2.5">
+          <Button
+            text="Buscar Ubicación en el Mapa"
+            isTypeButton
+            onClick={() => setIsMapOpen(true)}
+            color="gray"
+          />
+
+          <div className="flex gap-2.5">
+            <Button
+              text="Cancelar"
+              isTypeButton
+              onClick={() => setView('CurrentLocation')}
+              color="red"
+            />
+            <Button
+              text="Guardar Ubicación"
+              isTypeButton
+              onClick={() => handleLocationUpdate(true)}
+              color="blue"
+            />
+          </div>
+        </div>
+      </div>
+
+      {(isMapOpen) && (
+        <div className="absolute left-0 top-0 size-full">
+          <MarkersMap
+            markers={freeLocations}
+            isScreenSmall
+            onMarkerClick={(loc) => selectMarker(loc.location_id)}
+            markerPopUp={(loc) => (
+              <>
+                <b>{loc.name}</b>
+                <br />
+                {loc.location}
+              </>
+            )}
+            closeMarkersMap={() => setIsMapOpen(false)}
+          />
+        </div>
+      )}
+
+      {(isLocCreOpen) && (
+        <div className="absolute left-0 top-0 size-full">
+          <LocationCreation onClose={() => setIsLocCreOpen(false)} />
+        </div>
+      )}
+    </div>
+  );
+};
+
+const CurrentLocation = ({ setView }) => {
+  const {
+    spaceData, selectedNode, updateSelectedSpaceRoot, errorHandler,
+  } = useOutletContext();
+  const navigate = useNavigate();
+
+  const [isVisible, setIsVisible] = useState(selectedNode.is_location_visible);
+
+  const getDate = (dateString) => {
+    const dateObject = new Date(dateString);
+    return `${(`0${dateObject.getDate()}`).slice(-2)}-${(`0${dateObject.getMonth() + 1}`).slice(-2)}-${(`0${dateObject.getFullYear()}`).slice(-2)}`;
+  };
+
+  const handleVisibilityUpdate = async () => {
+    try {
+      const response = await locationsService.updateVisibility(
+        spaceData.space_id,
+        selectedNode.location_id,
+      );
+
+      notificationHelper.success(response);
+      updateSelectedSpaceRoot();
+      setIsVisible(!isVisible);
+    } catch (error) {
+      const goTo = errorHandler(error, updateSelectedSpaceRoot);
+
+      if (goTo)
+        navigate(goTo);
+    }
+  };
+
+  return (
+    <div className="relative flex size-full flex-col rounded-lg border bg-white p-5">
+      <Heading
+        text="Ubicación Actual"
+        hasButton
+        onButtonClick={() => navigate('..')}
+      />
+
+      <Divider />
+
+      <div className="flex grow">
+        {
+          (selectedNode.location_id)
+            ? (
+              <div className="flex grow flex-col gap-5">
+                <div className="flex grow flex-col">
+                  <div className="flex flex-col">
+                    <div className="flex divide-x">
+                      <InfoItem text="NOMBRE" width="w-2/3" value={selectedNode.location_name} />
+                      <InfoItem text="VISIBILIDAD" width="w-1/3 pl-2.5" value={selectedNode.is_location_visible ? 'publico' : 'privado'} />
+                    </div>
+                    <Divider changePadding="p-1.5" />
+
+                    <div className="flex divide-x">
+                      <InfoItem text="COORDENADAS" width="w-2/3" value={`[${selectedNode.lat}, ${selectedNode.long}]`} />
+                      <InfoItem text="INICIO" width="w-1/3 pl-2.5" value={getDate(selectedNode.start_time_stamp)} />
+                    </div>
+                    <Divider changePadding="p-1.5" />
+                  </div>
+
+                  <div className="relative flex grow overflow-hidden rounded-lg shadow">
+                    <MapBase
+                      markersQuantity="oneToShow"
+                      coordinates={{ lat: selectedNode.lat, long: selectedNode.long }}
+                      isNotFullScreen
+                    />
+                  </div>
+
+                  <Divider changePadding="p-1.5" />
+
+                  <ToggleSwitch
+                    labelText="Visibilidad"
+                    selectedOption={isVisible}
+                    leftOption={{
+                      title: 'Público',
+                      value: true,
+                      color: 'bg-main',
+                    }}
+                    rigthOption={{
+                      title: 'Privado',
+                      value: false,
+                      color: 'bg-main',
+                    }}
+                  />
+                </div>
+
+                <div className="flex gap-2.5">
+                  <Button
+                    text="Act. Visibilidad"
+                    isTypeButton
+                    onClick={() => handleVisibilityUpdate()}
+                    color="blue"
+                  />
+                  <Button
+                    text="Actualizar"
+                    isTypeButton
+                    onClick={() => setView('ChangeLocation')}
+                    color="gray"
+                  />
+                </div>
+              </div>
+            )
+            : (
+              <div className="flex grow flex-col gap-5">
+                <div className="flex grow items-center justify-center font-semibold">
+                  El nodo no posee una ubicación.
+                </div>
+
+                <Button
+                  text="Selecionar Ubicacion"
+                  isTypeButton
+                  onClick={() => setView('ChangeLocation')}
+                  color="gray"
+                />
+              </div>
+            )
+        }
+      </div>
+    </div>
+  );
+};
+
+const LocationSelection = () => {
+  const [view, setView] = useState('CurrentLocation');
+
+  const renderUpdateLocation = () => {
+    switch (view) {
+      case 'ChangeLocation':
+        return <ChangeLocation setView={setView} />;
+      default:
+        return <CurrentLocation setView={setView} />;
+    }
+  };
+
+  return (renderUpdateLocation());
+};
+
+export default LocationSelection;

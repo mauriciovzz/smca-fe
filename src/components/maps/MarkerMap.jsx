@@ -1,0 +1,99 @@
+import { React } from 'react';
+
+import { TextInput } from 'src/components/inputs';
+import MapBase from 'src/components/maps/MapBase';
+import { Divider, Heading } from 'src/components/ui';
+
+const InfoItem = ({ text, value, width }) => (
+  <div className={`${width} flex flex-col`}>
+    <span className="text-xs font-bold">{text}</span>
+    <span className="text-sm font-light">{value}</span>
+  </div>
+);
+
+const MarkerMap = ({
+  marker, showLocationInfo, isScreenSmall, closeLocationMap,
+}) => {
+  const getDate = (dateString) => {
+    const dateObject = new Date(dateString);
+    return `${(`0${dateObject.getDate()}`).slice(-2)}-${(`0${dateObject.getMonth() + 1}`).slice(-2)}-${(`0${dateObject.getFullYear()}`).slice(-2)}`;
+  };
+
+  return (
+    <div className="flex size-full flex-col overflow-hidden rounded-lg bg-white p-5 shadow">
+
+      {(isScreenSmall)
+        ? (
+          <Heading
+            text="Ubicación"
+            hasButton
+            onButtonClick={() => closeLocationMap()}
+          />
+        )
+        : (
+          <Heading text="Ubicación" />
+        )}
+
+      <Divider changeBottomPadding={showLocationInfo ? 'p-1.5' : 'p-2.5'} />
+
+      {(marker.location_id)
+        ? (
+          <div className="flex size-full flex-col">
+            {(showLocationInfo) && (
+            <>
+              <div className="flex divide-x">
+                <InfoItem text="NOMBRE" width="w-2/3" value={marker.location_name} />
+                <InfoItem text="VISIBILIDAD" width="w-1/3 pl-2.5" value={marker.is_location_visible ? 'publico' : 'privado'} />
+              </div>
+              <Divider changePadding="p-1.5" />
+
+              <div className="flex divide-x">
+                <InfoItem text="COORDENADAS" width="w-2/3" value={`[${marker.lat}, ${marker.long}]`} />
+                <InfoItem text="INICIO" width="w-1/3 pl-2.5" value={getDate(marker.start_time_stamp)} />
+              </div>
+              <Divider changePadding="p-1.5" />
+            </>
+            )}
+
+            <div className="relative flex size-full flex-col space-y-5 overflow-hidden">
+              {(!showLocationInfo) && (
+              <div className="flex justify-between space-x-5">
+                <TextInput
+                  id="lat"
+                  type="number"
+                  labelText="Latitud"
+                  value={marker.lat}
+                  disabled
+                />
+                <TextInput
+                  id="long"
+                  type="number"
+                  labelText="Longitud"
+                  value={marker.long}
+                  disabled
+                />
+              </div>
+              )}
+
+              <div className="relative flex size-full overflow-hidden rounded-lg shadow">
+                <MapBase
+                  markersQuantity="oneToShow"
+                  coordinates={{ lat: marker.lat, long: marker.long }}
+                  isNotFullScreen
+                />
+              </div>
+            </div>
+          </div>
+        )
+        : (
+          <div className="flex size-full flex-col items-center justify-center rounded-lg bg-white font-medium shadow">
+            <span>El nodo seleccionado no</span>
+            <span>posee una ubicación</span>
+          </div>
+        )}
+
+    </div>
+  );
+};
+
+export default MarkerMap;

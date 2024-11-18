@@ -27,7 +27,12 @@ import {
   MemberManagement, MemberInvitation, MembersRoot, membersLoader,
 } from 'src/pages/SpaceMembers';
 import {
-  SpaceInstanceRoot, spaceInstanceLoader, SpacesCreation,
+  NodeCreation, NodesRoot, SelectedNodeRoot, SelectedNodeManagementRoot,
+  selectedNodeComponentsLoader, nodesLoader, nodeCreationLoader,
+  DownloadNodeConfigFile, UpdateNodeInfo, UpdateNodeComponents, UpdateNodeLocation, DeleteNode,
+} from 'src/pages/SpaceNodes';
+import {
+  SelectedSpaceRoot, selectedSpaceLoader, SpacesCreation,
   SpacesInvitations, SpacesRoot, spacesLoader,
 } from 'src/pages/Spaces';
 import {
@@ -160,8 +165,8 @@ const Router = () => {
         },
         {
           path: '/espacios/:spaceId',
-          element: <SpaceInstanceRoot />,
-          loader: ({ params }) => spaceInstanceLoader(auth, params, loaderErrors),
+          element: <SelectedSpaceRoot />,
+          loader: ({ params }) => selectedSpaceLoader(auth, params, loaderErrors),
           children: [
             {
               path: 'reportes',
@@ -183,6 +188,49 @@ const Router = () => {
             },
             {
               path: 'nodos',
+              element: <NodesRoot />,
+              loader: ({ params }) => nodesLoader(auth, params, loaderErrors),
+              children: [
+                {
+                  path: 'agregar',
+                  element: <NodeCreation />,
+                  loader: ({ params }) => nodeCreationLoader(auth, params, loaderErrors),
+                },
+                {
+                  path: ':nodeId',
+                  element: <SelectedNodeRoot />,
+                  loader: ({ params }) => selectedNodeComponentsLoader(auth, params, loaderErrors),
+                  children: [
+                    {
+                      path: 'ajustes',
+                      element: <SelectedNodeManagementRoot />,
+                      children: [
+                        {
+                          path: 'descargar-configuracion',
+                          element: <DownloadNodeConfigFile />,
+                        },
+                        {
+                          path: 'informacion',
+                          element: <UpdateNodeInfo />,
+                        },
+                        {
+                          path: 'componentes',
+                          element: <UpdateNodeComponents />,
+                        },
+                        {
+                          path: 'ubicacion',
+                          element: <UpdateNodeLocation />,
+                          loader: ({ params }) => nodeCreationLoader(auth, params, loaderErrors),
+                        },
+                        {
+                          path: 'eliminar',
+                          element: <DeleteNode />,
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
             },
             {
               path: 'ubicaciones',

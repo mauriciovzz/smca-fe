@@ -50,7 +50,6 @@ const ComponentOverview = ({ spaceData, componentsData }) => (
           {componentsData.filter((c) => c.type === 'sensor').map((component) => <ComponentLink component={component} key={`${component.component_id}`} />)}
           {componentsData.filter((c) => c.type === 'rain_detector').map((component) => <ComponentLink component={component} key={`${component.component_id}`} />)}
           {componentsData.filter((c) => c.type === 'camera').map((component) => <ComponentLink component={component} key={`${component.component_id}`} />)}
-          {componentsData.filter((c) => c.type === 'screen').map((component) => <ComponentLink component={component} key={`${component.component_id}`} />)}
           {componentsData.filter((c) => c.type === 'other').map((component) => <ComponentLink component={component} key={`${component.component_id}`} />)}
         </ul>
       </div>

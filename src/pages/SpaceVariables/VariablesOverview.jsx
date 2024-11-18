@@ -45,30 +45,8 @@ const VariablesOverview = ({ spaceData, variablesData }) => (
                         <div className="break-words text-left font-medium">
                           {variable.name}
                         </div>
-
-                        <Divider changePadding="p-0.5" />
-
-                        <div className="flex text-xs font-medium text-gray-500">
-                          <div className="w-[45%]">
-                            <span className="text-black">valor: </span>
-                            {variable.value_type === 'numerical' ? 'numerico' : 'presencial'}
-                          </div>
-                          <div className="w-[45%]">
-                            {
-                              (variable.unit) && (
-                                <>
-                                  <span className="text-black">unidad: </span>
-                                  {variable.unit}
-                                </>
-                              )
-                            }
-                          </div>
-                          <div className="flex w-[10%] flex-row-reverse items-center">
-                            <div
-                              className="size-[10px] rounded-full bg-red-300"
-                              style={{ background: variable.color }}
-                            />
-                          </div>
+                        <div className=" text-xs font-medium text-gray-500">
+                          {variable.unit}
                         </div>
                       </div>
                     </Link>

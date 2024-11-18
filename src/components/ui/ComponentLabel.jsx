@@ -23,11 +23,6 @@ const ComponentLabel = ({ component }) => {
           color: 'text-camera',
           text: 'CAMARA',
         };
-      case 'screen':
-        return {
-          color: 'text-screen',
-          text: 'PANTALLA',
-        };
       case 'other':
         return {
           color: 'text-other',

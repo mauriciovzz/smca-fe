@@ -17,6 +17,11 @@ const update = async (spaceId, locationId, newData) => {
   return request.data;
 };
 
+const updateVisibility = async (spaceId, locationId) => {
+  const request = await axios.put(`${baseUrl}/${spaceId}/locations/${locationId}/visibility`);
+  return request.data;
+};
+
 const remove = async (spaceId, locationId) => {
   const request = await axios.delete(`${baseUrl}/${spaceId}/locations/${locationId}`);
   return request.data;
@@ -26,5 +31,6 @@ export default {
   create,
   getAll,
   update,
+  updateVisibility,
   remove,
 };

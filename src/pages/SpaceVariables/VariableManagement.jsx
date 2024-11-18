@@ -12,7 +12,7 @@ import notificationHelper from 'src/utils/notificationHelper';
 const VariableManagement = () => {
   const { variableId } = useParams();
   const {
-    spaceData, variablesData, updateSpaceInstanceRoot, errorHandler,
+    spaceData, variablesData, updateSelectedSpaceRoot, errorHandler,
   } = useOutletContext();
   const selectedVariable = variablesData.find((v) => v.variable_id === parseInt(variableId, 10));
   const navigate = useNavigate();
@@ -53,10 +53,10 @@ const VariableManagement = () => {
 
       notificationHelper.success(response);
 
-      updateSpaceInstanceRoot();
+      updateSelectedSpaceRoot();
       setIsEditable(!isEditable);
     } catch (error) {
-      const goTo = errorHandler(error, updateSpaceInstanceRoot);
+      const goTo = errorHandler(error, updateSelectedSpaceRoot);
 
       if (goTo)
         navigate(goTo);
@@ -72,10 +72,10 @@ const VariableManagement = () => {
 
       notificationHelper.success(response);
 
-      updateSpaceInstanceRoot();
+      updateSelectedSpaceRoot();
       navigate('..');
     } catch (error) {
-      const goTo = errorHandler(error, updateSpaceInstanceRoot);
+      const goTo = errorHandler(error, updateSelectedSpaceRoot);
 
       if (goTo)
         navigate(goTo);

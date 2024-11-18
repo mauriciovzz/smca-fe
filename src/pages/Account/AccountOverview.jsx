@@ -38,7 +38,7 @@ const OverviewNavLink = ({ title, value, to }) => (
 const AccountOverview = ({ accountData }) => (
   <div className="flex grow flex-col rounded-lg bg-white p-5 shadow">
     <Heading text="Cuenta" />
-    <Divider noBottomPadding />
+    <Divider changeBottomPadding="p-0" />
 
     <div className="flex grow flex-col divide-y">
       <OverviewNavLink

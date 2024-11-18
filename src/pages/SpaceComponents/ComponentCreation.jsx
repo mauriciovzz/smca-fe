@@ -4,23 +4,22 @@ import { useOutletContext, useNavigate, useLoaderData } from 'react-router-dom';
 
 import { checkCircleIcon, pasteIcon, uncheckCircleIcon } from 'src/assets';
 import {
-  AddToListButton, Button, TextInput, VariableListItem,
+  AddNewItemButton, Button, TextInput, VariableListItem,
 } from 'src/components/inputs';
 import { Divider, Heading, Label } from 'src/components/ui';
 import VariableCreation from 'src/pages/SpaceVariables/VariableCreation';
 import componentsService from 'src/services/components';
 import notificationHelper from 'src/utils/notificationHelper';
 
-const ComponentCreation = () => {
-  const { spaceData, updateSpaceInstanceRoot, errorHandler } = useOutletContext();
+const ComponentCreation = ({ onClose, sideLoadedVariables }) => {
+  const { spaceData, updateSelectedSpaceRoot, errorHandler } = useOutletContext();
   const navigate = useNavigate();
-  const variablesData = useLoaderData();
+  const variablesData = sideLoadedVariables || useLoaderData();
   const componentTypes = [
     { type: 'board', text: 'placa' },
     { type: 'sensor', text: 'sensor' },
     { type: 'rain_detector', text: 'detector de lluvia' },
     { type: 'camera', text: 'camara' },
-    { type: 'screen', text: 'pantalla' },
     { type: 'other', text: 'otro' },
   ];
 
@@ -55,9 +54,9 @@ const ComponentCreation = () => {
         setDatasheetLink('');
         setComponentVariables([]);
 
-        updateSpaceInstanceRoot();
+        updateSelectedSpaceRoot();
       } catch (error) {
-        const goTo = errorHandler(error, updateSpaceInstanceRoot);
+        const goTo = errorHandler(error, updateSelectedSpaceRoot);
 
         if (goTo)
           navigate(goTo);
@@ -89,7 +88,7 @@ const ComponentCreation = () => {
         <Heading
           text="Agregar Componente"
           hasButton
-          onButtonClick={() => navigate('..')}
+          onButtonClick={onClose ? () => onClose() : () => navigate('..')}
         />
 
         <Divider />
@@ -149,20 +148,20 @@ const ComponentCreation = () => {
 
                 <div className="relative size-full">
                   <ul className="small-scrollbar absolute flex size-full flex-col overflow-hidden overflow-y-scroll rounded-lg border bg-background">
-                    {
-                      variablesData.map((variable) => (
-                        <VariableListItem
-                          key={variable.variable_id}
-                          variable={variable}
-                          onClick={() => handleVariableSelection(variable.variable_id)}
-                          wasSelected={componentVariables.includes(variable.variable_id)}
-                          isEditable
-                        />
-                      ))
-                    }
-                    <li className="h-fit w-full border-b bg-white px-5 py-2.5 shadow hover:bg-slate-100">
-                      <AddToListButton text="Agregar Variable" onClick={() => setIsVarCreOpen(true)} />
-                    </li>
+                    {variablesData.map((variable) => (
+                      <VariableListItem
+                        key={variable.variable_id}
+                        variable={variable}
+                        onClick={() => handleVariableSelection(variable.variable_id)}
+                        wasSelected={componentVariables.includes(variable.variable_id)}
+                        isEditable
+                      />
+                    ))}
+
+                    <AddNewItemButton
+                      text="Agregar Variable"
+                      onClick={() => setIsVarCreOpen(true)}
+                    />
                   </ul>
                 </div>
               </div>
@@ -179,13 +178,11 @@ const ComponentCreation = () => {
         color="blue"
       />
 
-      {
-        isVarCreOpen && (
-          <div className="absolute left-0 top-0 size-full">
-            <VariableCreation onClose={() => setIsVarCreOpen(false)} />
-          </div>
-        )
-       }
+      {(isVarCreOpen) && (
+        <div className="absolute left-0 top-0 size-full">
+          <VariableCreation onClose={() => setIsVarCreOpen(false)} />
+        </div>
+      )}
     </div>
   );
 };

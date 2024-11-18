@@ -67,7 +67,7 @@ const OverviewNavLink = ({
 const SpaceSettingsOverview = ({ spaceData }) => (
   <div className="flex size-full flex-col rounded-lg bg-white p-5 shadow">
     <Heading text="Ajustes" />
-    <Divider noBottomPadding />
+    <Divider changeBottomPadding="p-0" />
 
     <div className="flex size-full flex-col divide-y">
       <OverviewNavLink

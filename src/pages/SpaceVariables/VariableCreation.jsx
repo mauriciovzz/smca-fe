@@ -10,7 +10,7 @@ import variablesService from 'src/services/variables';
 import notificationHelper from 'src/utils/notificationHelper';
 
 const VariableCreation = ({ onClose }) => {
-  const { spaceData, updateSpaceInstanceRoot, errorHandler } = useOutletContext();
+  const { spaceData, updateSelectedSpaceRoot, errorHandler } = useOutletContext();
   const navigate = useNavigate();
 
   const [variableType, setVariableType] = useState('enviromental');
@@ -41,9 +41,9 @@ const VariableCreation = ({ onClose }) => {
       setValueType('numerical');
       setUnit('');
       setColor('#0284C7');
-      updateSpaceInstanceRoot();
+      updateSelectedSpaceRoot();
     } catch (error) {
-      const goTo = errorHandler(error, updateSpaceInstanceRoot);
+      const goTo = errorHandler(error, updateSelectedSpaceRoot);
 
       if (goTo)
         navigate(goTo);

@@ -14,6 +14,7 @@ import download from 'src/assets/icons/download.svg';
 import errorIcon from 'src/assets/icons/errorIcon.svg';
 import helpIcon from 'src/assets/icons/helpIcon.svg';
 import imageIcon from 'src/assets/icons/imageIcon.svg';
+import indoorIcon from 'src/assets/icons/indoorIcon.svg';
 import infoIcon from 'src/assets/icons/infoIcon.svg';
 import locationIcon from 'src/assets/icons/locationIcon.svg';
 import loginIcon from 'src/assets/icons/loginIcon.svg';
@@ -22,6 +23,7 @@ import mailIcon from 'src/assets/icons/mailIcon.svg';
 import mapIcon from 'src/assets/icons/mapIcon.svg';
 import menuIcon from 'src/assets/icons/menuIcon.svg';
 import nodeIcon from 'src/assets/icons/nodeIcon.svg';
+import outdoorIcon from 'src/assets/icons/outdoorIcon.svg';
 import pasteIcon from 'src/assets/icons/pasteIcon.svg';
 import privateLocationIcon from 'src/assets/icons/privateLocationIcon.svg';
 import publicLocationIcon from 'src/assets/icons/publicLocationIcon.svg';
@@ -55,6 +57,7 @@ export {
   errorIcon,
   helpIcon,
   imageIcon,
+  indoorIcon,
   infoIcon,
   locationIcon,
   loginIcon,
@@ -65,6 +68,7 @@ export {
   componentIcon,
   menuIcon,
   nodeIcon,
+  outdoorIcon,
   pasteIcon,
   privateLocationIcon,
   publicLocationIcon,

@@ -57,8 +57,7 @@ const SpacesOverview = ({ space }) => {
           />
 
           <span className="text-sm">
-            {/* {addZeros(space.nodes)} */}
-            {'5'.padStart(3, '0')}
+            {space.nodes.padStart(3, '0')}
           </span>
         </div>
       </div>

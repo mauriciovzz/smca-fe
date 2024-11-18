@@ -8,7 +8,7 @@ import invitationsService from 'src/services/invitations';
 import notificationHelper from 'src/utils/notificationHelper';
 
 const MemberInvitation = () => {
-  const { spaceData, updateSpaceInstanceRoot, errorHandler } = useOutletContext();
+  const { spaceData, updateSelectedSpaceRoot, errorHandler } = useOutletContext();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
 
@@ -23,7 +23,7 @@ const MemberInvitation = () => {
 
       notificationHelper.success(response);
     } catch (error) {
-      const goTo = errorHandler(error, updateSpaceInstanceRoot);
+      const goTo = errorHandler(error, updateSelectedSpaceRoot);
 
       if (goTo)
         navigate(goTo);

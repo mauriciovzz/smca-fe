@@ -6,7 +6,7 @@ import {
 
 import { checkCircleIcon, pasteIcon, uncheckCircleIcon } from 'src/assets';
 import {
-  AddToListButton, Button, ConfirmationDialog, TextInput, VariableListItem,
+  AddNewItemButton, Button, ConfirmationDialog, TextInput, VariableListItem,
 } from 'src/components/inputs';
 import {
   Badge, Divider, Heading, Label,
@@ -30,7 +30,7 @@ const DatasheetButton = ({ link }) => (
 const ComponentManagement = () => {
   const { componentId } = useParams();
   const {
-    spaceData, componentsData, updateSpaceInstanceRoot, errorHandler,
+    spaceData, componentsData, updateSelectedSpaceRoot, errorHandler,
   } = useOutletContext();
 
   const selectedComponent = componentsData
@@ -113,10 +113,10 @@ const ComponentManagement = () => {
 
         notificationHelper.success(response);
 
-        updateSpaceInstanceRoot();
+        updateSelectedSpaceRoot();
         setIsEditable(!isEditable);
       } catch (error) {
-        const goTo = errorHandler(error, updateSpaceInstanceRoot);
+        const goTo = errorHandler(error, updateSelectedSpaceRoot);
 
         if (goTo)
           navigate(goTo);
@@ -136,10 +136,10 @@ const ComponentManagement = () => {
 
       notificationHelper.success(response);
 
-      updateSpaceInstanceRoot();
+      updateSelectedSpaceRoot();
       navigate('..');
     } catch (error) {
-      const goTo = errorHandler(error, updateSpaceInstanceRoot);
+      const goTo = errorHandler(error, updateSelectedSpaceRoot);
 
       if (goTo)
         navigate(goTo);
@@ -290,28 +290,25 @@ const ComponentManagement = () => {
                         ))
                     }
 
-                    {
-                      (isEditable ? variablesData : variables)
-                        .filter((v) => v.variable_type === 'meteorological')
-                        .sort((a, b) => a.name.localeCompare(b.name))
-                        .map((variable) => (
-                          <VariableListItem
-                            key={variable.variable_id}
-                            variable={variable}
-                            onClick={isEditable ? () => handleVariableSelection(variable) : null}
-                            wasSelected={isVariableInComponent(variable.variable_id) !== -1}
-                            isEditable={isEditable}
-                          />
-                        ))
-                    }
+                    {(isEditable ? variablesData : variables)
+                      .filter((v) => v.variable_type === 'meteorological')
+                      .sort((a, b) => a.name.localeCompare(b.name))
+                      .map((variable) => (
+                        <VariableListItem
+                          key={variable.variable_id}
+                          variable={variable}
+                          onClick={isEditable ? () => handleVariableSelection(variable) : null}
+                          wasSelected={isVariableInComponent(variable.variable_id) !== -1}
+                          isEditable={isEditable}
+                        />
+                      ))}
 
-                    {
-                      (isEditable) && (
-                        <li className="h-fit w-full border-b bg-white px-5 py-2.5 shadow hover:bg-slate-100">
-                          <AddToListButton text="Agregar Variable" onClick={() => setIsVarCreOpen(true)} />
-                        </li>
-                      )
-                    }
+                    {(isEditable) && (
+                      <AddNewItemButton
+                        text="Agregar Variable"
+                        onClick={() => setIsVarCreOpen(true)}
+                      />
+                    )}
                   </ul>
                 </div>
               </div>

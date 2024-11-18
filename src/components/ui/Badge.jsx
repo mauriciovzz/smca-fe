@@ -21,24 +21,21 @@ const Badge = ({
         return 'bg-rain';
       case 'camera':
         return 'bg-camera';
-      case 'screen':
-        return 'bg-screen';
       case 'other':
         return 'bg-other';
 
-      case 'Activo':
+      case 'activo':
         return 'bg-active';
-      case 'Inactivo':
+      case 'inactivo':
         return 'bg-inactive';
-      case 'Terminado':
-        return 'bg-terminated';
-      case 'Outdoor':
+
+      case 'outdoor':
         return 'bg-outdoor';
-      case 'Indoor':
+      case 'indoor':
         return 'bg-indoor';
-      case 'Público':
+      case 'público':
         return 'bg-public';
-      case 'Privado':
+      case 'privado':
         return 'bg-private';
       default:
         return 'bg-slate-100';
@@ -60,8 +57,6 @@ const Badge = ({
         return 'detector de lluvia';
       case 'camera':
         return 'camara';
-      case 'screen':
-        return 'pantalla';
       case 'other':
         return 'otro';
 

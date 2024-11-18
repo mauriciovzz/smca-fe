@@ -42,9 +42,9 @@ const SelectionMap = ({
   </div>
 );
 
-const LocationCreation = () => {
-  const { spaceData, updateSpaceInstanceRoot, errorHandler } = useOutletContext();
-  const isScreenSmall = useScreenWidth();
+const LocationCreation = ({ onClose }) => {
+  const { spaceData, updateSelectedSpaceRoot, errorHandler } = useOutletContext();
+  const isScreenSmall = onClose ? true : useScreenWidth();
   const navigate = useNavigate();
 
   const [isMapOpen, setIsMapOpen] = useState(false);
@@ -76,23 +76,30 @@ const LocationCreation = () => {
       setName('');
       setLocation('');
 
-      updateSpaceInstanceRoot();
+      updateSelectedSpaceRoot();
     } catch (error) {
-      const goTo = errorHandler(error, updateSpaceInstanceRoot);
+      const goTo = errorHandler(error, updateSelectedSpaceRoot);
 
       if (goTo)
         navigate(goTo);
     }
   };
 
+  const handleWindowSize = () => {
+    if (onClose)
+      return 'relative grid size-full grid-cols-1 grid-rows-1 gap-5';
+
+    return 'relative grid size-full grid-cols-1 grid-rows-1 gap-5 sm:grid sm:grid-cols-2 sm:grid-rows-1';
+  };
+
   return (
-    <div className="relative grid size-full grid-cols-1 grid-rows-1 gap-5 sm:grid sm:grid-cols-2 sm:grid-rows-1">
+    <div className={handleWindowSize()}>
       <div className="flex size-full flex-col rounded-lg bg-white p-5 shadow">
         <div className="flex grow flex-col">
           <Heading
             text="Agregar Ubicación"
             hasButton
-            onButtonClick={() => navigate('..')}
+            onButtonClick={onClose ? () => onClose() : () => navigate('..')}
           />
 
           <Divider />
@@ -179,29 +186,25 @@ const LocationCreation = () => {
         />
       </div>
 
-      {
-        (!isScreenSmall) && (
+      {(!isScreenSmall) && (
+        <SelectionMap
+          coordinates={coordinates}
+          setCoordenates={setCoordenates}
+          recenter={recenter}
+        />
+      )}
+
+      {(isScreenSmall) && (isMapOpen) && (
+        <div className="absolute size-full">
           <SelectionMap
             coordinates={coordinates}
             setCoordenates={setCoordenates}
             recenter={recenter}
+            isScreenSmall={isScreenSmall}
+            closeSelectionMap={() => setIsMapOpen(false)}
           />
-        )
-      }
-
-      {
-        (isScreenSmall) && (isMapOpen) && (
-          <div className="absolute size-full">
-            <SelectionMap
-              coordinates={coordinates}
-              setCoordenates={setCoordenates}
-              recenter={recenter}
-              isScreenSmall={isScreenSmall}
-              closeSelectionMap={() => setIsMapOpen(false)}
-            />
-          </div>
-        )
-      }
+        </div>
+      )}
     </div>
   );
 };

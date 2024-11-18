@@ -10,7 +10,7 @@ import notificationHelper from 'src/utils/notificationHelper';
 const MemberManagement = () => {
   const { accountId } = useParams();
   const {
-    spaceData, membersData, updateSpaceInstanceRoot, errorHandler,
+    spaceData, membersData, updateSelectedSpaceRoot, errorHandler,
   } = useOutletContext();
   const selectedMember = membersData.find((m) => m.account_id === parseInt(accountId, 10));
   const navigate = useNavigate();
@@ -25,9 +25,9 @@ const MemberManagement = () => {
       );
 
       notificationHelper.success(response);
-      updateSpaceInstanceRoot();
+      updateSelectedSpaceRoot();
     } catch (error) {
-      const goTo = errorHandler(error, updateSpaceInstanceRoot);
+      const goTo = errorHandler(error, updateSelectedSpaceRoot);
 
       if (goTo)
         navigate(goTo);
@@ -42,10 +42,10 @@ const MemberManagement = () => {
       );
 
       notificationHelper.success(response);
-      updateSpaceInstanceRoot();
+      updateSelectedSpaceRoot();
       navigate('..');
     } catch (error) {
-      const goTo = errorHandler(error, updateSpaceInstanceRoot);
+      const goTo = errorHandler(error, updateSelectedSpaceRoot);
 
       if (goTo)
         navigate(goTo);
