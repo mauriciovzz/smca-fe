@@ -22,11 +22,11 @@ export const nodeCreationLoader = async (auth, params, loaderErrors) => {
   }
 
   try {
-    const componentsData = await componentsService.getAll(params.spaceId);
-    const variablesData = await variablesService.getAll(params.spaceId);
-    const locationsData = await locationsService.getAll(params.spaceId);
+    const spaceComponentsData = await componentsService.getAll(params.spaceId);
+    const spaceVariablesData = await variablesService.getAll(params.spaceId);
+    const spaceLocationsData = await locationsService.getAll(params.spaceId);
 
-    return { componentsData, variablesData, locationsData };
+    return { spaceComponentsData, spaceVariablesData, spaceLocationsData };
   } catch (error) {
     const errorMessage = error.response.data.message;
 
@@ -45,7 +45,7 @@ export const nodeCreationLoader = async (auth, params, loaderErrors) => {
 
 const NodeCreation = () => {
   const { spaceData, updateSelectedSpaceRoot, errorHandler } = useOutletContext();
-  const { componentsData, variablesData, locationsData } = useLoaderData();
+  const { spaceComponentsData, spaceVariablesData, spaceLocationsData } = useLoaderData();
   const isScreenSmall = useScreenWidth();
   const navigate = useNavigate();
 
@@ -101,7 +101,7 @@ const NodeCreation = () => {
     );
 
     if (position !== -1) {
-      const variableInfo = variablesData
+      const variableInfo = spaceVariablesData
         .find((vd) => vd.variable_id === currentValue.variable_id);
 
       accumulator[position].variables.push({
@@ -109,7 +109,7 @@ const NodeCreation = () => {
         name: variableInfo.name,
       });
     } else {
-      const componentInfo = componentsData
+      const componentInfo = spaceComponentsData
         .find((cd) => cd.component_id === currentValue.component_id);
 
       const newEntry = {
@@ -120,7 +120,7 @@ const NodeCreation = () => {
       };
 
       if (currentValue.variable_id) {
-        const variableInfo = variablesData
+        const variableInfo = spaceVariablesData
           .find((vd) => vd.variable_id === currentValue.variable_id);
 
         newEntry.variables.push({
@@ -142,7 +142,7 @@ const NodeCreation = () => {
     if (position !== -1) {
       accumulator[position].variables.push(currentValue.variable_id);
     } else {
-      const componentInfo = componentsData
+      const componentInfo = spaceComponentsData
         .find((cd) => cd.component_id === currentValue.component_id);
 
       const newEntry = {
@@ -247,7 +247,7 @@ const NodeCreation = () => {
             name={name}
             readingInterval={readingInterval}
             isIndoor={isIndoor}
-            location={locationsData.find((l) => l.location_id === location)}
+            location={spaceLocationsData.find((l) => l.location_id === location)}
             components={components.reduce(componentsOverviewReducer, [])}
             handleNodeCreation={() => handleNodeCreation()}
             previousPage={() => setView('LocationSelection')}
@@ -258,7 +258,7 @@ const NodeCreation = () => {
       case 'LocationSelection':
         return (
           <EnterNodeLocation
-            locationsData={locationsData.filter((loc) => !loc.is_taken)}
+            spaceLocationsData={spaceLocationsData.filter((loc) => !loc.is_taken)}
             selectedLocation={location}
             selectLocation={handleLocationSelection}
             previousPage={() => setView('OtherSelection')}
@@ -270,8 +270,8 @@ const NodeCreation = () => {
           <EnterNodeComponents
             text="Selecionar Otros"
             color="bg-main"
-            componentsData={componentsData.filter((c) => c.type === 'other')}
-            variablesData={variablesData}
+            spaceComponentsData={spaceComponentsData.filter((c) => c.type === 'other')}
+            spaceVariablesData={spaceVariablesData}
             selectedComponents={components}
             selectComponent={(selection) => handleComponentSelection(selection)}
             previousPage={() => setView('CameraSelection')}
@@ -283,8 +283,8 @@ const NodeCreation = () => {
           <EnterNodeComponents
             text="Selecionar Camara"
             color="bg-main"
-            componentsData={componentsData.filter((c) => c.type === 'camera')}
-            variablesData={variablesData}
+            spaceComponentsData={spaceComponentsData.filter((c) => c.type === 'camera')}
+            spaceVariablesData={spaceVariablesData}
             selectedComponents={components}
             selectComponent={(selection) => handleComponentSelection(selection)}
             previousPage={() => setView('RainDetectorSelection')}
@@ -296,8 +296,8 @@ const NodeCreation = () => {
           <EnterNodeComponents
             text="Selecionar Detector de Lluvia"
             color="bg-main"
-            componentsData={componentsData.filter((c) => c.type === 'rain_detector')}
-            variablesData={variablesData}
+            spaceComponentsData={spaceComponentsData.filter((c) => c.type === 'rain_detector')}
+            spaceVariablesData={spaceVariablesData}
             selectedComponents={components}
             selectComponent={(selection) => handleComponentSelection(selection)}
             previousPage={() => setView('SensorSelection')}
@@ -309,8 +309,8 @@ const NodeCreation = () => {
           <EnterNodeComponents
             text="Selecionar Sensores"
             color="bg-main"
-            componentsData={componentsData.filter((c) => c.type === 'sensor')}
-            variablesData={variablesData}
+            spaceComponentsData={spaceComponentsData.filter((c) => c.type === 'sensor')}
+            spaceVariablesData={spaceVariablesData}
             selectedComponents={components}
             selectComponent={(selection) => handleComponentSelection(selection)}
             isSensorSelector
@@ -323,8 +323,8 @@ const NodeCreation = () => {
           <EnterNodeComponents
             text="Selecionar Placas"
             color="bg-main"
-            componentsData={componentsData.filter((c) => c.type === 'board')}
-            variablesData={variablesData}
+            spaceComponentsData={spaceComponentsData.filter((c) => c.type === 'board')}
+            spaceVariablesData={spaceVariablesData}
             selectedComponents={components}
             selectComponent={(selection) => handleComponentSelection(selection)}
             previousPage={() => setView(null)}
@@ -364,7 +364,7 @@ const NodeCreation = () => {
           name={name}
           readingInterval={readingInterval}
           isIndoor={isIndoor}
-          location={locationsData.find((l) => l.location_id === location)}
+          location={spaceLocationsData.find((l) => l.location_id === location)}
           components={components.reduce(componentsOverviewReducer, [])}
           handleNodeCreation={() => handleNodeCreation()}
           isScreenSmall={isScreenSmall}

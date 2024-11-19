@@ -38,6 +38,11 @@ const updateLocation = async (spaceId, nodeId, newLocation) => {
   return request.data;
 };
 
+const updateComponents = async (spaceId, nodeId, newComponents) => {
+  const request = await axios.put(`${baseUrl}/${spaceId}/nodes/${nodeId}/components`, newComponents);
+  return request.data;
+};
+
 const remove = async (spaceId, nodeId) => {
   const request = await axios.delete(`${baseUrl}/${spaceId}/nodes/${nodeId}`);
   return request.data;
@@ -50,5 +55,6 @@ export default {
   getConfigFile,
   updateInfo,
   updateLocation,
+  updateComponents,
   remove,
 };

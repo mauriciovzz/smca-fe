@@ -21,8 +21,8 @@ const ChangeLocation = ({ setView }) => {
   const {
     spaceData, selectedNode, updateSelectedSpaceRoot, errorHandler,
   } = useOutletContext();
-  const { locationsData } = useLoaderData();
-  const freeLocations = locationsData.filter((loc) => !loc.is_taken);
+  const { spaceLocationsData } = useLoaderData();
+  const freeLocations = spaceLocationsData.filter((loc) => !loc.is_taken);
   const navigate = useNavigate();
 
   const [isMapOpen, setIsMapOpen] = useState(false);

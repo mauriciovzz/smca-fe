@@ -65,6 +65,10 @@ const Router = () => {
       showMessage: true,
       redirectTo: '/espacios',
     },
+    {
+      errorMessage: 'El nodo indicado no se encuentra registrado.',
+      showMessage: true,
+    },
   ];
 
   const router = createBrowserRouter([
@@ -216,6 +220,7 @@ const Router = () => {
                         {
                           path: 'componentes',
                           element: <UpdateNodeComponents />,
+                          loader: ({ params }) => nodeCreationLoader(auth, params, loaderErrors),
                         },
                         {
                           path: 'ubicacion',

@@ -88,6 +88,7 @@ const UpdateName = () => {
             color: 'bg-main',
             onClick: () => setIsActive(false),
           }}
+          isDisabled={!selectedNode.location_id}
         />
       </div>
 

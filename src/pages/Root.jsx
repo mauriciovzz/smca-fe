@@ -147,6 +147,10 @@ const Root = () => {
     if (errorMessage === 'Una de las variables agregadas no se encuentra registrada.') {
       revalidator();
     }
+    if (errorMessage === 'El nodo indicado no se encuentra registrado.') {
+      revalidator();
+      return '../../..';
+    }
     return null;
   };
 
