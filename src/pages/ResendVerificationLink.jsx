@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 
 import { mailIcon } from 'src/assets';
 import { Button, TextInput } from 'src/components/inputs';
-import { BlurEffect, MapBase } from 'src/components/maps';
+import { MapBackground } from 'src/components/maps';
 import { EmailSent } from 'src/components/messages';
 import { Divider } from 'src/components/ui';
 import accountService from 'src/services/accounts';
@@ -81,8 +81,7 @@ const ResendVerificationLink = () => {
         }
       </div>
 
-      <BlurEffect index="z-10" />
-      <MapBase />
+      <MapBackground />
     </>
   );
 };

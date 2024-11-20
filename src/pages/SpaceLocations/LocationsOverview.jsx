@@ -90,14 +90,9 @@ const LocationsOverview = ({ locationsData, spaceData }) => {
         (!isScreenSmall) && (
           <MarkersMap
             markers={locationsData}
+            markersType="location"
+            markerColor={spaceData.color}
             onMarkerClick={(l) => navigate(`${l.location_id}`)}
-            markerPopUp={(l) => (
-              <>
-                <b>{l.name}</b>
-                <br />
-                {l.location}
-              </>
-            )}
           />
         )
       }
@@ -107,15 +102,10 @@ const LocationsOverview = ({ locationsData, spaceData }) => {
           <div className="absolute size-full">
             <MarkersMap
               markers={locationsData}
-              isScreenSmall={isScreenSmall}
+              markersType="location"
+              markerColor={spaceData.color}
               onMarkerClick={(location) => navigate(`${location.location_id}`)}
-              markerPopUp={(l) => (
-                <>
-                  <b>{l.name}</b>
-                  <br />
-                  {l.location}
-                </>
-              )}
+              isScreenSmall={isScreenSmall}
               closeMarkersMap={() => setIsMapOpen(false)}
             />
           </div>

@@ -6,7 +6,7 @@ import {
   variableIcon, closeIcon, locationIcon, mapIcon, componentIcon, menuIcon,
   nodeIcon, reportsIcon, settingsIcon, usersIcon, spaceIcon,
 } from 'src/assets';
-import { BlurEffect } from 'src/components/maps';
+import { BlurEffect } from 'src/components/ui';
 
 const BottomBar = ({ spaceId }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

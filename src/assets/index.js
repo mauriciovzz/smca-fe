@@ -36,8 +36,6 @@ import uncheckCircleIcon from 'src/assets/icons/uncheckCircleIcon.svg';
 import userIcon from 'src/assets/icons/userIcon.svg';
 import usersIcon from 'src/assets/icons/usersIcon.svg';
 import variableIcon from 'src/assets/icons/variableIcon.svg';
-import blueMarker from 'src/assets/markers/marker-icon-blue.png';
-import markerShadow from 'src/assets/markers/marker-shadow.png';
 
 export {
   accountIcon,
@@ -47,7 +45,6 @@ export {
   adminIcon,
   variableIcon,
   bellIcon,
-  blueMarker,
   calendarDayIcon,
   calendarIcon,
   checkCircleIcon,
@@ -64,7 +61,6 @@ export {
   logoutIcon,
   mailIcon,
   mapIcon,
-  markerShadow,
   componentIcon,
   menuIcon,
   nodeIcon,

@@ -4,7 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 
 import { errorIcon, successIcon } from 'src/assets';
 import { Button, TextInput } from 'src/components/inputs';
-import { BlurEffect, MapBase } from 'src/components/maps';
+import { MapBackground } from 'src/components/maps';
 import { Divider, Heading } from 'src/components/ui';
 import accountService from 'src/services/accounts';
 import notificationHelper from 'src/utils/notificationHelper';
@@ -135,8 +135,7 @@ const PasswordReset = () => {
         }
       </div>
 
-      <BlurEffect index="z-10" />
-      <MapBase />
+      <MapBackground />
     </>
 
   );

@@ -1,11 +1,15 @@
-import BlurEffect from './BlurEffect';
+import CoordinatesSelectionMap from './CoordinatesSelectionMap';
+import MapBackground from './MapBackground';
 import MapBase from './MapBase';
-import MarkerMap from './MarkerMap';
+import MarkerLocationMap from './MarkerLocationMap';
+import LocationInformationMap from './LocationInformationMap';
 import MarkersMap from './MarkersMap';
 
 export {
-  BlurEffect,
+  CoordinatesSelectionMap,
+  MapBackground,
   MapBase,
-  MarkerMap,
+  MarkerLocationMap,
+  LocationInformationMap,
   MarkersMap,
 };

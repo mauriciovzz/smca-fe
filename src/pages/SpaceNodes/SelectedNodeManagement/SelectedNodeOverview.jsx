@@ -3,7 +3,7 @@ import { React, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Button, ComponentListItem } from 'src/components/inputs';
-import { MarkerMap } from 'src/components/maps';
+import { LocationInformationMap } from 'src/components/maps';
 import { Divider, Heading } from 'src/components/ui';
 import useScreenWidth from 'src/hooks/useScreenWidth';
 
@@ -25,8 +25,9 @@ const SelectedNodeOverview = ({ spaceData, selectedNode, componentsData }) => {
       if (isMapOpen) {
         return (
           <div className="absolute size-full">
-            <MarkerMap
+            <LocationInformationMap
               marker={selectedNode}
+              markerColor={spaceData.color}
               showLocationInfo
               isScreenSmall={isScreenSmall}
               closeLocationMap={() => setIsMapOpen(false)}
@@ -37,8 +38,9 @@ const SelectedNodeOverview = ({ spaceData, selectedNode, componentsData }) => {
       return null;
     }
     return (
-      <MarkerMap
+      <LocationInformationMap
         marker={selectedNode}
+        markerColor={spaceData.color}
         showLocationInfo
       />
     );

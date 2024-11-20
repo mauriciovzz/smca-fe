@@ -1,8 +1,9 @@
 import { React } from 'react';
 
 import { TextInput } from 'src/components/inputs';
-import MapBase from 'src/components/maps/MapBase';
 import { Divider, Heading } from 'src/components/ui';
+
+import MarkerLocationMap from './MarkerLocationMap';
 
 const InfoItem = ({ text, value, width }) => (
   <div className={`${width} flex flex-col`}>
@@ -11,8 +12,8 @@ const InfoItem = ({ text, value, width }) => (
   </div>
 );
 
-const MarkerMap = ({
-  marker, showLocationInfo, isScreenSmall, closeLocationMap,
+const LocationInformationMap = ({
+  marker, markerColor, showLocationInfo, isScreenSmall, closeLocationMap,
 }) => {
   const getDate = (dateString) => {
     const dateObject = new Date(dateString);
@@ -75,13 +76,10 @@ const MarkerMap = ({
               </div>
               )}
 
-              <div className="relative flex size-full overflow-hidden rounded-lg shadow">
-                <MapBase
-                  markersQuantity="oneToShow"
-                  coordinates={{ lat: marker.lat, long: marker.long }}
-                  isNotFullScreen
-                />
-              </div>
+              <MarkerLocationMap
+                coordinates={{ lat: marker.lat, long: marker.long }}
+                markerColor={markerColor}
+              />
             </div>
           </div>
         )
@@ -91,9 +89,8 @@ const MarkerMap = ({
             <span>posee una ubicación</span>
           </div>
         )}
-
     </div>
   );
 };
 
-export default MarkerMap;
+export default LocationInformationMap;

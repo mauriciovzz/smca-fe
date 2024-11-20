@@ -103,14 +103,9 @@ const NodesOverview = ({ nodesData, spaceData }) => {
         (!isScreenSmall) && (
           <MarkersMap
             markers={nodesData.filter((n) => n.location_id)}
+            markersType="node"
+            markerColor={spaceData.color}
             onMarkerClick={(n) => navigate(`${n.node_id}`)}
-            markerPopUp={(n) => (
-              <>
-                <b>{n.node_name}</b>
-                <br />
-                {n.location_name}
-              </>
-            )}
           />
         )
       }
@@ -120,15 +115,10 @@ const NodesOverview = ({ nodesData, spaceData }) => {
           <div className="absolute size-full">
             <MarkersMap
               markers={nodesData.filter((n) => n.location_id)}
-              isScreenSmall={isScreenSmall}
+              markersType="node"
+              markerColor={spaceData.color}
               onMarkerClick={(n) => navigate(`${n.node_id}`)}
-              markerPopUp={(n) => (
-                <>
-                  <b>{n.node_name}</b>
-                  <br />
-                  {n.location_name}
-                </>
-              )}
+              isScreenSmall={isScreenSmall}
               closeMarkersMap={() => setIsMapOpen(false)}
             />
           </div>

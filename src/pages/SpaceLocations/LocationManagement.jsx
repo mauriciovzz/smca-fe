@@ -5,7 +5,7 @@ import { useOutletContext, useParams, useNavigate } from 'react-router-dom';
 import {
   Button, ConfirmationDialog, TextAreaInput, TextInput, ToggleSwitch,
 } from 'src/components/inputs';
-import { MarkerMap } from 'src/components/maps';
+import { LocationInformationMap } from 'src/components/maps';
 import { Divider, Heading } from 'src/components/ui';
 import useScreenWidth from 'src/hooks/useScreenWidth';
 import locationsService from 'src/services/locations';
@@ -163,13 +163,17 @@ const LocationManagement = () => {
       </div>
 
       {(!isScreenSmall) && (
-        <MarkerMap marker={selectedLocation} />
+        <LocationInformationMap
+          marker={selectedLocation}
+          markerColor={spaceData.color}
+        />
       )}
 
       {(isScreenSmall) && (isMapOpen) && (
         <div className="absolute size-full">
-          <MarkerMap
+          <LocationInformationMap
             marker={selectedLocation}
+            markerColor={spaceData.color}
             isScreenSmall={isScreenSmall}
             closeLocationMap={() => setIsMapOpen(false)}
           />

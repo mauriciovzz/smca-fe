@@ -3,7 +3,7 @@ import { React, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Button, TextInput } from 'src/components/inputs';
-import { BlurEffect, MapBase } from 'src/components/maps';
+import { MapBackground } from 'src/components/maps';
 import { EmailSent } from 'src/components/messages';
 import { Divider, Heading } from 'src/components/ui';
 import accountService from 'src/services/accounts';
@@ -105,8 +105,7 @@ const Register = () => {
         }
       </div>
 
-      <BlurEffect index="z-10" />
-      <MapBase />
+      <MapBackground />
     </>
   );
 };

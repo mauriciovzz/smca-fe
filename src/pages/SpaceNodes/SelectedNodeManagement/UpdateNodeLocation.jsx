@@ -3,7 +3,7 @@ import { React, useState } from 'react';
 import { useOutletContext, useNavigate, useLoaderData } from 'react-router-dom';
 
 import { Button, AddNewItemButton, ToggleSwitch } from 'src/components/inputs';
-import { MarkersMap, MapBase } from 'src/components/maps';
+import { MarkersMap, MarkerLocationMap } from 'src/components/maps';
 import { Label, Divider, Heading } from 'src/components/ui';
 import LocationCreation from 'src/pages/SpaceLocations/LocationCreation';
 import locationsService from 'src/services/locations';
@@ -143,15 +143,10 @@ const ChangeLocation = ({ setView }) => {
         <div className="absolute left-0 top-0 size-full">
           <MarkersMap
             markers={freeLocations}
+            markersType="location"
+            markerColor={spaceData.color}
+            onMarkerClick={(l) => selectMarker(l.location_id)}
             isScreenSmall
-            onMarkerClick={(loc) => selectMarker(loc.location_id)}
-            markerPopUp={(loc) => (
-              <>
-                <b>{loc.name}</b>
-                <br />
-                {loc.location}
-              </>
-            )}
             closeMarkersMap={() => setIsMapOpen(false)}
           />
         </div>
@@ -227,13 +222,10 @@ const CurrentLocation = ({ setView }) => {
                     <Divider changePadding="p-1.5" />
                   </div>
 
-                  <div className="relative flex grow overflow-hidden rounded-lg shadow">
-                    <MapBase
-                      markersQuantity="oneToShow"
-                      coordinates={{ lat: selectedNode.lat, long: selectedNode.long }}
-                      isNotFullScreen
-                    />
-                  </div>
+                  <MarkerLocationMap
+                    coordinates={{ lat: selectedNode.lat, long: selectedNode.long }}
+                    markerColor={spaceData.color}
+                  />
 
                   <Divider changePadding="p-1.5" />
 

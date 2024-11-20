@@ -6,7 +6,7 @@ import {
   accountIcon, closeIcon, helpIcon, infoIcon, loginIcon,
   logoutIcon, mapIcon, menuIcon, spaceIcon,
 } from 'src/assets';
-import { BlurEffect } from 'src/components/maps';
+import { BlurEffect } from 'src/components/ui';
 import useAuth from 'src/hooks/useAuth';
 
 const Bar = ({

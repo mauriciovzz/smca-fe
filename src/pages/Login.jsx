@@ -3,7 +3,7 @@ import { React, useState } from 'react';
 import { Link, useNavigate, useOutletContext } from 'react-router-dom';
 
 import { Button, CheckBoxInput, TextInput } from 'src/components/inputs';
-import { BlurEffect, MapBase } from 'src/components/maps';
+import { MapBackground } from 'src/components/maps';
 import { Divider, Heading } from 'src/components/ui';
 import notificationHelper from 'src/utils/notificationHelper';
 
@@ -92,8 +92,7 @@ const Login = () => {
         </div>
       </div>
 
-      <BlurEffect index="z-10" />
-      <MapBase />
+      <MapBackground />
     </>
   );
 };

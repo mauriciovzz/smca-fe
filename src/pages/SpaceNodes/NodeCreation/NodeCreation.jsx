@@ -259,6 +259,7 @@ const NodeCreation = () => {
         return (
           <EnterNodeLocation
             spaceLocationsData={spaceLocationsData.filter((loc) => !loc.is_taken)}
+            spaceData={spaceData}
             selectedLocation={location}
             selectLocation={handleLocationSelection}
             previousPage={() => setView('OtherSelection')}

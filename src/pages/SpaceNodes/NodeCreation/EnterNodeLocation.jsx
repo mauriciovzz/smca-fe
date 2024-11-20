@@ -5,7 +5,7 @@ import { MarkersMap } from 'src/components/maps';
 import LocationCreation from 'src/pages/SpaceLocations/LocationCreation';
 
 const EnterNodeLocation = ({
-  locationsData,
+  spaceLocationsData, spaceData,
   selectedLocation, selectLocation,
   previousPage, nextPage,
 }) => {
@@ -28,7 +28,7 @@ const EnterNodeLocation = ({
       <div className="flex size-full flex-col gap-2.5 sm:gap-5">
         <div className="relative flex grow flex-col">
           <ul className="small-scrollbar absolute flex size-full flex-col overflow-hidden overflow-y-scroll rounded-lg border bg-background">
-            {locationsData.map((location) => (
+            {spaceLocationsData.map((location) => (
               <li
                 key={location.location_id}
                 className={`${location.location_id === selectedLocation ? 'bg-main text-white' : 'bg-white hover:bg-slate-100'} h-fit w-full border-b p-2.5 shadow`}
@@ -80,16 +80,11 @@ const EnterNodeLocation = ({
       {(isMapOpen) && (
         <div className="absolute left-0 top-0 size-full">
           <MarkersMap
-            markers={locationsData}
-            isScreenSmall
+            markers={spaceLocationsData}
+            markersType="location"
+            markerColor={spaceData.color}
             onMarkerClick={(loc) => selectMarker(loc.location_id)}
-            markerPopUp={(l) => (
-              <>
-                <b>{l.name}</b>
-                <br />
-                {l.location}
-              </>
-            )}
+            isScreenSmall
             closeMarkersMap={() => setIsMapOpen(false)}
           />
         </div>

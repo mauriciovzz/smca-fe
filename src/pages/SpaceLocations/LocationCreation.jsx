@@ -4,43 +4,13 @@ import { useOutletContext, useNavigate } from 'react-router-dom';
 
 import { arrowIcon } from 'src/assets';
 import { Button, TextAreaInput, TextInput } from 'src/components/inputs';
-import { MapBase } from 'src/components/maps';
+import { CoordinatesSelectionMap } from 'src/components/maps';
 import { Divider, Heading } from 'src/components/ui';
 import useScreenWidth from 'src/hooks/useScreenWidth';
 import locationsService from 'src/services/locations';
 import notificationHelper from 'src/utils/notificationHelper';
 
 const mapCenter = ['8.322376', '-62.689662'];
-
-const SelectionMap = ({
-  coordinates, setCoordenates, recenter, isScreenSmall, closeSelectionMap,
-}) => (
-  <div className="flex size-full flex-col space-y-5 overflow-hidden rounded-lg bg-white p-5 shadow">
-    <div className="relative flex size-full overflow-hidden rounded-lg shadow">
-      <MapBase
-        markersQuantity="one"
-        coordinates={coordinates}
-        setCoordenates={setCoordenates}
-        recenter={recenter}
-        zoomControl
-        isNotFullScreen
-      />
-    </div>
-
-    {
-      (isScreenSmall) && (
-        <div className="h-fit w-full">
-          <Button
-            text="Regresar"
-            isTypeButton
-            onClick={() => closeSelectionMap()}
-            color="blue"
-          />
-        </div>
-      )
-    }
-  </div>
-);
 
 const LocationCreation = ({ onClose }) => {
   const { spaceData, updateSelectedSpaceRoot, errorHandler } = useOutletContext();
@@ -187,19 +157,21 @@ const LocationCreation = ({ onClose }) => {
       </div>
 
       {(!isScreenSmall) && (
-        <SelectionMap
+        <CoordinatesSelectionMap
           coordinates={coordinates}
           setCoordenates={setCoordenates}
           recenter={recenter}
+          markerColor={spaceData.color}
         />
       )}
 
       {(isScreenSmall) && (isMapOpen) && (
         <div className="absolute size-full">
-          <SelectionMap
+          <CoordinatesSelectionMap
             coordinates={coordinates}
             setCoordenates={setCoordenates}
             recenter={recenter}
+            markerColor={spaceData.color}
             isScreenSmall={isScreenSmall}
             closeSelectionMap={() => setIsMapOpen(false)}
           />
