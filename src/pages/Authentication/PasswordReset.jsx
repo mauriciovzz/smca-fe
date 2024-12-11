@@ -2,14 +2,14 @@ import { React, useState } from 'react';
 
 import { Link, useParams } from 'react-router-dom';
 
+import axios from 'src/api/axios';
 import { errorIcon, successIcon } from 'src/assets';
 import { Button, TextInput } from 'src/components/inputs';
 import { MapBackground } from 'src/components/maps';
 import { Divider, Heading } from 'src/components/ui';
-import accountService from 'src/services/accounts';
 import notificationHelper from 'src/utils/notificationHelper';
 
-const PasswordResetResponse = ({ wasSuccessful, requestResponse }) => (
+const PasswordResetResponse = ({ wasSuccessful, message }) => (
   <div className="flex h-fit w-full flex-col items-center rounded-lg bg-white p-5 shadow sm:h-fit sm:w-96">
     <Heading text="Restablecer contraseña" />
 
@@ -23,7 +23,7 @@ const PasswordResetResponse = ({ wasSuccessful, requestResponse }) => (
       />
 
       <div className="text-center font-bold">
-        {`${(wasSuccessful) ? '' : 'Error: '}${requestResponse}`}
+        {`${(wasSuccessful) ? '' : 'Error: '}${message}`}
       </div>
     </div>
 
@@ -55,23 +55,22 @@ const PasswordReset = () => {
   const [repeatNewPassword, setRepeatNewPassword] = useState('');
 
   const [requestMade, setRequestMade] = useState(false);
-  const [requestResponse, setRequestResponse] = useState(null);
   const [wasSuccessful, setWasSuccessful] = useState(false);
+  const [message, setMessage] = useState('');
 
   const handlePasswordVerificationSubmit = async (event) => {
     event.preventDefault();
 
     if (newPassword !== repeatNewPassword) {
-      notificationHelper.errorMsg('Los campos \'Nueva contraseña\' y \'Repetir nueva contraseña\' deben de coincidir.');
+      notificationHelper.error('Los campos \'Nueva contraseña\' y \'Repetir nueva contraseña\' deben de coincidir.');
     } else {
       try {
-        const response = await accountService.resetPassword(
-          accountId,
-          verificationToken,
+        const response = await axios.post(
+          `/api/accounts/reset-password/${accountId}/${verificationToken}`,
           { newPassword, repeatNewPassword },
         );
 
-        setRequestResponse(response);
+        setMessage(response.data);
         setWasSuccessful(true);
         setRequestMade(true);
       } catch (error) {
@@ -79,10 +78,10 @@ const PasswordReset = () => {
         const errorList = ['Link inválido.', 'El link utilizado ha expirado.'];
 
         if (errorList.includes(errorMessage)) {
-          setRequestResponse(errorMessage);
+          setMessage(errorMessage);
           setRequestMade(true);
         } else {
-          notificationHelper.error(error);
+          notificationHelper.error(errorMessage);
         }
       }
     }
@@ -129,7 +128,7 @@ const PasswordReset = () => {
             : (
               <PasswordResetResponse
                 wasSuccessful={wasSuccessful}
-                requestResponse={requestResponse}
+                message={message}
               />
             )
         }

@@ -1,37 +1,37 @@
 import { React, useState } from 'react';
 
-import { useNavigate, useOutletContext } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { Button, TextInput } from 'src/components/inputs';
 import { Divider, Heading } from 'src/components/ui';
-import accountsService from 'src/services/accounts';
+import useAuth from 'src/hooks/useAuth';
+import useAxiosPrivate from 'src/hooks/useAxiosPrivate';
+import useErrorHandler from 'src/hooks/useErrorHandler';
 import notificationHelper from 'src/utils/notificationHelper';
 
-import useAuth from '../../hooks/useAuth';
-
 const UpdateAccountPassword = () => {
+  const axiosPrivate = useAxiosPrivate();
+  const errorHandler = useErrorHandler();
   const { auth } = useAuth();
-  const { errorHandler } = useOutletContext();
+  const navigate = useNavigate();
 
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [repeatNewPassword, setRepeatNewPassword] = useState('');
 
-  const navigate = useNavigate();
-
   const handleUpdatePasswordSubmit = async (event) => {
     event.preventDefault();
 
     if (newPassword !== repeatNewPassword) {
-      notificationHelper.errorMsg('Los campos \'Nueva contraseña\' y \'Repetir nueva contraseña\' deben de coincidir.');
+      notificationHelper.error('Los campos \'Nueva contraseña\' y \'Repetir nueva contraseña\' deben de coincidir.');
     } else {
       try {
-        const response = await accountsService.updatePassword(
-          auth.accountId,
+        const response = await axiosPrivate.put(
+          `/api/accounts/${auth.accountId}/update-password`,
           { currentPassword, newPassword, repeatNewPassword },
         );
 
-        notificationHelper.success(response);
+        notificationHelper.success(response.data);
       } catch (error) {
         errorHandler(error);
       }

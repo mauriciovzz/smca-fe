@@ -1,20 +1,53 @@
-import { React, useState } from 'react';
+import { React, useState, useEffect } from 'react';
 
-import { useNavigate, useOutletContext, useLoaderData } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 
+import { successIcon } from 'src/assets';
 import { Button, SelectionBar, ComponentListItem } from 'src/components/inputs';
-import { Divider, Heading } from 'src/components/ui';
+import { Divider, Heading, LoaderSpinner } from 'src/components/ui';
+import useAxiosPrivate from 'src/hooks/useAxiosPrivate';
+import useErrorHandler from 'src/hooks/useErrorHandler';
 import { EnterNodeComponents } from 'src/pages/SpaceNodes/NodeCreation';
-import nodesService from 'src/services/nodes';
 import notificationHelper from 'src/utils/notificationHelper';
 
-const ComponentsUpdated = () => {
-  const oc = 'components updated';
+const ComponentsUpdateSuccessMessage = ({ onClose }) => (
+  <div className="flex grow flex-col bg-white">
+    <div className="flex grow flex-col">
+      <div className="flex flex-col items-center justify-center gap-[5px] border-b py-2.5">
+        <img
+          src={successIcon}
+          alt="success icon"
+          className="size-[30px]"
+        />
+        <div className="text-center font-bold">
+          Componentes Actualizados Exitosamente
+        </div>
+      </div>
 
-  return (
-    <div>{ oc }</div>
-  );
-};
+      <p className="border-b py-2.5 text-justify text-sm text-gray-500">
+        {`
+          El nodo se encuentra actualmente en estado 'Inactivo'.
+          Cuando el mismo esté funcionando en la ubicación indicada,
+          cambia su estado a 'Activo' en la sección 'Modificar'.
+        `}
+      </p>
+
+      <p className="py-2.5 text-justify text-sm text-gray-500">
+        {`
+          Para acceder a la información necesaria para la codificacion del nodo,
+          dirígete al apartado 'Descargar Configuración', en la sección 'Modificar' .
+        `}
+      </p>
+    </div>
+
+    <Button
+      text="Regresar"
+      isTypeButton
+      onClick={() => onClose()}
+      color="blue"
+    />
+  </div>
+);
 
 const NewComponentsOverview = ({
   components, handleComponentsUpdate, previousPage, onCancel,
@@ -52,12 +85,21 @@ const NewComponentsOverview = ({
 );
 
 const UpdateNodeComponents = () => {
-  const {
-    spaceData, selectedNode, componentsData,
-    updateSelectedSpaceRoot, errorHandler,
-  } = useOutletContext();
-  const { spaceComponentsData, spaceVariablesData } = useLoaderData();
+  const axiosPrivate = useAxiosPrivate();
+  const errorHandler = useErrorHandler();
   const navigate = useNavigate();
+
+  const {
+    spaceData, selectedNode,
+    componentsData, updateComponentsData,
+    variablesData, updateVariablesData,
+    updateNodesData,
+  } = useOutletContext();
+
+  const [loadingData, setLoadingData] = useState(true);
+  const [view, setView] = useState('BoardSelection');
+
+  const [nodeComponentsData, setNodeComponentsData] = useState([]);
 
   const formatCurrentComponents = (currentComponents) => {
     const formatedComponents = [];
@@ -80,33 +122,55 @@ const UpdateNodeComponents = () => {
     return formatedComponents;
   };
 
-  const [view, setView] = useState('BoardSelection');
-  const [components, setComponents] = useState(formatCurrentComponents(componentsData));
+  const getNodeComponentsData = async () => {
+    try {
+      const response = await axiosPrivate.get(
+        `/api/spaces/${spaceData.space_id}/nodes/${selectedNode.node_id}/components`,
+      );
+
+      setNodeComponentsData(formatCurrentComponents(response.data));
+      setLoadingData(false);
+    } catch (error) {
+      const errorMessage = error?.response?.data?.message;
+
+      if (errorMessage === 'NodeDoesNotExists') {
+        notificationHelper.error('El nodo indicado no se encuentra registrado.');
+        navigate('..');
+      } else {
+        errorHandler(error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    getNodeComponentsData();
+  }, []);
 
   const handleComponentSelection = (selection) => {
     if (selection.type === 'component') {
-      const position = components.findIndex((c) => c.component_id === selection.component_id);
+      const position = nodeComponentsData
+        .findIndex((c) => c.component_id === selection.component_id);
 
       if (position !== -1) {
-        setComponents(components.toSpliced(position, 1));
+        setNodeComponentsData(nodeComponentsData.toSpliced(position, 1));
       } else {
-        setComponents([
-          ...components,
+        setNodeComponentsData([
+          ...nodeComponentsData,
           { component_id: selection.component_id },
         ]);
       }
     }
 
     if (selection.type === 'variable') {
-      const position = components.findIndex(
+      const position = nodeComponentsData.findIndex(
         (c) => c.component_id === selection.component_id && c.variable_id === selection.variable_id,
       );
 
       if (position !== -1) {
-        setComponents(components.toSpliced(position, 1));
+        setNodeComponentsData(nodeComponentsData.toSpliced(position, 1));
       } else {
-        setComponents([
-          ...components,
+        setNodeComponentsData([
+          ...nodeComponentsData,
           { component_id: selection.component_id, variable_id: selection.variable_id },
         ]);
       }
@@ -119,7 +183,7 @@ const UpdateNodeComponents = () => {
     );
 
     if (position !== -1) {
-      const variableInfo = spaceVariablesData
+      const variableInfo = variablesData
         .find((vd) => vd.variable_id === currentValue.variable_id);
 
       accumulator[position].variables.push({
@@ -127,7 +191,7 @@ const UpdateNodeComponents = () => {
         name: variableInfo.name,
       });
     } else {
-      const componentInfo = spaceComponentsData
+      const componentInfo = componentsData
         .find((cd) => cd.component_id === currentValue.component_id);
 
       const newEntry = {
@@ -138,7 +202,7 @@ const UpdateNodeComponents = () => {
       };
 
       if (currentValue.variable_id) {
-        const variableInfo = spaceVariablesData
+        const variableInfo = variablesData
           .find((vd) => vd.variable_id === currentValue.variable_id);
 
         newEntry.variables.push({
@@ -160,7 +224,7 @@ const UpdateNodeComponents = () => {
     if (position !== -1) {
       accumulator[position].variables.push(currentValue.variable_id);
     } else {
-      const componentInfo = spaceComponentsData
+      const componentInfo = componentsData
         .find((cd) => cd.component_id === currentValue.component_id);
 
       const newEntry = {
@@ -178,7 +242,7 @@ const UpdateNodeComponents = () => {
   };
 
   const handleComponentsUpdate = async () => {
-    const nodeComponents = components.reduce(componentsSubmitReducer, []);
+    const nodeComponents = nodeComponentsData.reduce(componentsSubmitReducer, []);
 
     // check components min / max values
     const componentsCount = nodeComponents.reduce(
@@ -194,16 +258,16 @@ const UpdateNodeComponents = () => {
     );
 
     if (componentsCount.board === 0)
-      return notificationHelper.errorMsg('El nodo necesita por lo menos una placa.');
+      return notificationHelper.error('El nodo necesita por lo menos una placa.');
 
     if (componentsCount.sensor + componentsCount.camera + componentsCount.rain_detector === 0)
-      return notificationHelper.errorMsg('El nodo necesita por lo menos un componente que realice algún tipo de lectura (sensor, detector de lluvia o cámara).');
+      return notificationHelper.error('El nodo necesita por lo menos un componente que realice algún tipo de lectura (sensor, detector de lluvia o cámara).');
 
     if (componentsCount.rain_detector > 1)
-      return notificationHelper.errorMsg('El nodo solo puede poseer un detector de lluvia.');
+      return notificationHelper.error('El nodo solo puede poseer un detector de lluvia.');
 
     if (componentsCount.camera > 1)
-      return notificationHelper.errorMsg('El nodo solo puede poseer una camara.');
+      return notificationHelper.error('El nodo solo puede poseer una camara.');
 
     const nodeVariablesCount = nodeComponents.reduce(
       (accumulator, currentObj) => (currentObj.variables.length !== 0
@@ -214,25 +278,33 @@ const UpdateNodeComponents = () => {
     );
 
     if (nodeVariablesCount + componentsCount.rain_detector === 0)
-      return notificationHelper.errorMsg('El nodo necesita por lo menos 1 variable.');
+      return notificationHelper.error('El nodo necesita por lo menos 1 variable.');
 
     if (nodeVariablesCount > 11)
-      return notificationHelper.errorMsg('El nodo solo puede poseer 11 variables.');
+      return notificationHelper.error('El nodo solo puede poseer 11 variables.');
 
     try {
-      await nodesService.updateComponents(
-        spaceData.space_id,
-        selectedNode.node_id,
+      await axiosPrivate.put(
+        `/api/spaces/${spaceData.space_id}/nodes/${selectedNode.node_id}/components`,
         { components: nodeComponents },
       );
 
-      updateSelectedSpaceRoot();
-      setView('ComponentsUpdated');
+      updateNodesData();
+      setView('ComponentsUpdateSuccessMessage');
     } catch (error) {
-      const goTo = errorHandler(error, updateSelectedSpaceRoot);
+      const errorMessage = error?.response?.data?.message;
 
-      if (goTo)
-        navigate(goTo);
+      if (errorMessage === 'VariableDoesNotExist') {
+        notificationHelper.error('Una de las variables no se encuentra registrada.');
+        setNodeComponentsData(selectedNode.components);
+        updateVariablesData();
+      } else if (errorMessage === 'ComponentDoesNotExist') {
+        notificationHelper.error('Uno de los componente no se encuentra registrado.');
+        setNodeComponentsData(selectedNode.components);
+        updateComponentsData();
+      } else {
+        errorHandler(error);
+      }
     }
 
     return null;
@@ -240,14 +312,16 @@ const UpdateNodeComponents = () => {
 
   const renderView = () => {
     switch (view) {
-      case 'ComponentsUpdated':
+      case 'ComponentsUpdateSuccessMessage':
         return (
-          <ComponentsUpdated />
+          <ComponentsUpdateSuccessMessage
+            onClose={() => navigate('..')}
+          />
         );
       case 'NewComponentsOverview':
         return (
           <NewComponentsOverview
-            components={components.reduce(componentsOverviewReducer, [])}
+            components={nodeComponentsData.reduce(componentsOverviewReducer, [])}
             handleComponentsUpdate={() => handleComponentsUpdate()}
             previousPage={() => setView('OtherSelection')}
             onCancel={() => navigate('..')}
@@ -257,10 +331,8 @@ const UpdateNodeComponents = () => {
         return (
           <EnterNodeComponents
             text="Selecionar Otros"
-            color="bg-main"
-            spaceComponentsData={spaceComponentsData.filter((c) => c.type === 'other')}
-            spaceVariablesData={spaceVariablesData}
-            selectedComponents={components}
+            spaceComponentsData={componentsData.filter((c) => c.type === 'other')}
+            selectedComponents={nodeComponentsData}
             selectComponent={(selection) => handleComponentSelection(selection)}
             previousPage={() => setView('CameraSelection')}
             nextPage={() => setView('NewComponentsOverview')}
@@ -270,10 +342,8 @@ const UpdateNodeComponents = () => {
         return (
           <EnterNodeComponents
             text="Selecionar Camara"
-            color="bg-main"
-            spaceComponentsData={spaceComponentsData.filter((c) => c.type === 'camera')}
-            spaceVariablesData={spaceVariablesData}
-            selectedComponents={components}
+            spaceComponentsData={componentsData.filter((c) => c.type === 'camera')}
+            selectedComponents={nodeComponentsData}
             selectComponent={(selection) => handleComponentSelection(selection)}
             previousPage={() => setView('RainDetectorSelection')}
             nextPage={() => setView('OtherSelection')}
@@ -283,10 +353,8 @@ const UpdateNodeComponents = () => {
         return (
           <EnterNodeComponents
             text="Selecionar Detector de Lluvia"
-            color="bg-main"
-            spaceComponentsData={spaceComponentsData.filter((c) => c.type === 'rain_detector')}
-            spaceVariablesData={spaceVariablesData}
-            selectedComponents={components}
+            spaceComponentsData={componentsData.filter((c) => c.type === 'rain_detector')}
+            selectedComponents={nodeComponentsData}
             selectComponent={(selection) => handleComponentSelection(selection)}
             previousPage={() => setView('SensorSelection')}
             nextPage={() => setView('CameraSelection')}
@@ -296,10 +364,8 @@ const UpdateNodeComponents = () => {
         return (
           <EnterNodeComponents
             text="Selecionar Sensores"
-            color="bg-main"
-            spaceComponentsData={spaceComponentsData.filter((c) => c.type === 'sensor')}
-            spaceVariablesData={spaceVariablesData}
-            selectedComponents={components}
+            spaceComponentsData={componentsData.filter((c) => c.type === 'sensor')}
+            selectedComponents={nodeComponentsData}
             selectComponent={(selection) => handleComponentSelection(selection)}
             isSensorSelector
             previousPage={() => setView('BoardSelection')}
@@ -310,10 +376,8 @@ const UpdateNodeComponents = () => {
         return (
           <EnterNodeComponents
             text="Selecionar Placas"
-            color="bg-main"
-            spaceComponentsData={spaceComponentsData.filter((c) => c.type === 'board')}
-            spaceVariablesData={spaceVariablesData}
-            selectedComponents={components}
+            spaceComponentsData={componentsData.filter((c) => c.type === 'board')}
+            selectedComponents={nodeComponentsData}
             selectComponent={(selection) => handleComponentSelection(selection)}
             nextPage={() => setView('SensorSelection')}
           />
@@ -325,21 +389,23 @@ const UpdateNodeComponents = () => {
     }
   };
 
-  return (
-    <div className="relative flex size-full flex-col rounded-lg bg-white p-5 shadow">
-      <div className="flex grow flex-col">
-        <Heading
-          text="Actualizar Componentes"
-          hasButton
-          onButtonClick={() => navigate('..')}
-        />
+  return loadingData
+    ? <LoaderSpinner isSmall />
+    : (
+      <div className="relative flex size-full flex-col rounded-lg bg-white p-5 shadow">
+        <div className="flex grow flex-col">
+          <Heading
+            text="Actualizar Componentes"
+            hasButton
+            onButtonClick={() => navigate('..')}
+          />
 
-        <Divider changeBottomPadding="p-0" />
+          <Divider changeBottomPadding="p-0" />
 
-        {renderView()}
+          {renderView()}
+        </div>
       </div>
-    </div>
-  );
+    );
 };
 
 export default UpdateNodeComponents;

@@ -4,29 +4,30 @@ import { useOutletContext, useNavigate } from 'react-router-dom';
 
 import { Button, TextInput } from 'src/components/inputs';
 import { Divider, Heading } from 'src/components/ui';
-import invitationsService from 'src/services/invitations';
+import useAxiosPrivate from 'src/hooks/useAxiosPrivate';
+import useErrorHandler from 'src/hooks/useErrorHandler';
 import notificationHelper from 'src/utils/notificationHelper';
 
 const MemberInvitation = () => {
-  const { spaceData, updateSelectedSpaceRoot, errorHandler } = useOutletContext();
+  const axiosPrivate = useAxiosPrivate();
+  const errorHandler = useErrorHandler();
   const navigate = useNavigate();
+
+  const { spaceData } = useOutletContext();
   const [email, setEmail] = useState('');
 
   const handleInviteSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      const response = await invitationsService.invite(
-        spaceData.space_id,
+      const response = await axiosPrivate.post(
+        `/api/invitations/${spaceData.space_id}`,
         { email },
       );
 
-      notificationHelper.success(response);
+      notificationHelper.success(response.data);
     } catch (error) {
-      const goTo = errorHandler(error, updateSelectedSpaceRoot);
-
-      if (goTo)
-        navigate(goTo);
+      errorHandler(error);
     }
   };
 

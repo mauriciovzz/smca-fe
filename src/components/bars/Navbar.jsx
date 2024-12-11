@@ -8,12 +8,13 @@ import {
 } from 'src/assets';
 import { BlurEffect } from 'src/components/ui';
 import useAuth from 'src/hooks/useAuth';
+import useLogout from 'src/hooks/useLogout';
 
 const Bar = ({
-  navLinks, auth, logout, onClick,
+  navLinks, hasAuth, logout, onClick,
 }) => {
   const buttonColor = (isActive) => {
-    if (auth)
+    if (hasAuth)
       return 'bg-main hover:bg-main-dark';
 
     return (isActive) ? 'bg-main-dark' : 'bg-main hover:bg-main-dark';
@@ -21,45 +22,53 @@ const Bar = ({
 
   return (
     <>
-      {
-        navLinks
-          .filter(auth ? () => true : (link) => !link.needsAuth)
-          .map((link) => (
-            <li key={link.title}>
-              <NavLink
-                className={({ isActive }) => (`${isActive ? 'border-b-2 border-main py-1' : 'hover:text-main'}`)}
-                to={link.route}
-                onClick={() => onClick()}
-              >
-                {link.title}
-              </NavLink>
-            </li>
-          ))
-      }
+      {navLinks
+        .filter(hasAuth ? () => true : (link) => !link.needsAuth)
+        .map((link) => (
+          <li key={link.title}>
+            <NavLink
+              className={({ isActive }) => (`${isActive ? 'border-b-2 border-main py-1' : 'hover:text-main'}`)}
+              to={link.route}
+              onClick={() => onClick()}
+            >
+              {link.title}
+            </NavLink>
+          </li>
+        ))}
 
       <li>
-        <NavLink
-          className={({ isActive }) => (`${buttonColor(isActive)} rounded-lg p-2 font-medium text-white`)}
-          to={auth ? '/' : '/iniciar-sesion'}
-          onClick={auth
-            ? () => {
-              onClick();
-              logout();
-            }
-            : null}
-        >
-          {auth ? 'Cerrar sesión' : 'Iniciar sesión'}
-        </NavLink>
+        {
+          hasAuth
+            ? (
+              <NavLink
+                className={`${buttonColor(false)} rounded-lg p-2 font-medium text-white`}
+                onClick={() => {
+                  onClick();
+                  logout();
+                }}
+              >
+                Cerrar Sesión
+              </NavLink>
+            )
+            : (
+              <NavLink
+                className={({ isActive }) => (`${buttonColor(isActive)} rounded-lg p-2 font-medium text-white`)}
+                to="/iniciar-sesion"
+              >
+                Iniciar Sesión
+              </NavLink>
+            )
+        }
       </li>
     </>
   );
 };
 
 const Menu = ({
-  navLinks, auth, logout, onClick,
+  navLinks, hasAuth, logout, onClick,
 }) => {
   const buttonBackground = (isActive) => {
-    if (auth)
+    if (hasAuth)
       return '';
 
     return (isActive) && 'bg-background';
@@ -69,7 +78,7 @@ const Menu = ({
     <>
       {
         navLinks
-          .filter(auth ? () => true : (link) => !link.needsAuth)
+          .filter(hasAuth ? () => true : (link) => !link.needsAuth)
           .map((link) => (
             <li className="size-full" key={link.alt}>
               <NavLink
@@ -91,35 +100,45 @@ const Menu = ({
       }
 
       <li className="size-full">
-        <NavLink
-          className={({ isActive }) => (`${buttonBackground(isActive)} flex h-full w-full flex-col items-center justify-center gap-2.5 rounded-lg`)}
-          to={auth ? '/' : '/iniciar-sesion'}
-          end
-          onClick={
-            auth
-              ? () => {
-                onClick();
-                logout();
-              }
-              : () => onClick()
-          }
-        >
-          <img
-            src={auth ? logoutIcon : loginIcon}
-            alt={auth ? 'logout' : 'login'}
-            className="size-[35px]"
-          />
-          <span className="text-xs text-slate-500">
-            {auth ? 'Cerrar Sesión' : 'Iniciar Sesión'}
-          </span>
-        </NavLink>
+        {
+          hasAuth
+            ? (
+              <NavLink
+                className={`${buttonBackground(false)} flex size-full flex-col items-center justify-center gap-2.5 rounded-lg`}
+                onClick={() => logout()}
+              >
+                <img
+                  src={logoutIcon}
+                  alt="logout"
+                  className="size-[35px]"
+                />
+                <span className="text-xs text-slate-500">Cerrar Sesión</span>
+              </NavLink>
+            )
+            : (
+              <NavLink
+                className={({ isActive }) => (`${buttonBackground(isActive)} flex size-full flex-col items-center justify-center gap-2.5 rounded-lg`)}
+                to="/iniciar-sesion"
+                onClick={() => onClick()}
+              >
+                <img
+                  src={loginIcon}
+                  alt="login"
+                  className="size-[35px]"
+                />
+                <span className="text-xs text-slate-500">Iniciar Sesión</span>
+              </NavLink>
+            )
+        }
+
       </li>
     </>
   );
 };
 
-const Navbar = ({ logout }) => {
+const Navbar = () => {
   const { auth } = useAuth();
+  const logout = useLogout();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navLinks = [
@@ -193,16 +212,16 @@ const Navbar = ({ logout }) => {
           <ul className="hidden w-fit flex-row items-center gap-10 sm:flex">
             <Bar
               navLinks={navLinks}
-              auth={auth}
+              hasAuth={auth?.accessToken}
               logout={logout}
               onClick={() => setIsMenuOpen(false)}
             />
           </ul>
 
-          <ul className={`${isMenuOpen ? 'grid' : 'hidden'} ${auth ? 'grid-cols-3' : 'grid-cols-2'} h-[201px] w-full grid-rows-2 justify-items-center gap-5 pt-5 sm:hidden`}>
+          <ul className={`${isMenuOpen ? 'grid' : 'hidden'} ${auth?.accessToken ? 'grid-cols-3' : 'grid-cols-2'} h-[201px] w-full grid-rows-2 justify-items-center gap-5 pt-5 sm:hidden`}>
             <Menu
               navLinks={navLinks}
-              auth={auth}
+              hasAuth={auth?.accessToken}
               logout={logout}
               onClick={() => setIsMenuOpen(false)}
             />

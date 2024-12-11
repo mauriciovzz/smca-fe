@@ -1,18 +1,7 @@
-import NodeCreation, { nodeCreationLoader } from './NodeCreation/NodeCreation';
-import NodesRoot, { nodesLoader } from './NodesRoot';
-import {
-  SelectedNodeManagementRoot, SelectedNodeOverview, SelectedNodeRoot, selectedNodeComponentsLoader,
-  DownloadNodeConfigFile, UpdateNodeInfo, UpdateNodeComponents, UpdateNodeLocation, DeleteNode,
-} from './SelectedNodeManagement';
+import NodeCreationRoot from './NodeCreation/NodeCreationRoot';
+import NodesRoot from './NodesRoot';
 
 export {
-  NodeCreation,
+  NodeCreationRoot,
   NodesRoot,
-  nodesLoader,
-  nodeCreationLoader,
-  SelectedNodeManagementRoot,
-  SelectedNodeOverview,
-  SelectedNodeRoot,
-  selectedNodeComponentsLoader,
-  DownloadNodeConfigFile, UpdateNodeInfo, UpdateNodeComponents, UpdateNodeLocation, DeleteNode,
 };

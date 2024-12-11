@@ -4,30 +4,33 @@ import { useOutletContext, useNavigate } from 'react-router-dom';
 
 import { Button, TextInput } from 'src/components/inputs';
 import { Divider, Heading } from 'src/components/ui';
-import spacesService from 'src/services/spaces';
+import useAxiosPrivate from 'src/hooks/useAxiosPrivate';
+import useErrorHandler from 'src/hooks/useErrorHandler';
 import notificationHelper from 'src/utils/notificationHelper';
 
 const DeleteSpace = () => {
-  const { spaceData, updateSelectedSpaceRoot, errorHandler } = useOutletContext();
+  const axiosPrivate = useAxiosPrivate();
+  const errorHandler = useErrorHandler();
   const navigate = useNavigate();
+
+  const { spaceData, getSpaceData } = useOutletContext();
 
   const [spaceName, setSpaceName] = useState('');
 
   const handleDeleteSpace = async () => {
     if (spaceData.name === spaceName) {
       try {
-        const response = await spacesService.remove(spaceData.space_id);
+        const response = await axiosPrivate.delete(
+          `/api/spaces/${spaceData.space_id}`,
+        );
 
-        notificationHelper.success(response);
+        notificationHelper.success(response.data);
         navigate('/espacios');
       } catch (error) {
-        const goTo = errorHandler(error, updateSelectedSpaceRoot);
-
-        if (goTo)
-          navigate(goTo);
+        errorHandler(error, getSpaceData);
       }
     } else {
-      notificationHelper.errorMsg('El nombre ingresado no es correcto.');
+      notificationHelper.error('El nombre ingresado no es correcto.');
     }
   };
 

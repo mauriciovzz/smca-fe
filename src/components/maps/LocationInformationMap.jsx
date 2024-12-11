@@ -13,7 +13,7 @@ const InfoItem = ({ text, value, width }) => (
 );
 
 const LocationInformationMap = ({
-  marker, markerColor, showLocationInfo, isScreenSmall, closeLocationMap,
+  title, marker, markerColor, showLocationInfo, isScreenSmall, closeLocationMap,
 }) => {
   const getDate = (dateString) => {
     const dateObject = new Date(dateString);
@@ -26,13 +26,13 @@ const LocationInformationMap = ({
       {(isScreenSmall)
         ? (
           <Heading
-            text="Ubicación"
+            text={title || 'Ubicación'}
             hasButton
             onButtonClick={() => closeLocationMap()}
           />
         )
         : (
-          <Heading text="Ubicación" />
+          <Heading text={title || 'Ubicación'} />
         )}
 
       <Divider changeBottomPadding={showLocationInfo ? 'p-1.5' : 'p-2.5'} />

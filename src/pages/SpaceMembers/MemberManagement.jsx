@@ -4,51 +4,50 @@ import { useOutletContext, useNavigate, useParams } from 'react-router-dom';
 
 import { Button, ConfirmationDialog, ToggleSwitch } from 'src/components/inputs';
 import { Divider, Heading, Label } from 'src/components/ui';
-import membersService from 'src/services/members';
+import useAuth from 'src/hooks/useAuth';
+import useAxiosPrivate from 'src/hooks/useAxiosPrivate';
+import useErrorHandler from 'src/hooks/useErrorHandler';
 import notificationHelper from 'src/utils/notificationHelper';
 
 const MemberManagement = () => {
-  const { accountId } = useParams();
-  const {
-    spaceData, membersData, updateSelectedSpaceRoot, errorHandler,
-  } = useOutletContext();
-  const selectedMember = membersData.find((m) => m.account_id === parseInt(accountId, 10));
+  const axiosPrivate = useAxiosPrivate();
+  const errorHandler = useErrorHandler();
+  const { auth } = useAuth();
   const navigate = useNavigate();
+
+  const { spaceData, membersData, updateMembersData } = useOutletContext();
+
+  const { accountId } = useParams();
+  const selectedMember = membersData
+    .find((m) => m.account_id === parseInt(accountId, 10));
 
   const [isConDiaOpen, setIsConDiaOpen] = useState(false);
 
   const updateMemberRole = async () => {
     try {
-      const response = await membersService.updateMemberRole(
-        spaceData.space_id,
-        selectedMember.account_id,
+      const response = await axiosPrivate.put(
+        `/api/spaces/${spaceData.space_id}/members/${selectedMember.account_id}`,
       );
 
-      notificationHelper.success(response);
-      updateSelectedSpaceRoot();
+      notificationHelper.success(response.data);
+      updateMembersData();
     } catch (error) {
-      const goTo = errorHandler(error, updateSelectedSpaceRoot);
-
-      if (goTo)
-        navigate(goTo);
+      errorHandler(error, updateMembersData);
     }
   };
 
   const memberRemoval = async () => {
     try {
-      const response = await membersService.removeMember(
-        spaceData.space_id,
-        selectedMember.account_id,
+      const response = await axiosPrivate.delete(
+        `/api/spaces/${spaceData.space_id}/members/${selectedMember.account_id}/remove`,
       );
 
-      notificationHelper.success(response);
-      updateSelectedSpaceRoot();
+      notificationHelper.success(response.data);
+      updateMembersData();
       navigate('..');
     } catch (error) {
-      const goTo = errorHandler(error, updateSelectedSpaceRoot);
-
-      if (goTo)
-        navigate(goTo);
+      errorHandler(error, updateMembersData);
+      setIsConDiaOpen(false);
     }
   };
 
@@ -106,7 +105,7 @@ const MemberManagement = () => {
       </div>
 
       {
-        (spaceData.is_admin) && (
+        (spaceData.is_admin) && (auth.accountId !== selectedMember.account_id) && (
           <div className="flex gap-2.5">
             <Button
               text="Cambiar Rol"

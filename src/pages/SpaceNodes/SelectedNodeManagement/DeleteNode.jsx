@@ -4,37 +4,38 @@ import { useOutletContext, useNavigate } from 'react-router-dom';
 
 import { Button, ConfirmationDialog, TextInput } from 'src/components/inputs';
 import { Divider, Heading } from 'src/components/ui';
-import nodesService from 'src/services/nodes';
+import useAxiosPrivate from 'src/hooks/useAxiosPrivate';
+import useErrorHandler from 'src/hooks/useErrorHandler';
 import notificationHelper from 'src/utils/notificationHelper';
 
 const DeleteNode = () => {
-  const {
-    spaceData, selectedNode, updateSelectedSpaceRoot, errorHandler,
-  } = useOutletContext();
+  const axiosPrivate = useAxiosPrivate();
+  const errorHandler = useErrorHandler();
   const navigate = useNavigate();
 
+  const { spaceData, selectedNode, updateNodesData } = useOutletContext();
+
   const [isConDiaOpen, setIsConDiaOpen] = useState(false);
+
   const [nodeName, setNodeName] = useState('');
 
   const handleNodeDeletion = async () => {
     if (selectedNode.node_name === nodeName) {
       try {
-        const response = await nodesService.remove(
+        const response = await axiosPrivate.delete(
+          `/api/spaces/${spaceData.space_id}/nodes/${selectedNode.node_id}`,
           spaceData.space_id,
           selectedNode.node_id,
         );
 
-        notificationHelper.success(response);
-        updateSelectedSpaceRoot();
-        navigate('../../..');
+        notificationHelper.success(response.data);
+        updateNodesData();
+        navigate('../..');
       } catch (error) {
-        const goTo = errorHandler(error, updateSelectedSpaceRoot);
-
-        if (goTo)
-          navigate(goTo);
+        errorHandler(error);
       }
     } else {
-      notificationHelper.errorMsg('El nombre ingresado no es correcto.');
+      notificationHelper.error('El nombre ingresado no es correcto.');
     }
   };
   return (

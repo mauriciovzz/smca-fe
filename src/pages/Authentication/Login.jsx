@@ -1,14 +1,16 @@
 import { React, useState } from 'react';
 
-import { Link, useNavigate, useOutletContext } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
+import axios from 'src/api/axios';
 import { Button, CheckBoxInput, TextInput } from 'src/components/inputs';
 import { MapBackground } from 'src/components/maps';
 import { Divider, Heading } from 'src/components/ui';
+import useAuth from 'src/hooks/useAuth';
 import notificationHelper from 'src/utils/notificationHelper';
 
 const Login = () => {
-  const { login } = useOutletContext();
+  const { setAuth } = useAuth();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -20,13 +22,21 @@ const Login = () => {
     event.preventDefault();
 
     try {
-      await login({ email, password, rememberMe });
+      const response = await axios.post(
+        '/api/auth/login',
+        { email, password, rememberMe },
+      );
+
+      setAuth(response.data);
+      notificationHelper.info('Bienvenid@!');
       navigate('/');
     } catch (error) {
-      if (error.response.data.message === 'Su cuenta no se encuentra verificada.') {
+      const errorMessage = error.response.data.message;
+
+      if (errorMessage === 'Su cuenta no se encuentra verificada.') {
         navigate('/reenviar-enlace-verificacion/', { state: { email } });
       } else {
-        notificationHelper.error(error);
+        notificationHelper.error(errorMessage);
       }
     }
   };

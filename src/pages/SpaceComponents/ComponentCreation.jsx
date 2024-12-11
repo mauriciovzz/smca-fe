@@ -1,20 +1,28 @@
 import { React, useState } from 'react';
 
-import { useOutletContext, useNavigate, useLoaderData } from 'react-router-dom';
+import { useOutletContext, useNavigate } from 'react-router-dom';
 
 import { checkCircleIcon, pasteIcon, uncheckCircleIcon } from 'src/assets';
 import {
   AddNewItemButton, Button, TextInput, VariableListItem,
 } from 'src/components/inputs';
 import { Divider, Heading, Label } from 'src/components/ui';
+import useAxiosPrivate from 'src/hooks/useAxiosPrivate';
+import useErrorHandler from 'src/hooks/useErrorHandler';
 import VariableCreation from 'src/pages/SpaceVariables/VariableCreation';
-import componentsService from 'src/services/components';
 import notificationHelper from 'src/utils/notificationHelper';
 
-const ComponentCreation = ({ onClose, sideLoadedVariables }) => {
-  const { spaceData, updateSelectedSpaceRoot, errorHandler } = useOutletContext();
+const ComponentCreation = ({ onClose }) => {
+  const axiosPrivate = useAxiosPrivate();
+  const errorHandler = useErrorHandler();
   const navigate = useNavigate();
-  const variablesData = sideLoadedVariables || useLoaderData();
+
+  const {
+    spaceData,
+    updateComponentsData,
+    variablesData, updateVariablesData,
+  } = useOutletContext();
+
   const componentTypes = [
     { type: 'board', text: 'placa' },
     { type: 'sensor', text: 'sensor' },
@@ -34,11 +42,11 @@ const ComponentCreation = ({ onClose, sideLoadedVariables }) => {
     event.preventDefault();
 
     if ((type === 'sensor') && variablesData.length === 0) {
-      notificationHelper.errorMsg('Selecionar al menos 1 variable.');
+      notificationHelper.error('Selecionar al menos 1 variable.');
     } else {
       try {
-        const response = await componentsService.create(
-          spaceData.space_id,
+        const response = await axiosPrivate.post(
+          `/api/spaces/${spaceData.space_id}/components`,
           {
             type,
             name,
@@ -47,22 +55,22 @@ const ComponentCreation = ({ onClose, sideLoadedVariables }) => {
           },
         );
 
-        notificationHelper.success(response);
+        notificationHelper.success(response.data);
 
         setName('');
         setType('');
         setDatasheetLink('');
         setComponentVariables([]);
 
-        updateSelectedSpaceRoot();
+        updateComponentsData();
       } catch (error) {
-        const goTo = errorHandler(error, updateSelectedSpaceRoot);
-
-        if (goTo)
-          navigate(goTo);
-
-        if (error.response.data.message === 'Una de las variables agregadas no se encuentra registrada.')
+        if (error?.response?.data?.message === 'NewComponentVariableDoesNotExist') {
+          notificationHelper.error('Una de las variables agregadas no se encuentra registrada.');
+          updateVariablesData();
           setComponentVariables([]);
+        } else {
+          errorHandler(error, updateComponentsData);
+        }
       }
     }
   };

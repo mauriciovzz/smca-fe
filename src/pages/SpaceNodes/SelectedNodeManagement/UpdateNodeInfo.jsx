@@ -7,14 +7,16 @@ import {
   ToggleReadingInterval,
 } from 'src/components/inputs';
 import { Divider, Heading } from 'src/components/ui';
-import nodesService from 'src/services/nodes';
+import useAxiosPrivate from 'src/hooks/useAxiosPrivate';
+import useErrorHandler from 'src/hooks/useErrorHandler';
 import notificationHelper from 'src/utils/notificationHelper';
 
 const UpdateName = () => {
-  const {
-    spaceData, selectedNode, updateSelectedSpaceRoot, errorHandler,
-  } = useOutletContext();
+  const axiosPrivate = useAxiosPrivate();
+  const errorHandler = useErrorHandler();
   const navigate = useNavigate();
+
+  const { spaceData, selectedNode, updateNodesData } = useOutletContext();
 
   const [name, setName] = useState(selectedNode.node_name);
   const [isIndoor, setIsIndoor] = useState(selectedNode.is_indoor);
@@ -23,9 +25,8 @@ const UpdateName = () => {
 
   const handleNodeUpdate = async () => {
     try {
-      const response = await nodesService.updateInfo(
-        spaceData.space_id,
-        selectedNode.node_id,
+      const response = await axiosPrivate.put(
+        `/api/spaces/${spaceData.space_id}/nodes/${selectedNode.node_id}`,
         {
           name,
           isIndoor,
@@ -34,13 +35,10 @@ const UpdateName = () => {
         },
       );
 
-      notificationHelper.success(response);
-      updateSelectedSpaceRoot();
+      notificationHelper.success(response.data);
+      updateNodesData();
     } catch (error) {
-      const goTo = errorHandler(error, updateSelectedSpaceRoot);
-
-      if (goTo)
-        navigate(goTo);
+      errorHandler(error);
     }
   };
 

@@ -1,32 +1,35 @@
 import { React, useState } from 'react';
 
-import { useNavigate, useOutletContext } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { Button, TextInput } from 'src/components/inputs';
 import { Divider, Heading } from 'src/components/ui';
 import useAuth from 'src/hooks/useAuth';
-import accountsService from 'src/services/accounts';
+import useAxiosPrivate from 'src/hooks/useAxiosPrivate';
+import useErrorHandler from 'src/hooks/useErrorHandler';
+import useLogout from 'src/hooks/useLogout';
 import notificationHelper from 'src/utils/notificationHelper';
 
 const DeleteAccount = () => {
-  const { auth, logout } = useAuth();
-  const { errorHandler } = useOutletContext();
+  const axiosPrivate = useAxiosPrivate();
+  const errorHandler = useErrorHandler();
+  const { auth } = useAuth();
+  const logout = useLogout();
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  const navigate = useNavigate();
 
   const handleDeleteAccountSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      const response = await accountsService.remove(
-        auth.accountId,
-        { email, password },
+      const response = await axiosPrivate.delete(
+        `/api/accounts/${auth.accountId}`,
+        { data: { email, password } },
       );
 
-      notificationHelper.success(response);
+      notificationHelper.success(response.data);
       logout();
     } catch (err) {
       errorHandler(err);

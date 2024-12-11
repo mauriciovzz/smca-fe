@@ -4,30 +4,32 @@ import { useOutletContext, useNavigate } from 'react-router-dom';
 
 import { Button, TextInput } from 'src/components/inputs';
 import { Divider, Heading } from 'src/components/ui';
-import spacesService from 'src/services/spaces';
+import useAxiosPrivate from 'src/hooks/useAxiosPrivate';
+import useErrorHandler from 'src/hooks/useErrorHandler';
 import notificationHelper from 'src/utils/notificationHelper';
 
 const UpdateSpaceName = () => {
-  const { spaceData, updateSelectedSpaceRoot, errorHandler } = useOutletContext();
-  const [newName, setNewName] = useState(spaceData.name);
+  const axiosPrivate = useAxiosPrivate();
+  const errorHandler = useErrorHandler();
   const navigate = useNavigate();
+
+  const { spaceData, updateSpaceData } = useOutletContext();
+
+  const [newName, setNewName] = useState(spaceData.name);
 
   const handleUpdateSpaceNameSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      const response = await spacesService.updateName(
-        spaceData.space_id,
+      const response = await axiosPrivate.put(
+        `/api/spaces/${spaceData.space_id}/update-name`,
         { newName },
       );
 
-      notificationHelper.success(response);
-      updateSelectedSpaceRoot();
+      notificationHelper.success(response.data);
+      updateSpaceData();
     } catch (error) {
-      const goTo = errorHandler(error, updateSelectedSpaceRoot);
-
-      if (goTo)
-        navigate(goTo);
+      errorHandler(error, updateSpaceData);
     }
   };
 

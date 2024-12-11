@@ -1,7 +1,7 @@
 import { React } from 'react';
 
 import {
-  Outlet, useOutletContext, useOutlet,
+  Outlet, useOutletContext, useOutlet, useParams,
 } from 'react-router-dom';
 
 import useScreenWidth from 'src/hooks/useScreenWidth';
@@ -14,10 +14,25 @@ const NoOptionSelected = () => (
   </div>
 );
 
+// does going back reloads nodes and evrything else in case error? MOPE
+
 const NodeManagementRoot = () => {
   const {
-    spaceData, selectedNode, componentsData, updateSelectedSpaceRoot, errorHandler,
+    spaceData,
+    locationsData,
+    updateLocationsData,
+    componentsData,
+    updateComponentsData,
+    variablesData,
+    updateVariablesData,
+    nodesData,
+    updateNodesData,
   } = useOutletContext();
+
+  const { nodeId } = useParams();
+  const selectedNode = nodesData
+    .find((n) => n.node_id === parseInt(nodeId, 10));
+
   const outlet = useOutlet();
   const isScreenSmall = useScreenWidth();
 
@@ -25,10 +40,18 @@ const NodeManagementRoot = () => {
     if (isScreenSmall) {
       if (outlet)
         return (
-          <Outlet
-            context={{
-              spaceData, selectedNode, componentsData, updateSelectedSpaceRoot, errorHandler,
-            }}
+          <Outlet context={{
+            spaceData,
+            selectedNode,
+            locationsData,
+            updateLocationsData,
+            componentsData,
+            updateComponentsData,
+            variablesData,
+            updateVariablesData,
+            nodesData,
+            updateNodesData,
+          }}
           />
         );
 
@@ -37,10 +60,18 @@ const NodeManagementRoot = () => {
 
     if (outlet)
       return (
-        <Outlet
-          context={{
-            spaceData, selectedNode, componentsData, updateSelectedSpaceRoot, errorHandler,
-          }}
+        <Outlet context={{
+          spaceData,
+          selectedNode,
+          locationsData,
+          updateLocationsData,
+          componentsData,
+          updateComponentsData,
+          variablesData,
+          updateVariablesData,
+          nodesData,
+          updateNodesData,
+        }}
         />
       );
 

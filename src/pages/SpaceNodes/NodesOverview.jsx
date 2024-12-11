@@ -12,6 +12,7 @@ const NodesOverview = ({ nodesData, spaceData }) => {
   const [isMapOpen, setIsMapOpen] = useState(false);
   const isScreenSmall = useScreenWidth();
   const navigate = useNavigate();
+
   return (
     <div className="relative grid size-full grid-cols-1 grid-rows-1 gap-5 sm:grid sm:grid-cols-2 sm:grid-rows-1">
       <div className="flex size-full flex-col rounded-lg bg-white p-5 shadow">

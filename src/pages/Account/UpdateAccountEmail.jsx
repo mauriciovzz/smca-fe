@@ -4,26 +4,32 @@ import { useOutletContext, useNavigate } from 'react-router-dom';
 
 import { Button, TextInput } from 'src/components/inputs';
 import { Divider, Heading } from 'src/components/ui';
-import accountsService from 'src/services/accounts';
+import useAuth from 'src/hooks/useAuth';
+import useAxiosPrivate from 'src/hooks/useAxiosPrivate';
+import useErrorHandler from 'src/hooks/useErrorHandler';
 import notificationHelper from 'src/utils/notificationHelper';
 
-import useAuth from '../../hooks/useAuth';
-
 const UpdateAccountEmail = () => {
+  const axiosPrivate = useAxiosPrivate();
+  const errorHandler = useErrorHandler();
   const { auth } = useAuth();
-  const { accountData, errorHandler } = useOutletContext();
+  const navigate = useNavigate();
+
+  const { accountData } = useOutletContext();
 
   const [password, setPassword] = useState('');
   const [newEmail, setNewEmail] = useState('');
-
-  const navigate = useNavigate();
 
   const handleUpdateEmailSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      const response = await accountsService.updateEmail(auth?.accountId, { newEmail, password });
-      notificationHelper.success(response);
+      const response = await axiosPrivate.put(
+        `/api/accounts/${auth.accountId}/update-email`,
+        { newEmail, password },
+      );
+
+      notificationHelper.success(response.data);
     } catch (error) {
       errorHandler(error);
     }

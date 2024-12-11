@@ -7,18 +7,22 @@ import {
 } from 'src/components/inputs';
 import { LocationInformationMap } from 'src/components/maps';
 import { Divider, Heading } from 'src/components/ui';
+import useAxiosPrivate from 'src/hooks/useAxiosPrivate';
+import useErrorHandler from 'src/hooks/useErrorHandler';
 import useScreenWidth from 'src/hooks/useScreenWidth';
-import locationsService from 'src/services/locations';
 import notificationHelper from 'src/utils/notificationHelper';
 
 const LocationManagement = () => {
-  const { locationId } = useParams();
-  const {
-    spaceData, locationsData, updateSelectedSpaceRoot, errorHandler,
-  } = useOutletContext();
-  const selectedLocation = locationsData.find((l) => l.location_id === parseInt(locationId, 10));
+  const axiosPrivate = useAxiosPrivate();
+  const errorHandler = useErrorHandler();
   const isScreenSmall = useScreenWidth();
   const navigate = useNavigate();
+
+  const { spaceData, locationsData, updateLocationsData } = useOutletContext();
+
+  const { locationId } = useParams();
+  const selectedLocation = locationsData
+    .find((l) => l.location_id === parseInt(locationId, 10));
 
   const [isEditable, setIsEditable] = useState(false);
   const [isConDiaOpen, setIsConDiaOpen] = useState(false);
@@ -39,38 +43,30 @@ const LocationManagement = () => {
 
   const handleUpdate = async () => {
     try {
-      const response = await locationsService.update(
-        spaceData.space_id,
-        selectedLocation.location_id,
+      const response = await axiosPrivate.put(
+        `/api/spaces/${spaceData.space_id}/locations/${selectedLocation.location_id}`,
         { name, location, isVisible },
       );
 
-      notificationHelper.success(response);
-      updateSelectedSpaceRoot();
+      notificationHelper.success(response.data);
+      updateLocationsData();
       setIsEditable(!isEditable);
     } catch (error) {
-      const goTo = errorHandler(error, updateSelectedSpaceRoot);
-
-      if (goTo)
-        navigate(goTo);
+      errorHandler(error);
     }
   };
 
   const handleRemove = async () => {
     try {
-      const response = await locationsService.remove(
-        spaceData.space_id,
-        selectedLocation.location_id,
+      const response = await axiosPrivate.delete(
+        `/api/spaces/${spaceData.space_id}/locations/${selectedLocation.location_id}`,
       );
 
-      notificationHelper.success(response);
-      updateSelectedSpaceRoot();
+      notificationHelper.success(response.data);
+      updateLocationsData();
       navigate('..');
     } catch (error) {
-      const goTo = errorHandler(error, updateSelectedSpaceRoot);
-
-      if (goTo)
-        navigate(goTo);
+      errorHandler(error);
     }
   };
 
@@ -164,6 +160,7 @@ const LocationManagement = () => {
 
       {(!isScreenSmall) && (
         <LocationInformationMap
+          title="Ubicación en el Mapa"
           marker={selectedLocation}
           markerColor={spaceData.color}
         />
@@ -172,6 +169,7 @@ const LocationManagement = () => {
       {(isScreenSmall) && (isMapOpen) && (
         <div className="absolute size-full">
           <LocationInformationMap
+            title="Ubicación en el Mapa"
             marker={selectedLocation}
             markerColor={spaceData.color}
             isScreenSmall={isScreenSmall}

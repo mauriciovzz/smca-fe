@@ -14,7 +14,7 @@ const InfoItem = ({ text, value, padding }) => (
   </div>
 );
 
-const SelectedNodeOverview = ({ spaceData, selectedNode, componentsData }) => {
+const SelectedNodeOverview = ({ spaceData, selectedNode, nodeComponentsData }) => {
   const isScreenSmall = useScreenWidth();
   const navigate = useNavigate();
 
@@ -68,11 +68,11 @@ const SelectedNodeOverview = ({ spaceData, selectedNode, componentsData }) => {
 
             <div className="relative size-full">
               <ul className="small-scrollbar absolute flex size-full flex-col overflow-y-scroll rounded-lg border bg-background text-sm">
-                {componentsData.filter((c) => c.type === 'board').map((component) => <ComponentListItem component={component} key={`${component.component_id}`} />)}
-                {componentsData.filter((c) => c.type === 'sensor').map((component) => <ComponentListItem component={component} key={`${component.component_id}`} />)}
-                {componentsData.filter((c) => c.type === 'rain_detector').map((component) => <ComponentListItem component={component} key={`${component.component_id}`} />)}
-                {componentsData.filter((c) => c.type === 'camera').map((component) => <ComponentListItem component={component} key={`${component.component_id}`} />)}
-                {componentsData.filter((c) => c.type === 'other').map((component) => <ComponentListItem component={component} key={`${component.component_id}`} />)}
+                {nodeComponentsData.filter((c) => c.type === 'board').map((component) => <ComponentListItem component={component} key={`${component.component_id}`} />)}
+                {nodeComponentsData.filter((c) => c.type === 'sensor').map((component) => <ComponentListItem component={component} key={`${component.component_id}`} />)}
+                {nodeComponentsData.filter((c) => c.type === 'rain_detector').map((component) => <ComponentListItem component={component} key={`${component.component_id}`} />)}
+                {nodeComponentsData.filter((c) => c.type === 'camera').map((component) => <ComponentListItem component={component} key={`${component.component_id}`} />)}
+                {nodeComponentsData.filter((c) => c.type === 'other').map((component) => <ComponentListItem component={component} key={`${component.component_id}`} />)}
               </ul>
             </div>
           </div>

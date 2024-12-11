@@ -6,12 +6,16 @@ import {
   Button, ColorInput, TextInput, ToggleSwitch,
 } from 'src/components/inputs';
 import { Divider, Heading } from 'src/components/ui';
-import variablesService from 'src/services/variables';
+import useAxiosPrivate from 'src/hooks/useAxiosPrivate';
+import useErrorHandler from 'src/hooks/useErrorHandler';
 import notificationHelper from 'src/utils/notificationHelper';
 
 const VariableCreation = ({ onClose }) => {
-  const { spaceData, updateSelectedSpaceRoot, errorHandler } = useOutletContext();
+  const axiosPrivate = useAxiosPrivate();
+  const errorHandler = useErrorHandler();
   const navigate = useNavigate();
+
+  const { spaceData, updateVariablesData } = useOutletContext();
 
   const [variableType, setVariableType] = useState('enviromental');
   const [valueType, setValueType] = useState('numerical');
@@ -23,8 +27,8 @@ const VariableCreation = ({ onClose }) => {
     event.preventDefault();
 
     try {
-      const response = await variablesService.create(
-        spaceData.space_id,
+      const response = await axiosPrivate.post(
+        `/api/spaces/${spaceData.space_id}/variables`,
         {
           variableType,
           valueType,
@@ -34,19 +38,16 @@ const VariableCreation = ({ onClose }) => {
         },
       );
 
-      notificationHelper.success(response);
+      notificationHelper.success(response.data);
 
       setVariableType('enviromental');
       setName('');
       setValueType('numerical');
       setUnit('');
       setColor('#0284C7');
-      updateSelectedSpaceRoot();
+      updateVariablesData();
     } catch (error) {
-      const goTo = errorHandler(error, updateSelectedSpaceRoot);
-
-      if (goTo)
-        navigate(goTo);
+      errorHandler(error);
     }
   };
 

@@ -6,8 +6,8 @@ import {
 import ComponentCreation from 'src/pages/SpaceComponents/ComponentCreation';
 
 const EnterNodeComponents = ({
-  text, color,
-  spaceComponentsData, spaceVariablesData,
+  text,
+  spaceComponentsData,
   selectedComponents, selectComponent,
   isSensorSelector,
   previousPage, nextPage,
@@ -33,7 +33,7 @@ const EnterNodeComponents = ({
                   component={component}
                   selectedComponents={selectedComponents}
                   onClick={selectComponent}
-                  color={color}
+                  color="bg-main"
                 />
               )))
               : (spaceComponentsData.map((component) => (
@@ -42,7 +42,7 @@ const EnterNodeComponents = ({
                   component={component}
                   selectedComponents={selectedComponents}
                   onClick={selectComponent}
-                  color={color}
+                  color="bg-main"
                 />
               )))
           }
@@ -56,10 +56,7 @@ const EnterNodeComponents = ({
 
       {isComCreOpen && (
         <div className="absolute left-0 top-0 size-full">
-          <ComponentCreation
-            onClose={() => setIsComCreOpen(false)}
-            sideLoadedVariables={spaceVariablesData}
-          />
+          <ComponentCreation onClose={() => setIsComCreOpen(false)} />
         </div>
       )}
     </div>

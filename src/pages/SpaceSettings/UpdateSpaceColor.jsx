@@ -4,30 +4,32 @@ import { useOutletContext, useNavigate } from 'react-router-dom';
 
 import { Button, ColorInput } from 'src/components/inputs';
 import { Divider, Heading } from 'src/components/ui';
-import spacesService from 'src/services/spaces';
+import useAxiosPrivate from 'src/hooks/useAxiosPrivate';
+import useErrorHandler from 'src/hooks/useErrorHandler';
 import notificationHelper from 'src/utils/notificationHelper';
 
 const UpdateSpaceColor = () => {
-  const { spaceData, updateSelectedSpaceRoot, errorHandler } = useOutletContext();
-  const [newColor, setNewColor] = useState(spaceData.color);
+  const axiosPrivate = useAxiosPrivate();
+  const errorHandler = useErrorHandler();
   const navigate = useNavigate();
+
+  const { spaceData, updateSpaceData } = useOutletContext();
+
+  const [newColor, setNewColor] = useState(spaceData.color);
 
   const handleUpdateSpaceColorSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      const response = await spacesService.updateColor(
-        spaceData.space_id,
+      const response = await axiosPrivate.put(
+        `/api/spaces/${spaceData.space_id}/update-color`,
         { newColor },
       );
 
-      notificationHelper.success(response);
-      updateSelectedSpaceRoot();
+      notificationHelper.success(response.data);
+      updateSpaceData();
     } catch (error) {
-      const goTo = errorHandler(error, updateSelectedSpaceRoot);
-
-      if (goTo)
-        navigate(goTo);
+      errorHandler(error, updateSpaceData);
     }
   };
 

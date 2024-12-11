@@ -1,6 +1,6 @@
 import { React } from 'react';
 
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
 
 import { arrowIcon } from 'src/assets';
 import { Divider, Heading, Label } from 'src/components/ui';
@@ -37,13 +37,14 @@ const OverviewNavLink = ({ title, value, to }) => (
 
 const SelectedNodeManagementOverview = () => {
   const navigate = useNavigate();
+  const { nodeId } = useParams();
 
   return (
     <div className="flex grow flex-col rounded-lg bg-white p-5 shadow">
       <Heading
         text="Ajustes del Nodo"
         hasButton
-        onButtonClick={() => navigate('..')}
+        onButtonClick={() => navigate(`../${nodeId}`)}
       />
 
       <Divider changeBottomPadding="p-0" />

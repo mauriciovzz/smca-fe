@@ -1,39 +1,13 @@
-import { React, useEffect } from 'react';
+import { React, useEffect, useState } from 'react';
 
-import {
-  Outlet, redirect, useLoaderData, useOutlet, useOutletContext,
-} from 'react-router-dom';
+import { Outlet, useOutlet, useOutletContext } from 'react-router-dom';
 
+import { LoaderSpinner } from 'src/components/ui';
+import useAxiosPrivate from 'src/hooks/useAxiosPrivate';
+import useErrorHandler from 'src/hooks/useErrorHandler';
 import useScreenWidth from 'src/hooks/useScreenWidth';
-import membersService from 'src/services/members';
-import notificationHelper from 'src/utils/notificationHelper';
 
 import MembersOverview from './MembersOverview';
-
-export const membersLoader = async (auth, params, loaderErrors) => {
-  if (!auth) {
-    return redirect('/');
-  }
-
-  try {
-    const membersData = await membersService.getMembers(params.spaceId);
-
-    return membersData;
-  } catch (error) {
-    const errorMessage = error.response.data.message;
-
-    const errorData = loaderErrors.find((err) => err.errorMessage === errorMessage);
-
-    if (errorData) {
-      if (errorData.showMessage)
-        notificationHelper.errorMsg(errorData.errorMessage);
-
-      return redirect(errorData.redirectTo);
-    }
-
-    return null;
-  }
-};
 
 const NoOptionSelected = () => (
   <div className="flex grow flex-col items-center justify-center rounded-lg bg-white font-medium shadow">
@@ -42,53 +16,70 @@ const NoOptionSelected = () => (
 );
 
 const MembersRoot = () => {
-  const { spaceData, updateSelectedSpaceRoot, errorHandler } = useOutletContext();
-  const outlet = useOutlet();
-  const isScreenSmall = useScreenWidth();
-  const membersData = useLoaderData();
+  const axiosPrivate = useAxiosPrivate();
+  const errorHandler = useErrorHandler();
+
+  const { spaceData, updateSpaceData } = useOutletContext();
+
+  const [loadingData, setLoadingData] = useState(true);
+  const [membersData, setMembersData] = useState([]);
+
+  const [uptMembersData, setUptMembersData] = useState(0);
+  const updateMembersData = () => setUptMembersData(Math.random());
+
+  const getSpaceMembers = async () => {
+    try {
+      const request = await axiosPrivate.get(
+        `/api/spaces/${spaceData.space_id}/members`,
+      );
+
+      setMembersData(request.data);
+      setLoadingData(false);
+    } catch (error) {
+      errorHandler(error);
+    }
+  };
 
   useEffect(() => {
-    updateSelectedSpaceRoot();
+    updateSpaceData();
   }, []);
+
+  useEffect(() => {
+    getSpaceMembers();
+  }, [uptMembersData]);
+
+  const outlet = useOutlet();
+  const isScreenSmall = useScreenWidth();
 
   const renderOutlet = () => {
     if (isScreenSmall) {
-      if (outlet) {
-        return (
-          <Outlet context={{
-            spaceData, membersData, updateSelectedSpaceRoot, errorHandler,
-          }}
-          />
-        );
-      }
+      if (outlet)
+        return <Outlet context={{ spaceData, membersData, updateMembersData }} />;
+
       return <MembersOverview membersData={membersData} spaceData={spaceData} />;
     }
 
-    if (outlet) {
-      return (
-        <Outlet context={{
-          spaceData, membersData, updateSelectedSpaceRoot, errorHandler,
-        }}
-        />
-      );
-    }
+    if (outlet)
+      return <Outlet context={{ spaceData, membersData, updateMembersData }} />;
 
     return <NoOptionSelected />;
   };
 
-  return (
-    <div className="flex grow flex-col">
-      <div className="flex grow bg-background sm:grid sm:grid-cols-2 sm:grid-rows-1 sm:gap-5">
-        <div className="hidden grow bg-background sm:flex">
-          <MembersOverview membersData={membersData} spaceData={spaceData} />
-        </div>
+  return loadingData
+    ? <LoaderSpinner isSmall />
+    : (
+      <div className="flex grow flex-col">
+        <div className="flex grow bg-background sm:grid sm:grid-cols-2 sm:grid-rows-1 sm:gap-5">
+          <div className="hidden grow bg-background sm:flex">
+            <MembersOverview membersData={membersData} spaceData={spaceData} />
+          </div>
 
-        <div className="flex grow bg-background">
-          {renderOutlet()}
+          <div className="flex grow bg-background">
+            {renderOutlet()}
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
 };
 
 export default MembersRoot;

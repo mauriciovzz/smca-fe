@@ -1,68 +1,64 @@
-import { React, useEffect } from 'react';
+import { React, useEffect, useState } from 'react';
 
-import {
-  Outlet, redirect, useLoaderData, useOutlet, useOutletContext,
-} from 'react-router-dom';
+import { Outlet, useOutlet, useOutletContext } from 'react-router-dom';
 
-import locationsService from 'src/services/locations';
-import notificationHelper from 'src/utils/notificationHelper';
+import { LoaderSpinner } from 'src/components/ui';
+import useAxiosPrivate from 'src/hooks/useAxiosPrivate';
+import useErrorHandler from 'src/hooks/useErrorHandler';
 
 import LocationsOverview from './LocationsOverview';
 
-export const locationsLoader = async (auth, params, loaderErrors) => {
-  if (!auth) {
-    return redirect('/');
-  }
-
-  try {
-    const locationsData = await locationsService.getAll(params.spaceId);
-
-    return locationsData;
-  } catch (error) {
-    const errorMessage = error.response.data.message;
-
-    const errorData = loaderErrors.find((err) => err.errorMessage === errorMessage);
-
-    if (errorData) {
-      if (errorData.showMessage)
-        notificationHelper.errorMsg(errorData.errorMessage);
-
-      return redirect(errorData.redirectTo);
-    }
-
-    return null;
-  }
-};
-
 const LocationsRoot = () => {
-  const { spaceData, updateSelectedSpaceRoot, errorHandler } = useOutletContext();
-  const outlet = useOutlet();
-  const locationsData = useLoaderData();
+  const axiosPrivate = useAxiosPrivate();
+  const errorHandler = useErrorHandler();
+
+  const { spaceData, updateSpaceData } = useOutletContext();
+
+  const [loadingData, setLoadingData] = useState(true);
+  const [locationsData, setLocationsData] = useState([]);
+
+  const [uptLocationsData, setUptLocationsData] = useState(0);
+  const updateLocationsData = () => setUptLocationsData(Math.random());
+
+  const getLocationsData = async () => {
+    try {
+      const request = await axiosPrivate.get(
+        `/api/spaces/${spaceData.space_id}/locations`,
+      );
+
+      setLocationsData(request.data);
+      setLoadingData(false);
+    } catch (error) {
+      errorHandler(error);
+    }
+  };
 
   useEffect(() => {
-    updateSelectedSpaceRoot();
+    updateSpaceData();
   }, []);
 
+  useEffect(() => {
+    getLocationsData();
+  }, [uptLocationsData]);
+
+  const outlet = useOutlet();
+
   const renderOutlet = () => {
-    if (outlet) {
-      return (
-        <Outlet context={{
-          spaceData, locationsData, updateSelectedSpaceRoot, errorHandler,
-        }}
-        />
-      );
-    }
+    if (outlet)
+      return <Outlet context={{ spaceData, locationsData, updateLocationsData }} />;
 
     return <LocationsOverview locationsData={locationsData} spaceData={spaceData} />;
   };
 
-  return (
-    <div className="flex grow flex-col">
-      <div className="flex grow bg-background">
-        {renderOutlet()}
+  return loadingData
+    ? <LoaderSpinner isSmall />
+    : (
+      <div className="flex grow flex-col">
+        <div className="flex grow bg-background">
+          {renderOutlet()}
+        </div>
       </div>
-    </div>
-  );
+    );
 };
 
 export default LocationsRoot;

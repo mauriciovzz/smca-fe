@@ -1,8 +1,6 @@
 import { React, useEffect, useState } from 'react';
 
-import {
-  useOutletContext, useParams, useNavigate, useLoaderData,
-} from 'react-router-dom';
+import { useOutletContext, useParams, useNavigate } from 'react-router-dom';
 
 import { checkCircleIcon, pasteIcon, uncheckCircleIcon } from 'src/assets';
 import {
@@ -11,9 +9,10 @@ import {
 import {
   Badge, Divider, Heading, Label,
 } from 'src/components/ui';
+import useAxiosPrivate from 'src/hooks/useAxiosPrivate';
+import useErrorHandler from 'src/hooks/useErrorHandler';
 import useScreenWidth from 'src/hooks/useScreenWidth';
 import VariableCreation from 'src/pages/SpaceVariables/VariableCreation';
-import componentsService from 'src/services/components';
 import notificationHelper from 'src/utils/notificationHelper';
 
 const DatasheetButton = ({ link }) => (
@@ -28,17 +27,20 @@ const DatasheetButton = ({ link }) => (
 );
 
 const ComponentManagement = () => {
-  const { componentId } = useParams();
-  const {
-    spaceData, componentsData, updateSelectedSpaceRoot, errorHandler,
-  } = useOutletContext();
-
-  const selectedComponent = componentsData
-    .find((c) => c.component_id === parseInt(componentId, 10));
-
-  const variablesData = useLoaderData();
+  const axiosPrivate = useAxiosPrivate();
+  const errorHandler = useErrorHandler();
   const isScreenSmall = useScreenWidth();
   const navigate = useNavigate();
+
+  const {
+    spaceData,
+    componentsData, updateComponentsData,
+    variablesData, updateVariablesData,
+  } = useOutletContext();
+
+  const { componentId } = useParams();
+  const selectedComponent = componentsData
+    .find((c) => c.component_id === parseInt(componentId, 10));
 
   const [isEditable, setIsEditable] = useState(false);
   const [isConDiaOpen, setIsConDiaOpen] = useState(false);
@@ -83,11 +85,16 @@ const ComponentManagement = () => {
 
   const arraysDiference = (array1, array2) => array1.filter((v) => !array2.includes(v));
 
+  const copyClipboard = async () => {
+    const text = await navigator.clipboard.readText();
+    setDatasheetLink(text);
+  };
+
   const handleUpdate = async (event) => {
     event.preventDefault();
 
     if (type === 'sensor' && variables.length === 0) {
-      notificationHelper.errorMsg('Selecionar al menos 1 variable.');
+      notificationHelper.error('Selecionar al menos 1 variable.');
     } else {
       try {
         const originalVariables = selectedComponent.variables.map((v) => v.variable_id);
@@ -101,9 +108,8 @@ const ComponentManagement = () => {
         const variablesToRemove = arraysDiference(originalVariables, updatedVariables);
         variablesToRemove.forEach((variableId) => variablesToUpdate.push({ variableId, action: 'remove' }));
 
-        const response = await componentsService.update(
-          spaceData.space_id,
-          selectedComponent.component_id,
+        const response = await axiosPrivate.put(
+          `/api/spaces/${spaceData.space_id}/components/${selectedComponent.component_id}`,
           {
             name,
             datasheetLink,
@@ -111,44 +117,34 @@ const ComponentManagement = () => {
           },
         );
 
-        notificationHelper.success(response);
+        notificationHelper.success(response.data);
 
-        updateSelectedSpaceRoot();
+        updateComponentsData();
         setIsEditable(!isEditable);
       } catch (error) {
-        const goTo = errorHandler(error, updateSelectedSpaceRoot);
-
-        if (goTo)
-          navigate(goTo);
-
-        if (error.response.data.message === 'Una de las variables agregadas no se encuentra registrada.')
+        if (error?.response?.data?.message === 'NewComponentVariableDoesNotExist') {
+          notificationHelper.error('Una de las variables agregadas no se encuentra registrada.');
+          updateVariablesData();
           setVariables(selectedComponent.variables);
+        } else {
+          errorHandler(error, updateComponentsData);
+        }
       }
     }
   };
 
   const handleRemove = async () => {
     try {
-      const response = await componentsService.remove(
-        spaceData.space_id,
-        selectedComponent.component_id,
+      const response = await axiosPrivate.delete(
+        `/api/spaces/${spaceData.space_id}/components/${selectedComponent.component_id}`,
       );
 
       notificationHelper.success(response);
-
-      updateSelectedSpaceRoot();
+      updateComponentsData();
       navigate('..');
     } catch (error) {
-      const goTo = errorHandler(error, updateSelectedSpaceRoot);
-
-      if (goTo)
-        navigate(goTo);
+      errorHandler(error, updateComponentsData);
     }
-  };
-
-  const copyClipboard = async () => {
-    const text = await navigator.clipboard.readText();
-    setDatasheetLink(text);
   };
 
   return (
@@ -362,13 +358,11 @@ const ComponentManagement = () => {
         )
       }
 
-      {
-        isVarCreOpen && (
-          <div className="absolute left-0 top-0 size-full">
-            <VariableCreation onClose={() => setIsVarCreOpen(false)} />
-          </div>
-        )
-       }
+      {isVarCreOpen && (
+        <div className="absolute left-0 top-0 size-full">
+          <VariableCreation onClose={() => setIsVarCreOpen(false)} />
+        </div>
+      )}
     </div>
   );
 };

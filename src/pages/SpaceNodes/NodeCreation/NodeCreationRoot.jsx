@@ -1,53 +1,70 @@
 import { React, useState } from 'react';
 
-import {
-  useNavigate, useLoaderData, redirect, useOutletContext,
-} from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 
+import { successIcon } from 'src/assets';
+import { Button } from 'src/components/inputs';
 import { Divider, Heading } from 'src/components/ui';
+import useAxiosPrivate from 'src/hooks/useAxiosPrivate';
+import useErrorHandler from 'src/hooks/useErrorHandler';
 import useScreenWidth from 'src/hooks/useScreenWidth';
 import {
-  EnterNodeInformation, EnterNodeComponents, EnterNodeLocation,
-  NewNodeOverview, NewNodeCreationSuccess,
+  EnterNodeInformation, EnterNodeComponents, EnterNodeLocation, NewNodeOverview,
 } from 'src/pages/SpaceNodes/NodeCreation';
-import componentsService from 'src/services/components';
-import locationsService from 'src/services/locations';
-import nodesService from 'src/services/nodes';
-import variablesService from 'src/services/variables';
 import notificationHelper from 'src/utils/notificationHelper';
 
-export const nodeCreationLoader = async (auth, params, loaderErrors) => {
-  if (!auth) {
-    return redirect('/');
-  }
+const NodeCreationSuccessMessage = ({ onClose }) => (
+  <div className="flex grow flex-col bg-white">
+    <div className="flex grow flex-col">
+      <div className="flex flex-col items-center justify-center gap-[5px] border-b py-2.5">
+        <img
+          src={successIcon}
+          alt="success icon"
+          className="size-[30px]"
+        />
+        <div className="text-center font-bold">
+          Nodo Creado Exitosamente
+        </div>
+      </div>
 
-  try {
-    const spaceComponentsData = await componentsService.getAll(params.spaceId);
-    const spaceVariablesData = await variablesService.getAll(params.spaceId);
-    const spaceLocationsData = await locationsService.getAll(params.spaceId);
+      <p className="border-b py-2.5 text-justify text-sm text-gray-500">
+        {`
+          El nodo se encuentra actualmente en estado 'Inactivo'.
+          Cuando el mismo esté funcionando en la ubicación indicada,
+          cambia su estado a 'Activo' en la sección 'Modificar'.
+        `}
+      </p>
 
-    return { spaceComponentsData, spaceVariablesData, spaceLocationsData };
-  } catch (error) {
-    const errorMessage = error.response.data.message;
+      <p className="py-2.5 text-justify text-sm text-gray-500">
+        {`
+          Para acceder a la información necesaria para la codificacion del nodo,
+          dirígete al apartado 'Descargar Configuración', en la sección 'Modificar' .
+        `}
+      </p>
+    </div>
 
-    const errorData = loaderErrors.find((err) => err.errorMessage === errorMessage);
+    <Button
+      text="Regresar"
+      isTypeButton
+      onClick={() => onClose()}
+      color="blue"
+    />
+  </div>
+);
 
-    if (errorData) {
-      if (errorData.showMessage)
-        notificationHelper.errorMsg(errorData.errorMessage);
-
-      return redirect(errorData.redirectTo);
-    }
-
-    return null;
-  }
-};
-
-const NodeCreation = () => {
-  const { spaceData, updateSelectedSpaceRoot, errorHandler } = useOutletContext();
-  const { spaceComponentsData, spaceVariablesData, spaceLocationsData } = useLoaderData();
+const NodeCreationRoot = () => {
+  const axiosPrivate = useAxiosPrivate();
+  const errorHandler = useErrorHandler();
   const isScreenSmall = useScreenWidth();
   const navigate = useNavigate();
+
+  const {
+    spaceData,
+    locationsData, updateLocationsData,
+    componentsData, updateComponentsData,
+    variablesData, updateVariablesData,
+    updateNodesData,
+  } = useOutletContext();
 
   const [view, setView] = useState(null);
   const [nodeCreated, setNodeCreated] = useState(false);
@@ -101,7 +118,7 @@ const NodeCreation = () => {
     );
 
     if (position !== -1) {
-      const variableInfo = spaceVariablesData
+      const variableInfo = variablesData
         .find((vd) => vd.variable_id === currentValue.variable_id);
 
       accumulator[position].variables.push({
@@ -109,7 +126,7 @@ const NodeCreation = () => {
         name: variableInfo.name,
       });
     } else {
-      const componentInfo = spaceComponentsData
+      const componentInfo = componentsData
         .find((cd) => cd.component_id === currentValue.component_id);
 
       const newEntry = {
@@ -120,7 +137,7 @@ const NodeCreation = () => {
       };
 
       if (currentValue.variable_id) {
-        const variableInfo = spaceVariablesData
+        const variableInfo = variablesData
           .find((vd) => vd.variable_id === currentValue.variable_id);
 
         newEntry.variables.push({
@@ -142,7 +159,7 @@ const NodeCreation = () => {
     if (position !== -1) {
       accumulator[position].variables.push(currentValue.variable_id);
     } else {
-      const componentInfo = spaceComponentsData
+      const componentInfo = componentsData
         .find((cd) => cd.component_id === currentValue.component_id);
 
       const newEntry = {
@@ -164,10 +181,10 @@ const NodeCreation = () => {
 
     // check name
     if (!name || !name.trim())
-      return notificationHelper.errorMsg('El nodo necesita un nombre.');
+      return notificationHelper.error('El nodo necesita un nombre.');
 
     if (name.length > 15)
-      return notificationHelper.errorMsg('El nombre del nodo puede tener maximo 15 caracteres.');
+      return notificationHelper.error('El nombre del nodo puede tener maximo 15 caracteres.');
 
     // check components min / max values
     const componentsCount = nodeComponents.reduce(
@@ -183,16 +200,16 @@ const NodeCreation = () => {
     );
 
     if (componentsCount.board === 0)
-      return notificationHelper.errorMsg('El nodo necesita por lo menos una placa.');
+      return notificationHelper.error('El nodo necesita por lo menos una placa.');
 
     if (componentsCount.sensor + componentsCount.camera + componentsCount.rain_detector === 0)
-      return notificationHelper.errorMsg('El nodo necesita por lo menos un componente que realice algún tipo de lectura (sensor, detector de lluvia o cámara).');
+      return notificationHelper.error('El nodo necesita por lo menos un componente que realice algún tipo de lectura (sensor, detector de lluvia o cámara).');
 
     if (componentsCount.rain_detector > 1)
-      return notificationHelper.errorMsg('El nodo solo puede poseer un detector de lluvia.');
+      return notificationHelper.error('El nodo solo puede poseer un detector de lluvia.');
 
     if (componentsCount.camera > 1)
-      return notificationHelper.errorMsg('El nodo solo puede poseer una camara.');
+      return notificationHelper.error('El nodo solo puede poseer una camara.');
 
     const nodeVariablesCount = nodeComponents.reduce(
       (accumulator, currentObj) => (currentObj.variables.length !== 0
@@ -203,14 +220,14 @@ const NodeCreation = () => {
     );
 
     if (nodeVariablesCount + componentsCount.rain_detector === 0)
-      return notificationHelper.errorMsg('El nodo necesita por lo menos 1 variable.');
+      return notificationHelper.error('El nodo necesita por lo menos 1 variable.');
 
     if (nodeVariablesCount > 11)
-      return notificationHelper.errorMsg('El nodo solo puede poseer 11 variables.');
+      return notificationHelper.error('El nodo solo puede poseer 11 variables.');
 
     try {
-      await nodesService.create(
-        spaceData.space_id,
+      await axiosPrivate.post(
+        `/api/spaces/${spaceData.space_id}/nodes`,
         {
           name,
           isIndoor,
@@ -220,14 +237,31 @@ const NodeCreation = () => {
         },
       );
 
-      updateSelectedSpaceRoot();
+      updateNodesData();
       setNodeCreated(true);
-      setView('NewNodeCreationSuccess');
+      setView('NodeCreationSuccessMessage');
     } catch (error) {
-      const goTo = errorHandler(error, updateSelectedSpaceRoot);
+      const errorMessage = error?.response?.data?.message;
 
-      if (goTo)
-        navigate(goTo);
+      if (errorMessage === 'LocationDoesNotExist' || errorMessage === 'LocationInUse') {
+        notificationHelper.error(
+          (errorMessage === 'LocationDoesNotExist')
+            ? 'La ubicacion indicada no se encuentra registrada.'
+            : 'La ubicacion indicada se encuentra en uso.',
+        );
+        setLocation(null);
+        updateLocationsData();
+      } else if (errorMessage === 'VariableDoesNotExist') {
+        notificationHelper.error('Una de las variables no se encuentra registrada.');
+        setComponents([]);
+        updateVariablesData();
+      } else if (errorMessage === 'ComponentDoesNotExist') {
+        notificationHelper.error('Uno de los componente no se encuentra registrado.');
+        setComponents([]);
+        updateComponentsData();
+      } else {
+        errorHandler(error);
+      }
     }
 
     return null;
@@ -235,9 +269,9 @@ const NodeCreation = () => {
 
   const renderView = () => {
     switch (view) {
-      case 'NewNodeCreationSuccess':
+      case 'NodeCreationSuccessMessage':
         return (
-          <NewNodeCreationSuccess
+          <NodeCreationSuccessMessage
             onClose={() => navigate('..')}
           />
         );
@@ -247,7 +281,7 @@ const NodeCreation = () => {
             name={name}
             readingInterval={readingInterval}
             isIndoor={isIndoor}
-            location={spaceLocationsData.find((l) => l.location_id === location)}
+            location={locationsData.find((l) => l.location_id === location)}
             components={components.reduce(componentsOverviewReducer, [])}
             handleNodeCreation={() => handleNodeCreation()}
             previousPage={() => setView('LocationSelection')}
@@ -258,7 +292,7 @@ const NodeCreation = () => {
       case 'LocationSelection':
         return (
           <EnterNodeLocation
-            spaceLocationsData={spaceLocationsData.filter((loc) => !loc.is_taken)}
+            spaceLocationsData={locationsData.filter((loc) => !loc.is_taken)}
             spaceData={spaceData}
             selectedLocation={location}
             selectLocation={handleLocationSelection}
@@ -270,9 +304,7 @@ const NodeCreation = () => {
         return (
           <EnterNodeComponents
             text="Selecionar Otros"
-            color="bg-main"
-            spaceComponentsData={spaceComponentsData.filter((c) => c.type === 'other')}
-            spaceVariablesData={spaceVariablesData}
+            spaceComponentsData={componentsData.filter((c) => c.type === 'other')}
             selectedComponents={components}
             selectComponent={(selection) => handleComponentSelection(selection)}
             previousPage={() => setView('CameraSelection')}
@@ -283,9 +315,7 @@ const NodeCreation = () => {
         return (
           <EnterNodeComponents
             text="Selecionar Camara"
-            color="bg-main"
-            spaceComponentsData={spaceComponentsData.filter((c) => c.type === 'camera')}
-            spaceVariablesData={spaceVariablesData}
+            spaceComponentsData={componentsData.filter((c) => c.type === 'camera')}
             selectedComponents={components}
             selectComponent={(selection) => handleComponentSelection(selection)}
             previousPage={() => setView('RainDetectorSelection')}
@@ -296,9 +326,7 @@ const NodeCreation = () => {
         return (
           <EnterNodeComponents
             text="Selecionar Detector de Lluvia"
-            color="bg-main"
-            spaceComponentsData={spaceComponentsData.filter((c) => c.type === 'rain_detector')}
-            spaceVariablesData={spaceVariablesData}
+            spaceComponentsData={componentsData.filter((c) => c.type === 'rain_detector')}
             selectedComponents={components}
             selectComponent={(selection) => handleComponentSelection(selection)}
             previousPage={() => setView('SensorSelection')}
@@ -309,9 +337,7 @@ const NodeCreation = () => {
         return (
           <EnterNodeComponents
             text="Selecionar Sensores"
-            color="bg-main"
-            spaceComponentsData={spaceComponentsData.filter((c) => c.type === 'sensor')}
-            spaceVariablesData={spaceVariablesData}
+            spaceComponentsData={componentsData.filter((c) => c.type === 'sensor')}
             selectedComponents={components}
             selectComponent={(selection) => handleComponentSelection(selection)}
             isSensorSelector
@@ -323,9 +349,7 @@ const NodeCreation = () => {
         return (
           <EnterNodeComponents
             text="Selecionar Placas"
-            color="bg-main"
-            spaceComponentsData={spaceComponentsData.filter((c) => c.type === 'board')}
-            spaceVariablesData={spaceVariablesData}
+            spaceComponentsData={componentsData.filter((c) => c.type === 'board')}
             selectedComponents={components}
             selectComponent={(selection) => handleComponentSelection(selection)}
             previousPage={() => setView(null)}
@@ -365,7 +389,7 @@ const NodeCreation = () => {
           name={name}
           readingInterval={readingInterval}
           isIndoor={isIndoor}
-          location={spaceLocationsData.find((l) => l.location_id === location)}
+          location={locationsData.find((l) => l.location_id === location)}
           components={components.reduce(componentsOverviewReducer, [])}
           handleNodeCreation={() => handleNodeCreation()}
           isScreenSmall={isScreenSmall}
@@ -376,4 +400,4 @@ const NodeCreation = () => {
   );
 };
 
-export default NodeCreation;
+export default NodeCreationRoot;

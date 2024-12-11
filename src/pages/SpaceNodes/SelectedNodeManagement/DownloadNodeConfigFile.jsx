@@ -5,27 +5,35 @@ import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import { Button } from 'src/components/inputs';
 import { Divider, Heading } from 'src/components/ui';
-import nodesService from 'src/services/nodes';
+import useAxiosPrivate from 'src/hooks/useAxiosPrivate';
+import useErrorHandler from 'src/hooks/useErrorHandler';
 
 const DownloadNodeConfigFile = () => {
-  const { spaceData, selectedNode, errorHandler } = useOutletContext();
+  const axiosPrivate = useAxiosPrivate();
+  const errorHandler = useErrorHandler();
+
   const navigate = useNavigate();
+
+  const { spaceData, selectedNode } = useOutletContext();
 
   const RequestNodeCodeInfo = async () => {
     try {
-      const response = await nodesService.getConfigFile(
-        spaceData.space_id,
-        selectedNode.node_id,
+      const response = await axiosPrivate.get(
+        `/api/spaces/${spaceData.space_id}/nodes/${selectedNode.node_id}/config-file`,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          responseType: 'arraybuffer',
+        },
       );
+
       const filename = response.headers['content-disposition'].split('filename=')[1].replace(/['"]+/g, '');
 
       const blob = new Blob([response.data], { type: 'text/x-c' });
       saveAs(blob, filename);
     } catch (error) {
-      const goTo = errorHandler(error);
-
-      if (goTo)
-        navigate(goTo);
+      errorHandler(error);
     }
   };
 

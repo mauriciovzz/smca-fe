@@ -1,38 +1,14 @@
-import { React } from 'react';
+import { React, useEffect, useState } from 'react';
 
-import {
-  Outlet, useOutletContext, redirect, useLoaderData, useOutlet, useRevalidator,
-} from 'react-router-dom';
+import { Outlet, useOutlet, useNavigate } from 'react-router-dom';
 
+import { LoaderSpinner } from 'src/components/ui';
+import useAuth from 'src/hooks/useAuth';
+import useAxiosPrivate from 'src/hooks/useAxiosPrivate';
+import useErrorHandler from 'src/hooks/useErrorHandler';
 import useScreenWidth from 'src/hooks/useScreenWidth';
-import accountsService from 'src/services/accounts';
-import notificationHelper from 'src/utils/notificationHelper';
 
 import AccountOverview from './AccountOverview';
-
-export const accountInfoLoader = async (auth, loaderErrors) => {
-  if (!auth) {
-    return redirect('/');
-  }
-
-  try {
-    const accountData = await accountsService.get(auth.accountId);
-    return accountData;
-  } catch (error) {
-    const errorMessage = error.response.data.message;
-
-    const errorData = loaderErrors.find((err) => err.errorMessage === errorMessage);
-
-    if (errorData) {
-      if (errorData.showMessage)
-        notificationHelper.errorMsg(errorData.errorMessage);
-
-      return redirect(errorData.redirectTo);
-    }
-
-    return null;
-  }
-};
 
 const NoOptionSelected = () => (
   <div className="flex grow flex-col items-center justify-center rounded-lg bg-white font-medium shadow">
@@ -41,39 +17,65 @@ const NoOptionSelected = () => (
 );
 
 const AccountRoot = () => {
-  const { errorHandler } = useOutletContext();
-  const outlet = useOutlet();
-  const isScreenSmall = useScreenWidth();
-  const revalidator = useRevalidator();
-  const accountData = useLoaderData();
+  const axiosPrivate = useAxiosPrivate();
+  const errorHandler = useErrorHandler();
+  const { auth } = useAuth();
+  const navigate = useNavigate();
 
-  const updateAccountRoot = () => revalidator.revalidate();
+  const [loadingData, setLoadingData] = useState(true);
+  const [accountData, setAccountData] = useState({});
+
+  const getAccountData = async () => {
+    try {
+      const response = await axiosPrivate.get(
+        `/api/accounts/${auth.accountId}`,
+      );
+
+      setAccountData(response.data);
+      setLoadingData(false);
+    } catch (error) {
+      errorHandler(error);
+    }
+  };
+
+  useEffect(() => {
+    if (!auth?.accessToken) {
+      navigate('/');
+    } else {
+      getAccountData();
+    }
+  }, []);
+
+  const isScreenSmall = useScreenWidth();
+  const outlet = useOutlet();
 
   const renderOutlet = () => {
     if (isScreenSmall) {
       if (outlet)
-        return <Outlet context={{ accountData, updateAccountRoot, errorHandler }} />;
+        return <Outlet context={{ accountData, getAccountData }} />;
 
       return <AccountOverview accountData={accountData} />;
     }
 
     if (outlet)
-      return <Outlet context={{ accountData, updateAccountRoot, errorHandler }} />;
+      return <Outlet context={{ accountData, getAccountData }} />;
 
     return <NoOptionSelected />;
   };
 
-  return (
-    <div className="flex grow bg-background px-5 pb-5 sm:grid sm:grid-cols-2 sm:grid-rows-1 sm:gap-5">
-      <div className="hidden grow bg-background sm:flex">
-        <AccountOverview accountData={accountData} />
-      </div>
+  return loadingData
+    ? <LoaderSpinner />
+    : (
+      <div className="flex grow bg-background px-5 pb-5 sm:grid sm:grid-cols-2 sm:grid-rows-1 sm:gap-5">
+        <div className="hidden grow bg-background sm:flex">
+          <AccountOverview accountData={accountData} />
+        </div>
 
-      <div className="flex grow bg-background">
-        {renderOutlet()}
+        <div className="flex grow bg-background">
+          {renderOutlet()}
+        </div>
       </div>
-    </div>
-  );
+    );
 };
 
 export default AccountRoot;

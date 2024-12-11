@@ -6,16 +6,20 @@ import {
   Button, ConfirmationDialog, ColorInput, TextInput,
 } from 'src/components/inputs';
 import { Divider, Heading } from 'src/components/ui';
-import variablesService from 'src/services/variables';
+import useAxiosPrivate from 'src/hooks/useAxiosPrivate';
+import useErrorHandler from 'src/hooks/useErrorHandler';
 import notificationHelper from 'src/utils/notificationHelper';
 
 const VariableManagement = () => {
-  const { variableId } = useParams();
-  const {
-    spaceData, variablesData, updateSelectedSpaceRoot, errorHandler,
-  } = useOutletContext();
-  const selectedVariable = variablesData.find((v) => v.variable_id === parseInt(variableId, 10));
+  const axiosPrivate = useAxiosPrivate();
+  const errorHandler = useErrorHandler();
   const navigate = useNavigate();
+
+  const { spaceData, variablesData, updateVariablesData } = useOutletContext();
+
+  const { variableId } = useParams();
+  const selectedVariable = variablesData
+    .find((v) => v.variable_id === parseInt(variableId, 10));
 
   const [isEditable, setIsEditable] = useState(false);
   const [isConDiaOpen, setIsConDiaOpen] = useState(false);
@@ -41,9 +45,8 @@ const VariableManagement = () => {
     event.preventDefault();
 
     try {
-      const response = await variablesService.update(
-        spaceData.space_id,
-        selectedVariable.variable_id,
+      const response = await axiosPrivate.put(
+        `/api/spaces/${spaceData.space_id}/variables/${selectedVariable.variable_id}`,
         {
           name,
           unit: (selectedVariable.value_type === 'numerical') ? unit : null,
@@ -51,34 +54,27 @@ const VariableManagement = () => {
         },
       );
 
-      notificationHelper.success(response);
+      notificationHelper.success(response.data);
 
-      updateSelectedSpaceRoot();
+      updateVariablesData();
       setIsEditable(!isEditable);
     } catch (error) {
-      const goTo = errorHandler(error, updateSelectedSpaceRoot);
-
-      if (goTo)
-        navigate(goTo);
+      errorHandler(error, updateVariablesData);
     }
   };
 
   const handleRemove = async () => {
     try {
-      const response = await variablesService.remove(
-        spaceData.space_id,
-        selectedVariable.variable_id,
+      const response = await axiosPrivate.delete(
+        `/api/spaces/${spaceData.space_id}/variables/${selectedVariable.variable_id}`,
       );
 
       notificationHelper.success(response);
 
-      updateSelectedSpaceRoot();
+      updateVariablesData();
       navigate('..');
     } catch (error) {
-      const goTo = errorHandler(error, updateSelectedSpaceRoot);
-
-      if (goTo)
-        navigate(goTo);
+      errorHandler(error, updateVariablesData);
     }
   };
 

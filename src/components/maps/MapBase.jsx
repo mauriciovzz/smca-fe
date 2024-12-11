@@ -79,14 +79,25 @@ const PrivateMarker = (color) => (
 
 function createMarker(marker, markersType, markerColor) {
   const MarkerConfig = () => {
-    const color = markerColor || '#0284c7';
+    const color = () => {
+      if (markerColor)
+        return markerColor;
+
+      if (markersType === 'node' && marker.is_visible)
+        return '#0284c7';
+
+      if (markersType === 'node' && marker.color)
+        return marker.color;
+
+      return '#0284c7';
+    };
 
     switch (markersType) {
       case 'location':
-        return (marker.is_visible) ? PublicMarker(color) : PrivateMarker(color);
+        return (marker.is_visible) ? PublicMarker(color()) : PrivateMarker(color());
       case 'node':
-        return (marker.is_indoor) ? IndoorMarker(color) : OutdoorMarker(color);
-      default: return RegularMarker(color);
+        return (marker.is_indoor) ? IndoorMarker(color()) : OutdoorMarker(color());
+      default: return RegularMarker(color());
     }
   };
 
@@ -129,9 +140,18 @@ const getPos = (coordinate, type) => {
 
 const RecenterAutomatically = ({ recenter }) => {
   const map = useMap();
+
   if (recenter) {
     map.setView(mapCenter, mapZoom);
   }
+  return null;
+};
+
+const Recenter = ({ position }) => {
+  const map = useMap();
+
+  map.setView(position, 18);
+
   return null;
 };
 
@@ -231,10 +251,13 @@ const MapBase = ({
         );
       case 'oneToShow':
         return (
-          <Marker
-            icon={createMarker(null, null, markerColor)}
-            position={[coordinates.lat, coordinates.long]}
-          />
+          <>
+            <Marker
+              icon={createMarker(null, null, markerColor)}
+              position={[coordinates.lat, coordinates.long]}
+            />
+            <Recenter position={[coordinates.lat, coordinates.long]} />
+          </>
         );
       default:
         return (null);

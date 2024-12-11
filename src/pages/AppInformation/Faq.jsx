@@ -1,9 +1,9 @@
 import React from 'react';
 
-const Information = () => (
+const Faq = () => (
   <div className="z-20 flex grow space-y-5 px-5 pb-5 sm:items-center sm:justify-center">
-    Information
+    Faq Page
   </div>
 );
 
-export default Information;
+export default Faq;

@@ -4,31 +4,33 @@ import { useOutletContext, useNavigate } from 'react-router-dom';
 
 import { Button, TextInput } from 'src/components/inputs';
 import { Divider, Heading } from 'src/components/ui';
-import accountsService from 'src/services/accounts';
+import useAuth from 'src/hooks/useAuth';
+import useAxiosPrivate from 'src/hooks/useAxiosPrivate';
+import useErrorHandler from 'src/hooks/useErrorHandler';
 import notificationHelper from 'src/utils/notificationHelper';
 
-import useAuth from '../../hooks/useAuth';
-
 const UpdateAccountName = () => {
+  const axiosPrivate = useAxiosPrivate();
+  const errorHandler = useErrorHandler();
   const { auth } = useAuth();
-  const { accountData, updateAccountRoot, errorHandler } = useOutletContext();
+  const navigate = useNavigate();
+
+  const { accountData, getAccountData } = useOutletContext();
 
   const [firstName, setFirstName] = useState(accountData.firstName);
   const [lastName, setLastName] = useState(accountData.lastName);
-
-  const navigate = useNavigate();
 
   const HandleUpdateNameSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      const response = await accountsService.updateName(
-        auth?.accountId,
+      const response = await axiosPrivate.put(
+        `/api/accounts/${auth.accountId}/update-name`,
         { firstName, lastName },
       );
 
-      notificationHelper.success(response);
-      updateAccountRoot();
+      notificationHelper.success(response.data);
+      getAccountData();
     } catch (error) {
       errorHandler(error);
     }

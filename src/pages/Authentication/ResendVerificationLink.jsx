@@ -2,31 +2,35 @@ import { React, useState } from 'react';
 
 import { useLocation } from 'react-router-dom';
 
+import axios from 'src/api/axios';
 import { mailIcon } from 'src/assets';
 import { Button, TextInput } from 'src/components/inputs';
 import { MapBackground } from 'src/components/maps';
 import { EmailSent } from 'src/components/messages';
 import { Divider } from 'src/components/ui';
-import accountService from 'src/services/accounts';
 import notificationHelper from 'src/utils/notificationHelper';
 
 const ResendVerificationLink = () => {
   const { state } = useLocation();
 
   const [email, setEmail] = useState(state?.email ? state.email : null);
+
   const [requestMade, setRequestMade] = useState(false);
-  const [requestResponse, setRequestResponse] = useState(null);
+  const [requestResponse, setRequestResponse] = useState({});
 
   const handleResendVerificationLink = async (event) => {
     event.preventDefault();
 
     try {
-      const response = await accountService.resendVerificationLink({ email });
+      const response = await axios.post(
+        '/api/accounts/resend-account-verification-email',
+        { email },
+      );
 
       setRequestResponse(response);
       setRequestMade(true);
     } catch (error) {
-      notificationHelper.error(error);
+      notificationHelper.error(error.response.data.message);
     }
   };
 

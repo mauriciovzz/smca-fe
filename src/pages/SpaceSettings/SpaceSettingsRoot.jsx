@@ -15,24 +15,25 @@ const NoOptionSelected = () => (
 );
 
 const SpaceSettingsRoot = () => {
-  const { spaceData, updateSelectedSpaceRoot, errorHandler } = useOutletContext();
-  const outlet = useOutlet();
+  const { spaceData, updateSpaceData } = useOutletContext();
+
   const isScreenSmall = useScreenWidth();
+  const outlet = useOutlet();
 
   useEffect(() => {
-    updateSelectedSpaceRoot();
+    updateSpaceData();
   }, []);
 
   const renderOutlet = () => {
     if (isScreenSmall) {
       if (outlet) {
-        return <Outlet context={{ spaceData, updateSelectedSpaceRoot, errorHandler }} />;
+        return <Outlet context={{ spaceData, updateSpaceData }} />;
       }
       return <SpaceSettingsOverview spaceData={spaceData} />;
     }
 
     if (outlet) {
-      return <Outlet context={{ spaceData, updateSelectedSpaceRoot, errorHandler }} />;
+      return <Outlet context={{ spaceData, updateSpaceData }} />;
     }
 
     return <NoOptionSelected />;

@@ -9,7 +9,7 @@ const NotFound = () => {
   return (
     <div className="relative flex h-screen w-full flex-col justify-between bg-background">
       <div className="z-20 flex grow space-y-5 px-5 pb-5 sm:items-center sm:justify-center">
-        <Link to="/">Not found</Link>
+        <Link to="/">Not found page</Link>
       </div>
     </div>
   );

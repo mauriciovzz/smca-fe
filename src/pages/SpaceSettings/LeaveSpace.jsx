@@ -5,22 +5,25 @@ import { useOutletContext, useNavigate } from 'react-router-dom';
 import { Button } from 'src/components/inputs';
 import { Divider, Heading } from 'src/components/ui';
 import useAuth from 'src/hooks/useAuth';
-import membersService from 'src/services/members';
+import useAxiosPrivate from 'src/hooks/useAxiosPrivate';
+import useErrorHandler from 'src/hooks/useErrorHandler';
 import notificationHelper from 'src/utils/notificationHelper';
 
 const LeaveSpace = () => {
+  const axiosPrivate = useAxiosPrivate();
+  const errorHandler = useErrorHandler();
   const { auth } = useAuth();
-  const { spaceData, errorHandler } = useOutletContext();
   const navigate = useNavigate();
+
+  const { spaceData } = useOutletContext();
 
   const handleLeaveSpace = async () => {
     try {
-      const response = await membersService.leaveSpace(
-        spaceData.space_id,
-        auth.accountId,
+      const response = await axiosPrivate.delete(
+        `/api/spaces/${spaceData.space_id}/members/${auth.accountId}/leave`,
       );
 
-      notificationHelper.success(response);
+      notificationHelper.success(response.data);
       navigate('/espacios');
     } catch (error) {
       errorHandler(error);

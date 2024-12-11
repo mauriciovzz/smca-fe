@@ -1,39 +1,13 @@
-import { React, useEffect } from 'react';
+import { React, useEffect, useState } from 'react';
 
-import {
-  Outlet, redirect, useLoaderData, useOutlet, useOutletContext,
-} from 'react-router-dom';
+import { Outlet, useOutlet, useOutletContext } from 'react-router-dom';
 
+import { LoaderSpinner } from 'src/components/ui';
+import useAxiosPrivate from 'src/hooks/useAxiosPrivate';
+import useErrorHandler from 'src/hooks/useErrorHandler';
 import useScreenWidth from 'src/hooks/useScreenWidth';
-import variablesService from 'src/services/variables';
-import notificationHelper from 'src/utils/notificationHelper';
 
 import VariablesOverview from './VariablesOverview';
-
-export const variablesLoader = async (auth, params, loaderErrors) => {
-  if (!auth) {
-    return redirect('/');
-  }
-
-  try {
-    const variablesData = await variablesService.getAll(params.spaceId);
-
-    return variablesData;
-  } catch (error) {
-    const errorMessage = error.response.data.message;
-
-    const errorData = loaderErrors.find((err) => err.errorMessage === errorMessage);
-
-    if (errorData) {
-      if (errorData.showMessage)
-        notificationHelper.errorMsg(errorData.errorMessage);
-
-      return redirect(errorData.redirectTo);
-    }
-
-    return null;
-  }
-};
 
 const NoOptionSelected = () => (
   <div className="flex w-full flex-col items-center justify-center rounded-lg bg-white font-medium shadow">
@@ -43,53 +17,70 @@ const NoOptionSelected = () => (
 );
 
 const VariablesRoot = () => {
-  const { spaceData, updateSelectedSpaceRoot, errorHandler } = useOutletContext();
-  const outlet = useOutlet();
-  const isScreenSmall = useScreenWidth();
-  const variablesData = useLoaderData();
+  const axiosPrivate = useAxiosPrivate();
+  const errorHandler = useErrorHandler();
+
+  const { spaceData, updateSpaceData } = useOutletContext();
+
+  const [loadingData, setLoadingData] = useState(true);
+  const [variablesData, setVariablesData] = useState([]);
+
+  const [uptVariablesData, setUptVariablesData] = useState(0);
+  const updateVariablesData = () => setUptVariablesData(Math.random());
+
+  const getVariablesData = async () => {
+    try {
+      const request = await axiosPrivate.get(
+        `/api/spaces/${spaceData.space_id}/variables`,
+      );
+
+      setVariablesData(request.data);
+      setLoadingData(false);
+    } catch (error) {
+      errorHandler(error);
+    }
+  };
 
   useEffect(() => {
-    updateSelectedSpaceRoot();
+    updateSpaceData();
   }, []);
+
+  useEffect(() => {
+    getVariablesData();
+  }, [uptVariablesData]);
+
+  const outlet = useOutlet();
+  const isScreenSmall = useScreenWidth();
 
   const renderOutlet = () => {
     if (isScreenSmall) {
-      if (outlet) {
-        return (
-          <Outlet context={{
-            spaceData, variablesData, updateSelectedSpaceRoot, errorHandler,
-          }}
-          />
-        );
-      }
+      if (outlet)
+        return <Outlet context={{ spaceData, variablesData, updateVariablesData }} />;
+
       return <VariablesOverview variablesData={variablesData} spaceData={spaceData} />;
     }
 
-    if (outlet) {
-      return (
-        <Outlet context={{
-          spaceData, variablesData, updateSelectedSpaceRoot, errorHandler,
-        }}
-        />
-      );
-    }
+    if (outlet)
+      return <Outlet context={{ spaceData, variablesData, updateVariablesData }} />;
 
     return <NoOptionSelected />;
   };
 
-  return (
-    <div className="flex grow flex-col">
-      <div className="flex grow bg-background sm:grid sm:grid-cols-2 sm:grid-rows-1 sm:gap-5">
-        <div className="hidden grow bg-background sm:flex">
-          <VariablesOverview variablesData={variablesData} spaceData={spaceData} />
-        </div>
+  return loadingData
+    ? <LoaderSpinner isSmall />
+    : (
+      <div className="flex grow flex-col">
+        <div className="flex grow bg-background sm:grid sm:grid-cols-2 sm:grid-rows-1 sm:gap-5">
+          <div className="hidden grow bg-background sm:flex">
+            <VariablesOverview spaceData={spaceData} variablesData={variablesData} />
+          </div>
 
-        <div className="flex grow bg-background">
-          {renderOutlet()}
+          <div className="flex grow bg-background">
+            {renderOutlet()}
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
 };
 
 export default VariablesRoot;

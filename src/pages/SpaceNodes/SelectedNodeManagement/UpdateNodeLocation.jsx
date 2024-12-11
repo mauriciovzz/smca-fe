@@ -1,13 +1,13 @@
 import { React, useState } from 'react';
 
-import { useOutletContext, useNavigate, useLoaderData } from 'react-router-dom';
+import { useOutletContext, useNavigate } from 'react-router-dom';
 
 import { Button, AddNewItemButton, ToggleSwitch } from 'src/components/inputs';
 import { MarkersMap, MarkerLocationMap } from 'src/components/maps';
 import { Label, Divider, Heading } from 'src/components/ui';
+import useAxiosPrivate from 'src/hooks/useAxiosPrivate';
+import useErrorHandler from 'src/hooks/useErrorHandler';
 import LocationCreation from 'src/pages/SpaceLocations/LocationCreation';
-import locationsService from 'src/services/locations';
-import nodesService from 'src/services/nodes';
 import notificationHelper from 'src/utils/notificationHelper';
 
 const InfoItem = ({ text, value, width }) => (
@@ -18,12 +18,16 @@ const InfoItem = ({ text, value, width }) => (
 );
 
 const ChangeLocation = ({ setView }) => {
-  const {
-    spaceData, selectedNode, updateSelectedSpaceRoot, errorHandler,
-  } = useOutletContext();
-  const { spaceLocationsData } = useLoaderData();
-  const freeLocations = spaceLocationsData.filter((loc) => !loc.is_taken);
+  const axiosPrivate = useAxiosPrivate();
+  const errorHandler = useErrorHandler();
   const navigate = useNavigate();
+
+  const {
+    spaceData, selectedNode, updateNodesData, locationsData, updateLocationsData,
+  } = useOutletContext();
+
+  const freeLocations = locationsData
+    .filter((loc) => !loc.is_taken);
 
   const [isMapOpen, setIsMapOpen] = useState(false);
   const [isLocCreOpen, setIsLocCreOpen] = useState(false);
@@ -32,20 +36,17 @@ const ChangeLocation = ({ setView }) => {
 
   const handleLocationUpdate = async () => {
     try {
-      const response = await nodesService.updateLocation(
-        spaceData.space_id,
-        selectedNode.node_id,
+      const response = await axiosPrivate.put(
+        `/api/spaces/${spaceData.space_id}/nodes/${selectedNode.node_id}/location`,
         { location },
       );
 
-      notificationHelper.success(response);
-      updateSelectedSpaceRoot();
+      notificationHelper.success(response.data);
+      updateLocationsData();
+      updateNodesData();
       setView('CurrentLocation');
     } catch (error) {
-      const goTo = errorHandler(error, updateSelectedSpaceRoot);
-
-      if (goTo)
-        navigate(goTo);
+      errorHandler(error);
     }
   };
 
@@ -162,12 +163,13 @@ const ChangeLocation = ({ setView }) => {
 };
 
 const CurrentLocation = ({ setView }) => {
-  const {
-    spaceData, selectedNode, updateSelectedSpaceRoot, errorHandler,
-  } = useOutletContext();
+  const axiosPrivate = useAxiosPrivate();
+  const errorHandler = useErrorHandler();
   const navigate = useNavigate();
 
-  const [isVisible, setIsVisible] = useState(selectedNode.is_location_visible);
+  const {
+    spaceData, selectedNode, updateNodesData, updateLocationsData,
+  } = useOutletContext();
 
   const getDate = (dateString) => {
     const dateObject = new Date(dateString);
@@ -176,19 +178,15 @@ const CurrentLocation = ({ setView }) => {
 
   const handleVisibilityUpdate = async () => {
     try {
-      const response = await locationsService.updateVisibility(
-        spaceData.space_id,
-        selectedNode.location_id,
+      const response = await axiosPrivate.put(
+        `/api/spaces/${spaceData.space_id}/locations/${selectedNode.location_id}/visibility`,
       );
 
-      notificationHelper.success(response);
-      updateSelectedSpaceRoot();
-      setIsVisible(!isVisible);
+      notificationHelper.success(response.data);
+      updateNodesData();
+      updateLocationsData();
     } catch (error) {
-      const goTo = errorHandler(error, updateSelectedSpaceRoot);
-
-      if (goTo)
-        navigate(goTo);
+      errorHandler(error);
     }
   };
 
@@ -231,7 +229,7 @@ const CurrentLocation = ({ setView }) => {
 
                   <ToggleSwitch
                     labelText="Visibilidad"
-                    selectedOption={isVisible}
+                    selectedOption={selectedNode.is_location_visible}
                     leftOption={{
                       title: 'Público',
                       value: true,

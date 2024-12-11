@@ -6,31 +6,34 @@ import { arrowIcon } from 'src/assets';
 import { Button, TextAreaInput, TextInput } from 'src/components/inputs';
 import { CoordinatesSelectionMap } from 'src/components/maps';
 import { Divider, Heading } from 'src/components/ui';
+import useAxiosPrivate from 'src/hooks/useAxiosPrivate';
+import useErrorHandler from 'src/hooks/useErrorHandler';
 import useScreenWidth from 'src/hooks/useScreenWidth';
-import locationsService from 'src/services/locations';
 import notificationHelper from 'src/utils/notificationHelper';
 
 const mapCenter = ['8.322376', '-62.689662'];
 
 const LocationCreation = ({ onClose }) => {
-  const { spaceData, updateSelectedSpaceRoot, errorHandler } = useOutletContext();
+  const axiosPrivate = useAxiosPrivate();
+  const errorHandler = useErrorHandler();
   const isScreenSmall = onClose ? true : useScreenWidth();
   const navigate = useNavigate();
 
+  const { spaceData, updateLocationsData } = useOutletContext();
+
   const [isMapOpen, setIsMapOpen] = useState(false);
+  const [recenter, setRecenter] = useState(false);
 
   const [name, setName] = useState('');
   const [location, setLocation] = useState('');
   const [coordinates, setCoordenates] = useState({ lat: mapCenter[0], long: mapCenter[1] });
 
-  const [recenter, setRecenter] = useState(false);
-
   const handleLocationCreationSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      const response = await locationsService.create(
-        spaceData.space_id,
+      const response = await axiosPrivate.post(
+        `/api/spaces/${spaceData.space_id}/locations`,
         {
           lat: coordinates.lat,
           long: coordinates.long,
@@ -39,19 +42,16 @@ const LocationCreation = ({ onClose }) => {
         },
       );
 
-      notificationHelper.success(response);
+      notificationHelper.success(response.data);
 
       setCoordenates({ lat: mapCenter[0], long: mapCenter[1] });
       setRecenter(true);
       setName('');
       setLocation('');
 
-      updateSelectedSpaceRoot();
+      updateLocationsData();
     } catch (error) {
-      const goTo = errorHandler(error, updateSelectedSpaceRoot);
-
-      if (goTo)
-        navigate(goTo);
+      errorHandler(error);
     }
   };
 

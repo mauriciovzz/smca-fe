@@ -1,39 +1,13 @@
-import { React, useEffect } from 'react';
+import { React, useEffect, useState } from 'react';
 
-import {
-  Outlet, redirect, useLoaderData, useOutlet, useOutletContext,
-} from 'react-router-dom';
+import { Outlet, useOutlet, useOutletContext } from 'react-router-dom';
 
+import { LoaderSpinner } from 'src/components/ui';
+import useAxiosPrivate from 'src/hooks/useAxiosPrivate';
+import useErrorHandler from 'src/hooks/useErrorHandler';
 import useScreenWidth from 'src/hooks/useScreenWidth';
-import componentsService from 'src/services/components';
-import notificationHelper from 'src/utils/notificationHelper';
 
 import ComponentsOverview from './ComponentsOverview';
-
-export const componentsLoader = async (auth, params, loaderErrors) => {
-  if (!auth) {
-    return redirect('/');
-  }
-
-  try {
-    const componentsData = await componentsService.getAll(params.spaceId);
-
-    return componentsData;
-  } catch (error) {
-    const errorMessage = error.response.data.message;
-
-    const errorData = loaderErrors.find((err) => err.errorMessage === errorMessage);
-
-    if (errorData) {
-      if (errorData.showMessage)
-        notificationHelper.errorMsg(errorData.errorMessage);
-
-      return redirect(errorData.redirectTo);
-    }
-
-    return null;
-  }
-};
 
 const NoOptionSelected = () => (
   <div className="flex w-full flex-col items-center justify-center rounded-lg bg-white font-medium shadow">
@@ -43,53 +17,102 @@ const NoOptionSelected = () => (
 );
 
 const ComponentsRoot = () => {
-  const { spaceData, updateSelectedSpaceRoot, errorHandler } = useOutletContext();
-  const outlet = useOutlet();
-  const isScreenSmall = useScreenWidth();
-  const componentsData = useLoaderData();
+  const axiosPrivate = useAxiosPrivate();
+  const errorHandler = useErrorHandler();
+
+  const { spaceData, updateSpaceData } = useOutletContext();
+
+  const [loadingData, setLoadingData] = useState(true);
+  const [variablesData, setVariablesData] = useState([]);
+  const [componentsData, setComponentsData] = useState([]);
+
+  const [uptVariablesData, setUptVariablesData] = useState(0);
+  const updateVariablesData = () => setUptVariablesData(Math.random());
+
+  const getVariablesData = async () => {
+    try {
+      const request = await axiosPrivate.get(
+        `/api/spaces/${spaceData.space_id}/variables`,
+      );
+
+      setVariablesData(request.data);
+    } catch (error) {
+      errorHandler(error);
+    }
+  };
+
+  const [uptComponentsData, setUptComponentsData] = useState(0);
+  const updateComponentsData = () => setUptComponentsData(Math.random());
+
+  const getComponentsData = async () => {
+    try {
+      const request = await axiosPrivate.get(
+        `/api/spaces/${spaceData.space_id}/components`,
+      );
+
+      setComponentsData(request.data);
+      setLoadingData(false);
+    } catch (error) {
+      errorHandler(error);
+    }
+  };
 
   useEffect(() => {
-    updateSelectedSpaceRoot();
+    updateSpaceData();
   }, []);
+
+  useEffect(() => {
+    getComponentsData();
+  }, [uptComponentsData]);
+
+  useEffect(() => {
+    getVariablesData();
+  }, [uptVariablesData]);
+
+  const outlet = useOutlet();
+  const isScreenSmall = useScreenWidth();
 
   const renderOutlet = () => {
     if (isScreenSmall) {
-      if (outlet) {
+      if (outlet)
         return (
-          <Outlet context={{
-            spaceData, componentsData, updateSelectedSpaceRoot, errorHandler,
-          }}
+          <Outlet
+            context={{
+              spaceData, componentsData, updateComponentsData, variablesData, updateVariablesData,
+            }}
           />
         );
-      }
+
       return <ComponentsOverview componentsData={componentsData} spaceData={spaceData} />;
     }
 
-    if (outlet) {
+    if (outlet)
       return (
-        <Outlet context={{
-          spaceData, componentsData, updateSelectedSpaceRoot, errorHandler,
-        }}
+        <Outlet
+          context={{
+            spaceData, componentsData, updateComponentsData, variablesData, updateVariablesData,
+          }}
         />
       );
-    }
 
     return <NoOptionSelected />;
   };
 
-  return (
-    <div className="flex grow flex-col">
-      <div className="flex grow bg-background sm:grid sm:grid-cols-2 sm:grid-rows-1 sm:gap-5">
-        <div className="hidden grow bg-background sm:flex">
-          <ComponentsOverview componentsData={componentsData} spaceData={spaceData} />
-        </div>
+  return loadingData
+    ? <LoaderSpinner isSmall />
+    : (
+      <div className="flex grow flex-col">
+        <div className="flex grow bg-background sm:grid sm:grid-cols-2 sm:grid-rows-1 sm:gap-5">
+          <div className="hidden grow bg-background sm:flex">
+            <ComponentsOverview componentsData={componentsData} spaceData={spaceData} />
+          </div>
 
-        <div className="flex grow bg-background">
-          {renderOutlet()}
+          <div className="flex grow bg-background">
+            {renderOutlet()}
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
 };
 
 export default ComponentsRoot;

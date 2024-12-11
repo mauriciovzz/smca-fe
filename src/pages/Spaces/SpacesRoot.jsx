@@ -1,50 +1,53 @@
-import { React } from 'react';
+import { React, useEffect, useState } from 'react';
 
-import {
-  Outlet, useOutletContext, redirect, useLoaderData, useOutlet, useRevalidator,
-} from 'react-router-dom';
+import { Outlet, useOutlet, useNavigate } from 'react-router-dom';
 
+import { LoaderSpinner } from 'src/components/ui';
+import useAuth from 'src/hooks/useAuth';
+import useAxiosPrivate from 'src/hooks/useAxiosPrivate';
+import useErrorHandler from 'src/hooks/useErrorHandler';
 import useScreenWidth from 'src/hooks/useScreenWidth';
-import invitationsService from 'src/services/invitations';
-import spacesService from 'src/services/spaces';
-import notificationHelper from 'src/utils/notificationHelper';
 
 import SpacesOverview from './SpacesOverview';
 
-export const spacesLoader = async (auth, loaderErrors) => {
-  if (!auth) {
-    return redirect('/');
-  }
-
-  try {
-    const spacesData = await spacesService.getAll();
-    const invitationsData = await invitationsService.getInvitations(auth.accountId);
-
-    return { spacesData, invitationsData };
-  } catch (error) {
-    const errorMessage = error.response.data.message;
-
-    const errorData = loaderErrors.find((err) => err.errorMessage === errorMessage);
-
-    if (errorData) {
-      if (errorData.showMessage)
-        notificationHelper.errorMsg(errorData.errorMessage);
-
-      return redirect(errorData.redirectTo);
-    }
-
-    return null;
-  }
-};
-
 const SpacesRoot = () => {
-  const { errorHandler } = useOutletContext();
-  const outlet = useOutlet();
-  const isScreenSmall = useScreenWidth();
-  const revalidator = useRevalidator();
-  const { spacesData, invitationsData } = useLoaderData();
+  const axiosPrivate = useAxiosPrivate();
+  const errorHandler = useErrorHandler();
+  const { auth } = useAuth();
+  const navigate = useNavigate();
 
-  const updateSpaceRoot = () => revalidator.revalidate();
+  const [loadingData, setLoadingData] = useState(true);
+  const [spacesData, setSpacesData] = useState([]);
+  const [invitationsData, setInvitationsData] = useState([]);
+
+  const getSpacesData = async () => {
+    try {
+      const spacesResponse = await axiosPrivate.get(
+        '/api/spaces',
+      );
+
+      const invitationsResponse = await axiosPrivate.get(
+        `/api/invitations/${auth.accountId}`,
+      );
+
+      setSpacesData(spacesResponse.data);
+      setInvitationsData(invitationsResponse.data);
+      setLoadingData(false);
+    } catch (error) {
+      errorHandler(error);
+    }
+  };
+
+  useEffect(() => {
+    if (!auth?.accessToken) {
+      navigate('/');
+    } else {
+      getSpacesData();
+    }
+  }, []);
+
+  const isScreenSmall = useScreenWidth();
+  const outlet = useOutlet();
 
   const handleRenderOutlet = () => {
     if (isScreenSmall || outlet)
@@ -56,37 +59,29 @@ const SpacesRoot = () => {
   const renderOutlet = () => {
     if (isScreenSmall) {
       if (outlet)
-        return (
-          <Outlet context={{
-            spacesData, invitationsData, updateSpaceRoot, errorHandler,
-          }}
-          />
-        );
+        return <Outlet context={{ spacesData, invitationsData, getSpacesData }} />;
 
       return <SpacesOverview spacesData={spacesData} invitationsCount={invitationsData.length} />;
     }
     if (outlet)
-      return (
-        <Outlet context={{
-          spacesData, invitationsData, updateSpaceRoot, errorHandler,
-        }}
-        />
-      );
+      return <Outlet context={{ spacesData, invitationsData, getSpacesData }} />;
 
     return <SpacesOverview spacesData={spacesData} invitationsCount={invitationsData.length} />;
   };
 
-  return (
-    <div className="flex grow bg-background px-5 pb-5 sm:grid sm:grid-cols-4 sm:grid-rows-1 sm:gap-5">
-      <div className={`${outlet ? 'col-span-3' : 'col-span-4'} hidden grow bg-background sm:flex`}>
-        <SpacesOverview spacesData={spacesData} invitationsCount={invitationsData.length} />
-      </div>
+  return loadingData
+    ? <LoaderSpinner />
+    : (
+      <div className="flex grow bg-background px-5 pb-5 sm:grid sm:grid-cols-4 sm:grid-rows-1 sm:gap-5">
+        <div className={`${outlet ? 'col-span-3' : 'col-span-4'} hidden grow bg-background sm:flex`}>
+          <SpacesOverview spacesData={spacesData} invitationsCount={invitationsData.length} />
+        </div>
 
-      <div className={handleRenderOutlet()}>
-        {renderOutlet()}
+        <div className={handleRenderOutlet()}>
+          {renderOutlet()}
+        </div>
       </div>
-    </div>
-  );
+    );
 };
 
 export default SpacesRoot;
