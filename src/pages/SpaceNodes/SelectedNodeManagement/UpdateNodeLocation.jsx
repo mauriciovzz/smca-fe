@@ -3,7 +3,7 @@ import { React, useState } from 'react';
 import { useOutletContext, useNavigate } from 'react-router-dom';
 
 import { Button, AddNewItemButton, ToggleSwitch } from 'src/components/inputs';
-import { MarkersMap, MarkerLocationMap } from 'src/components/maps';
+import { MarkersMap, LocationMap } from 'src/components/maps';
 import { Label, Divider, Heading } from 'src/components/ui';
 import useAxiosPrivate from 'src/hooks/useAxiosPrivate';
 import useErrorHandler from 'src/hooks/useErrorHandler';
@@ -144,10 +144,10 @@ const ChangeLocation = ({ setView }) => {
         <div className="absolute left-0 top-0 size-full">
           <MarkersMap
             markers={freeLocations}
-            markersType="location"
             markerColor={spaceData.color}
-            onMarkerClick={(l) => selectMarker(l.location_id)}
+            markersType="location"
             isScreenSmall
+            onMarkerClick={(l) => selectMarker(l.location_id)}
             closeMarkersMap={() => setIsMapOpen(false)}
           />
         </div>
@@ -220,9 +220,10 @@ const CurrentLocation = ({ setView }) => {
                     <Divider changePadding="p-1.5" />
                   </div>
 
-                  <MarkerLocationMap
-                    coordinates={{ lat: selectedNode.lat, long: selectedNode.long }}
+                  <LocationMap
+                    marker={{ lat: selectedNode.lat, long: selectedNode.long }}
                     markerColor={spaceData.color}
+                    onlyMap
                   />
 
                   <Divider changePadding="p-1.5" />

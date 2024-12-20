@@ -5,6 +5,7 @@ import ColorInput from './ColorInput';
 import ComponentListItem from './ComponentListItem';
 import ComponentSelectionItem from './ComponentSelectionItem';
 import ConfirmationDialog from './ConfirmationDialog';
+import MapButton from './MapButton';
 import SelectionBar from './SelectionBar';
 import TextAreaInput from './TextAreaInput';
 import TextInput from './TextInput';
@@ -23,6 +24,7 @@ export {
   ColorInput,
   ComponentListItem,
   ConfirmationDialog,
+  MapButton,
   SelectionBar,
   ToggleNodeType,
   TextAreaInput,

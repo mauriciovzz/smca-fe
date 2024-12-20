@@ -81,10 +81,10 @@ const EnterNodeLocation = ({
         <div className="absolute left-0 top-0 size-full">
           <MarkersMap
             markers={spaceLocationsData}
-            markersType="location"
             markerColor={spaceData.color}
-            onMarkerClick={(loc) => selectMarker(loc.location_id)}
+            markersType="location"
             isScreenSmall
+            onMarkerClick={(loc) => selectMarker(loc.location_id)}
             closeMarkersMap={() => setIsMapOpen(false)}
           />
         </div>

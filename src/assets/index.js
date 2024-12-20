@@ -21,6 +21,7 @@ import loginIcon from 'src/assets/icons/loginIcon.svg';
 import logoutIcon from 'src/assets/icons/logoutIcon.svg';
 import mailIcon from 'src/assets/icons/mailIcon.svg';
 import mapIcon from 'src/assets/icons/mapIcon.svg';
+import mapWhiteIcon from 'src/assets/icons/mapWhiteIcon.svg';
 import menuIcon from 'src/assets/icons/menuIcon.svg';
 import nodeIcon from 'src/assets/icons/nodeIcon.svg';
 import outdoorIcon from 'src/assets/icons/outdoorIcon.svg';
@@ -36,6 +37,11 @@ import uncheckCircleIcon from 'src/assets/icons/uncheckCircleIcon.svg';
 import userIcon from 'src/assets/icons/userIcon.svg';
 import usersIcon from 'src/assets/icons/usersIcon.svg';
 import variableIcon from 'src/assets/icons/variableIcon.svg';
+import indoorMarker from 'src/assets/markers/indoorMarker';
+import outdoorMarker from 'src/assets/markers/outdoorMarker';
+import privateMarker from 'src/assets/markers/privateMarker';
+import publicMarker from 'src/assets/markers/publicMarker';
+import regularMarker from 'src/assets/markers/regularMarker';
 
 export {
   accountIcon,
@@ -50,6 +56,7 @@ export {
   checkCircleIcon,
   closeIcon,
   arrowIcon,
+  mapWhiteIcon,
   download,
   errorIcon,
   helpIcon,
@@ -76,4 +83,10 @@ export {
   userIcon,
   usersIcon,
   spaceIcon,
+
+  indoorMarker,
+  outdoorMarker,
+  privateMarker,
+  publicMarker,
+  regularMarker,
 };

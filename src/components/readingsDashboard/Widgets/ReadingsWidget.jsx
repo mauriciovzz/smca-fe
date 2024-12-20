@@ -11,7 +11,7 @@ const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sab'];
 const Divider = () => <div className="ml-2 border-l" />;
 
 const ReadingsWidget = ({
-  type, dayReadings, selectedDate, changeDate,
+  type, dateReadings, selectedDate, changeDate,
 }) => {
   const [selectedVariable, setSelectedVariable] = useState('Resumen');
 
@@ -29,15 +29,16 @@ const ReadingsWidget = ({
 
   const getReadingValue = (variableName, hour) => {
     const time = hour || selectedDate.getHours();
-    const inx = dayReadings.findIndex((v) => v.variable_name === variableName);
+    const inx = dateReadings.findIndex((v) => v.variable_name === variableName);
 
     return (inx !== -1)
-      ? dayReadings[inx].dayAverages.find((element) => (element.time === time)).value
+      ? dateReadings[inx].dayAverages.find((element) => (element.time === time)).value
       : null;
   };
 
   const getReadingTime = (date) => {
-    if (date === 'sunrise' || date === 'sunset') return '';
+    if (date === 'sunrise' || date === 'sunset')
+      return '';
 
     let hours = date;
     const ampm = (hours >= 12 && hours !== 24) ? 'PM' : 'AM';
@@ -48,18 +49,20 @@ const ReadingsWidget = ({
     return `${hours} ${ampm}`;
   };
 
-  const checkForRainSensor = () => dayReadings
-    .map((v) => v.variable_name)
-    .includes('lluvia');
+  const checkForRainSensor = () => dateReadings.map((v) => v.variable_name).includes('lluvia');
 
   const getWeatherIcon = (hour, data) => {
-    if (hour === 'sunrise') return 'wi wi-sunrise text-yellow-400';
-    if (hour === 'sunset') return 'wi wi-sunset text-orange-400';
-    if (data === null) return 'wi wi-na text-gray-400';
+    if (hour === 'sunrise')
+      return 'wi wi-sunrise text-yellow-400';
+    if (hour === 'sunset')
+      return 'wi wi-sunset text-orange-400';
+    if (data === null)
+      return 'wi wi-na text-gray-400';
 
     if (hour > 5 && hour < 18) {
       if (checkForRainSensor()) {
-        if (getReadingValue('lluvia', hour)) return 'wi wi-day-showers text-orange-700';
+        if (getReadingValue('lluvia', hour))
+          return 'wi wi-day-showers text-orange-700';
       }
       return 'wi wi-day-sunny text-yellow-400';
     }
@@ -67,7 +70,8 @@ const ReadingsWidget = ({
     const phase = Moon.lunarPhase(selectedDate);
     if (checkForRainSensor()) {
       if (getReadingValue('lluvia', hour)) {
-        if (phase === 'New' || phase === 'Full') return 'wi wi-night-showers text-sky-700';
+        if (phase === 'New' || phase === 'Full')
+          return 'wi wi-night-showers text-sky-700';
         return 'wi wi-night-alt-showers text-sky-700';
       }
     }
@@ -95,35 +99,48 @@ const ReadingsWidget = ({
   };
 
   const getGridSize = (index) => {
-    let varCount = dayReadings.filter((v) => v.variable_name !== 'lluvia').length;
-    if (type === 'meteorological') varCount += 1;
+    let varCount = dateReadings.filter((v) => v.variable_name !== 'lluvia').length;
+    if (type === 'meteorological')
+      varCount += 1;
 
     let rows = '';
     let cols = '';
 
-    if (varCount < 4) rows = 'row-span-6';
-    else if (varCount < 9) rows = 'row-span-3';
-    else rows = 'row-span-2';
+    if (varCount < 4)
+      rows = 'row-span-6';
+    else if (varCount < 9)
+      rows = 'row-span-3';
+    else
+      rows = 'row-span-2';
 
     if (72 % varCount === 0) {
-      if (varCount < 4) cols = `col-span-${12 / varCount}`;
-      else if (varCount < 9) cols = `col-span-${12 / (varCount / 2)}`;
-      else cols = 'col-span-4';
+      if (varCount < 4)
+        cols = `col-span-${12 / varCount}`;
+      else if (varCount < 9)
+        cols = `col-span-${12 / (varCount / 2)}`;
+      else
+        cols = 'col-span-4';
     } else if (varCount < 9) {
-      if (index < ((varCount - 1) / 2) + 1) cols = `col-span-${12 / ((varCount - 1) / 2)}`;
-      else cols = `col-span-${12 / (((varCount - 1) / 2) + 1)}`;
+      if (index < ((varCount - 1) / 2) + 1)
+        cols = `col-span-${12 / ((varCount - 1) / 2)}`;
+      else
+        cols = `col-span-${12 / (((varCount - 1) / 2) + 1)}`;
     } else if (varCount === 10) {
-      if (index < 3) cols = 'col-span-6';
-      else cols = 'col-span-3';
+      if (index < 3)
+        cols = 'col-span-6';
+      else
+        cols = 'col-span-3';
     } else if (varCount === 11) {
-      if (index < 4) cols = 'col-span-4';
-      else cols = 'col-span-3';
+      if (index < 4)
+        cols = 'col-span-4';
+      else
+        cols = 'col-span-3';
     }
 
     return `${rows} ${cols}`;
   };
 
-  return (dayReadings !== undefined) && (
+  return (
     <div className="absolute flex size-full flex-col rounded-xl bg-white p-5 shadow">
       <div className="pb-2 sm:px-6">
         <div className="text-2xl sm:text-4xl">
@@ -132,7 +149,7 @@ const ReadingsWidget = ({
       </div>
 
       {
-        (dayReadings.length === 0)
+        (dateReadings.length === 0)
           ? (
             <div className="flex size-full flex-col">
               <div className="border-t px-2 py-1 text-xs sm:px-7 sm:text-sm" />
@@ -171,7 +188,7 @@ const ReadingsWidget = ({
                   </div>
 
                   {
-                    dayReadings.filter((v) => v.variable_name !== 'lluvia').map(
+                    dateReadings.filter((v) => v.variable_name !== 'lluvia').map(
                       (v, index) => (
                         <div
                           key={v.name}
@@ -219,7 +236,7 @@ const ReadingsWidget = ({
                         }
 
                         {
-                          dayReadings.filter((vtf) => vtf.variable_name !== 'lluvia').map((v, index) => (
+                          dateReadings.filter((vtf) => vtf.variable_name !== 'lluvia').map((v, index) => (
                             <div key={v.variable_id} className={`${getGridSize((type === 'meteorological') ? index + 2 : index + 1)} flex size-full flex-col items-center justify-center rounded-lg border`}>
                               <div className="font-semibold">
                                 {v.variable_name}
@@ -269,7 +286,7 @@ const ReadingsWidget = ({
                             <div className="flex grow">
                               <ResponsiveContainer width="100%" height="100%">
                                 <AreaChart
-                                  data={dayReadings[selectedVariable].dayAverages}
+                                  data={dateReadings[selectedVariable].dayAverages}
                                   margin={{
                                     top: 10, right: 25, left: 25, bottom: 0,
                                   }}
@@ -277,14 +294,14 @@ const ReadingsWidget = ({
                                   <Area
                                     type="monotone"
                                     dataKey="value"
-                                    fill={dayReadings[selectedVariable].color}
+                                    fill={dateReadings[selectedVariable].color}
                                     stroke={colorHelper.getDarkerColor(
-                                      dayReadings[selectedVariable].color,
+                                      dateReadings[selectedVariable].color,
                                       0.09,
                                     )}
                                     dot={{
                                       stroke: colorHelper.getDarkerColor(
-                                        dayReadings[selectedVariable].color,
+                                        dateReadings[selectedVariable].color,
                                         0.09,
                                       ),
                                       strokeWidth: 2,
@@ -297,7 +314,7 @@ const ReadingsWidget = ({
 
                             <div className="flex space-x-2 py-2 ">
                               {
-                                dayReadings[selectedVariable]
+                                dateReadings[selectedVariable]
                                   .dayAverages
                                   .map((average) => (
                                     <div
@@ -331,7 +348,7 @@ const ReadingsWidget = ({
 
                       <div className="grid grid-cols-7 gap-2 border-t pt-2">
                         {
-                          dayReadings[selectedVariable].weekData.map((day) => (
+                          dateReadings[selectedVariable].weekData.map((day) => (
                             <button
                               type="button"
                               key={day.day}

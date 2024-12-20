@@ -24,19 +24,21 @@ const Badge = ({
       case 'other':
         return 'bg-other';
 
-      case 'activo':
+      case 'active':
         return 'bg-active';
-      case 'inactivo':
+      case 'inactive':
         return 'bg-inactive';
 
       case 'outdoor':
         return 'bg-outdoor';
       case 'indoor':
         return 'bg-indoor';
-      case 'público':
+
+      case 'public':
         return 'bg-public';
-      case 'privado':
+      case 'private':
         return 'bg-private';
+
       default:
         return 'bg-slate-100';
     }
@@ -59,6 +61,16 @@ const Badge = ({
         return 'camara';
       case 'other':
         return 'otro';
+
+      case 'active':
+        return 'activo';
+      case 'inactive':
+        return 'inactivo';
+
+      case 'public':
+        return 'público';
+      case 'private':
+        return 'privado';
 
       default:
         return value;

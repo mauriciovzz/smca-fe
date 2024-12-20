@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 import axios from 'src/api/axios';
 import { mailIcon } from 'src/assets';
 import { Button, TextInput } from 'src/components/inputs';
-import { MapBackground } from 'src/components/maps';
+import { BackgroundMap } from 'src/components/maps';
 import { EmailSent } from 'src/components/messages';
 import { Divider } from 'src/components/ui';
 import notificationHelper from 'src/utils/notificationHelper';
@@ -85,7 +85,7 @@ const ResendVerificationLink = () => {
         }
       </div>
 
-      <MapBackground />
+      <BackgroundMap />
     </>
   );
 };

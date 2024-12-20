@@ -5,14 +5,14 @@ import {
   AreaChart, Area, ResponsiveContainer, ReferenceArea,
 } from 'recharts';
 
-import { control } from 'src/assets';
+import { arrowIcon } from 'src/assets';
 
 const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sab'];
 
 const Divider = () => <div className="text-gray-300">&nbsp;|&nbsp;</div>;
 
 const EnviromentalWidget = ({
-  dayReadings, dayUiInfo, selectedDate, changeDate,
+  dayReadings, dayUiInfo, selectedDate,
 }) => {
   const [selectedVariable, setSelectedVariable] = useState('Resumen');
   const centerRef = useRef(null);
@@ -39,7 +39,8 @@ const EnviromentalWidget = ({
   };
 
   const getReadingTime = (date) => {
-    if (date === 'sunrise' || date === 'sunset') return '';
+    if (date === 'sunrise' || date === 'sunset')
+      return '';
 
     let hours = date;
     const ampm = (hours >= 12 && hours !== 24) ? 'PM' : 'AM';
@@ -66,13 +67,17 @@ const EnviromentalWidget = ({
   };
 
   const getWeatherIcon = (hour, data) => {
-    if (hour === 'sunrise') return 'wi wi-sunrise text-yellow-400';
-    if (hour === 'sunset') return 'wi wi-sunset text-orange-400';
-    if (data === null) return 'wi wi-na text-gray-400';
+    if (hour === 'sunrise')
+      return 'wi wi-sunrise text-yellow-400';
+    if (hour === 'sunset')
+      return 'wi wi-sunset text-orange-400';
+    if (data === null)
+      return 'wi wi-na text-gray-400';
 
     if (hour > 5 && hour < 18) {
       if (dayUiInfo.has_rain) {
-        if (getReadingValue('lluvia', hour)) return 'wi wi-day-showers text-orange-700';
+        if (getReadingValue('lluvia', hour))
+          return 'wi wi-day-showers text-orange-700';
       }
       return 'wi wi-day-sunny text-yellow-400';
     }
@@ -80,7 +85,8 @@ const EnviromentalWidget = ({
     const phase = Moon.lunarPhase(selectedDate);
     if (dayUiInfo.has_rain) {
       if (getReadingValue('lluvia', hour)) {
-        if (phase === 'New' || phase === 'Full') return 'wi wi-night-showers text-sky-700';
+        if (phase === 'New' || phase === 'Full')
+          return 'wi wi-night-showers text-sky-700';
         return 'wi wi-night-alt-showers text-sky-700';
       }
     }
@@ -112,23 +118,35 @@ const EnviromentalWidget = ({
     let rows = '';
     let cols = '';
 
-    if (varCount < 4) rows = 'row-span-6';
-    else if (varCount < 9) rows = 'row-span-3';
-    else rows = 'row-span-2';
+    if (varCount < 4)
+      rows = 'row-span-6';
+    else if (varCount < 9)
+      rows = 'row-span-3';
+    else
+      rows = 'row-span-2';
 
     if (72 % varCount === 0) {
-      if (varCount < 4) cols = `col-span-${12 / varCount}`;
-      else if (varCount < 9) cols = `col-span-${12 / (varCount / 2)}`;
-      else cols = 'col-span-4';
+      if (varCount < 4)
+        cols = `col-span-${12 / varCount}`;
+      else if (varCount < 9)
+        cols = `col-span-${12 / (varCount / 2)}`;
+      else
+        cols = 'col-span-4';
     } else if (varCount < 9) {
-      if (index < ((varCount - 1) / 2) + 1) cols = `col-span-${12 / ((varCount - 1) / 2)}`;
-      else cols = `col-span-${12 / (((varCount - 1) / 2) + 1)}`;
+      if (index < ((varCount - 1) / 2) + 1)
+        cols = `col-span-${12 / ((varCount - 1) / 2)}`;
+      else
+        cols = `col-span-${12 / (((varCount - 1) / 2) + 1)}`;
     } else if (varCount === 10) {
-      if (index < 3) cols = 'col-span-6';
-      else cols = 'col-span-3';
+      if (index < 3)
+        cols = 'col-span-6';
+      else
+        cols = 'col-span-3';
     } else if (varCount === 11) {
-      if (index < 4) cols = 'col-span-4';
-      else cols = 'col-span-3';
+      if (index < 4)
+        cols = 'col-span-4';
+      else
+        cols = 'col-span-3';
     }
 
     return `${rows} ${cols}`;
@@ -160,7 +178,7 @@ const EnviromentalWidget = ({
               <div className="flex w-full border-y py-1 text-xs sm:text-sm">
                 <div className="flex w-[28px] justify-center">
                   <img
-                    src={control}
+                    src={arrowIcon}
                     alt="left var list scroll"
                     className="hidden size-[20px] self-center sm:flex"
                     onMouseEnter={() => updateVarListRepeater(-20)}
@@ -206,7 +224,7 @@ const EnviromentalWidget = ({
 
                 <div className="flex w-[28px] justify-center">
                   <img
-                    src={control}
+                    src={arrowIcon}
                     alt="right var list scroll"
                     className="hidden size-[20px] rotate-180 self-center sm:flex"
                     onMouseEnter={() => updateVarListRepeater(20)}
@@ -259,7 +277,7 @@ const EnviromentalWidget = ({
                     <>
                       <div className="flex">
                         <img
-                          src={control}
+                          src={arrowIcon}
                           alt="left graph scroll"
                           className="hidden size-[28px] self-center sm:flex"
                           onMouseEnter={() => updateGraphRepeater(-20)}
@@ -321,7 +339,7 @@ const EnviromentalWidget = ({
                         </div>
 
                         <img
-                          src={control}
+                          src={arrowIcon}
                           alt="right graph scroll"
                           className="hidden size-[28px] rotate-180 self-center sm:flex"
                           onMouseEnter={() => updateGraphRepeater(20)}

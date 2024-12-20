@@ -2,9 +2,10 @@ import { React, useState } from 'react';
 
 import { useOutletContext, useNavigate } from 'react-router-dom';
 
-import { arrowIcon } from 'src/assets';
-import { Button, TextAreaInput, TextInput } from 'src/components/inputs';
-import { CoordinatesSelectionMap } from 'src/components/maps';
+import {
+  Button, TextAreaInput, TextInput, MapButton,
+} from 'src/components/inputs';
+import { SelectionMap } from 'src/components/maps';
 import { Divider, Heading } from 'src/components/ui';
 import useAxiosPrivate from 'src/hooks/useAxiosPrivate';
 import useErrorHandler from 'src/hooks/useErrorHandler';
@@ -78,8 +79,8 @@ const LocationCreation = ({ onClose }) => {
             {
               (isScreenSmall)
                 ? (
-                  <div className="flex justify-between space-x-4">
-                    <div className="flex w-[90%] justify-between space-x-4">
+                  <div className="flex w-full space-x-4">
+                    <div className="flex flex-1 space-x-4">
                       <TextInput
                         id="lat"
                         type="number"
@@ -97,17 +98,8 @@ const LocationCreation = ({ onClose }) => {
                         setValue={(newValue) => setCoordenates({ ...coordinates, long: newValue })}
                       />
                     </div>
-                    <button
-                      type="button"
-                      className="w-[10%]"
-                      onClick={() => setIsMapOpen(true)}
-                    >
-                      <img
-                        src={arrowIcon}
-                        alt="arrow"
-                        className="size-[25px] rotate-180"
-                      />
-                    </button>
+
+                    <MapButton onClick={() => setIsMapOpen(true)} />
                   </div>
                 )
                 : (
@@ -157,7 +149,7 @@ const LocationCreation = ({ onClose }) => {
       </div>
 
       {(!isScreenSmall) && (
-        <CoordinatesSelectionMap
+        <SelectionMap
           coordinates={coordinates}
           setCoordenates={setCoordenates}
           recenter={recenter}
@@ -167,7 +159,7 @@ const LocationCreation = ({ onClose }) => {
 
       {(isScreenSmall) && (isMapOpen) && (
         <div className="absolute size-full">
-          <CoordinatesSelectionMap
+          <SelectionMap
             coordinates={coordinates}
             setCoordenates={setCoordenates}
             recenter={recenter}

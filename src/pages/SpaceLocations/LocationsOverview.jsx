@@ -86,31 +86,27 @@ const LocationsOverview = ({ locationsData, spaceData }) => {
         </div>
       </div>
 
-      {
-        (!isScreenSmall) && (
+      {(!isScreenSmall) && (
+        <MarkersMap
+          markers={locationsData}
+          markerColor={spaceData.color}
+          markersType="location"
+          onMarkerClick={(l) => navigate(`${l.location_id}`)}
+        />
+      )}
+
+      {(isScreenSmall) && (isMapOpen) && (
+        <div className="absolute size-full">
           <MarkersMap
             markers={locationsData}
-            markersType="location"
             markerColor={spaceData.color}
-            onMarkerClick={(l) => navigate(`${l.location_id}`)}
+            markersType="location"
+            isScreenSmall={isScreenSmall}
+            onMarkerClick={(location) => navigate(`${location.location_id}`)}
+            closeMarkersMap={() => setIsMapOpen(false)}
           />
-        )
-      }
-
-      {
-        (isScreenSmall) && (isMapOpen) && (
-          <div className="absolute size-full">
-            <MarkersMap
-              markers={locationsData}
-              markersType="location"
-              markerColor={spaceData.color}
-              onMarkerClick={(location) => navigate(`${location.location_id}`)}
-              isScreenSmall={isScreenSmall}
-              closeMarkersMap={() => setIsMapOpen(false)}
-            />
-          </div>
-        )
-      }
+        </div>
+      )}
     </div>
   );
 };

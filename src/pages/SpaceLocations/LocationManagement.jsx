@@ -3,9 +3,10 @@ import { React, useState } from 'react';
 import { useOutletContext, useParams, useNavigate } from 'react-router-dom';
 
 import {
-  Button, ConfirmationDialog, TextAreaInput, TextInput, ToggleSwitch,
+  Button, ConfirmationDialog, MapButton,
+  TextAreaInput, TextInput, ToggleSwitch,
 } from 'src/components/inputs';
-import { LocationInformationMap } from 'src/components/maps';
+import { LocationMap } from 'src/components/maps';
 import { Divider, Heading } from 'src/components/ui';
 import useAxiosPrivate from 'src/hooks/useAxiosPrivate';
 import useErrorHandler from 'src/hooks/useErrorHandler';
@@ -98,55 +99,46 @@ const LocationManagement = () => {
               setValue={(newValue) => setLocation(newValue)}
               disabled={!isEditable}
             />
-            <ToggleSwitch
-              labelText="Visibilidad"
-              selectedOption={isVisible}
-              leftOption={{
-                title: 'Público',
-                value: true,
-                color: 'bg-main',
-                onClick: () => setIsVisible(true),
-              }}
-              rigthOption={{
-                title: 'Privado',
-                value: false,
-                color: 'bg-main',
-                onClick: () => setIsVisible(false),
-              }}
-              isDisabled={!isEditable}
-            />
+            <div className="flex w-full space-x-4">
+              <ToggleSwitch
+                labelText="Visibilidad"
+                selectedOption={isVisible}
+                leftOption={{
+                  title: 'Público',
+                  value: true,
+                  color: 'bg-main',
+                  onClick: () => setIsVisible(true),
+                }}
+                rigthOption={{
+                  title: 'Privado',
+                  value: false,
+                  color: 'bg-main',
+                  onClick: () => setIsVisible(false),
+                }}
+                isDisabled={!isEditable}
+              />
+
+              {isScreenSmall && <MapButton onClick={() => setIsMapOpen(true)} />}
+            </div>
           </form>
         </div>
 
-        {
-          (isScreenSmall) && (
+        {(spaceData.is_admin) && (
+          <div className="flex w-full gap-2.5">
             <Button
-              text="Ver en el Mapa"
+              text={isEditable ? 'Guardar' : 'Modificar'}
               isTypeButton
-              onClick={() => setIsMapOpen(true)}
-              color="gray"
+              onClick={isEditable ? () => handleUpdate() : () => setIsEditable(!isEditable)}
+              color="blue"
             />
-          )
-        }
-
-        {
-          (spaceData.is_admin) && (
-            <div className="flex w-full gap-2.5">
-              <Button
-                text={isEditable ? 'Guardar' : 'Modificar'}
-                isTypeButton
-                onClick={isEditable ? () => handleUpdate() : () => setIsEditable(!isEditable)}
-                color="blue"
-              />
-              <Button
-                text={isEditable ? 'Cancelar' : 'Eliminar'}
-                isTypeButton
-                onClick={isEditable ? () => setData(!isEditable) : () => setIsConDiaOpen(true)}
-                color="red"
-              />
-            </div>
-          )
-        }
+            <Button
+              text={isEditable ? 'Cancelar' : 'Eliminar'}
+              isTypeButton
+              onClick={isEditable ? () => setData(!isEditable) : () => setIsConDiaOpen(true)}
+              color="red"
+            />
+          </div>
+        )}
 
         {(isConDiaOpen) && (
           <ConfirmationDialog
@@ -159,19 +151,19 @@ const LocationManagement = () => {
       </div>
 
       {(!isScreenSmall) && (
-        <LocationInformationMap
-          title="Ubicación en el Mapa"
+        <LocationMap
           marker={selectedLocation}
           markerColor={spaceData.color}
+          longTitle
         />
       )}
 
       {(isScreenSmall) && (isMapOpen) && (
         <div className="absolute size-full">
-          <LocationInformationMap
-            title="Ubicación en el Mapa"
+          <LocationMap
             marker={selectedLocation}
             markerColor={spaceData.color}
+            longTitle
             isScreenSmall={isScreenSmall}
             closeLocationMap={() => setIsMapOpen(false)}
           />

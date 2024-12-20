@@ -3,7 +3,7 @@ import { React, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import axios from 'src/api/axios';
-import { MapBackground } from 'src/components/maps';
+import { BackgroundMap } from 'src/components/maps';
 import { VerificationSuccess, VerificationError } from 'src/components/messages';
 import { LoaderSpinner } from 'src/components/ui';
 
@@ -91,7 +91,7 @@ const Verification = () => {
           {renderResponse()}
         </div>
 
-        <MapBackground />
+        <BackgroundMap />
       </>
     );
 };

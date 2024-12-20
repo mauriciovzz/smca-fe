@@ -43,7 +43,7 @@ const ToggleOption = ({
 const ToggleSwitch = ({
   labelText, selectedOption, leftOption, rigthOption, isDisabled,
 }) => (
-  <div>
+  <div className="w-full">
     {(labelText) && <Label text={labelText} />}
 
     <div className={`${isDisabled ? 'bg-disabled' : 'bg-white'} flex h-fit w-full overflow-hidden rounded-lg border-2 font-medium`}>

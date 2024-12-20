@@ -5,7 +5,7 @@ import { Link, useParams } from 'react-router-dom';
 import axios from 'src/api/axios';
 import { errorIcon, successIcon } from 'src/assets';
 import { Button, TextInput } from 'src/components/inputs';
-import { MapBackground } from 'src/components/maps';
+import { BackgroundMap } from 'src/components/maps';
 import { Divider, Heading } from 'src/components/ui';
 import notificationHelper from 'src/utils/notificationHelper';
 
@@ -134,7 +134,7 @@ const PasswordReset = () => {
         }
       </div>
 
-      <MapBackground />
+      <BackgroundMap />
     </>
 
   );

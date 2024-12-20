@@ -9,7 +9,7 @@ const Root = () => {
   const isHomeRoute = location.pathname === '/';
 
   return (
-    <>
+    <div className="relative flex h-screen w-full flex-col justify-between bg-background">
       <div className="relative flex h-screen w-full flex-col justify-between bg-background">
         <Navbar />
 
@@ -17,7 +17,7 @@ const Root = () => {
       </div>
 
       {isHomeRoute && (<Outlet />)}
-    </>
+    </div>
   );
 };
 

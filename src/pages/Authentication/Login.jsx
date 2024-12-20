@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import axios from 'src/api/axios';
 import { Button, CheckBoxInput, TextInput } from 'src/components/inputs';
-import { MapBackground } from 'src/components/maps';
+import { BackgroundMap } from 'src/components/maps';
 import { Divider, Heading } from 'src/components/ui';
 import useAuth from 'src/hooks/useAuth';
 import notificationHelper from 'src/utils/notificationHelper';
@@ -102,7 +102,7 @@ const Login = () => {
         </div>
       </div>
 
-      <MapBackground />
+      <BackgroundMap />
     </>
   );
 };

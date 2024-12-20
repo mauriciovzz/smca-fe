@@ -6,7 +6,7 @@ import Calendar from 'react-calendar';
 import './Calendar.css';
 
 import {
-  calendarDayIcon, calendarIcon, control, refresh,
+  calendarDayIcon, calendarIcon, arrowIcon, refresh,
 } from 'src/assets';
 
 const dayNames = ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'];
@@ -19,7 +19,7 @@ const ArrowButton = ({ direction, onClick }) => (
     className="flex size-[30px] items-center justify-center rounded-lg hover:bg-graydetails"
   >
     <img
-      src={control}
+      src={arrowIcon}
       alt="arrow button"
       className={`${(direction === 'right') && 'rotate-180'} size-[20px]`}
     />
@@ -80,7 +80,7 @@ const DateWidget = ({ selectedNode, selectedDate, changeDate }) => {
             <Calendar
               value={selectedDate}
               onChange={(newDate) => changeDate(newDate)}
-              minDate={new Date(selectedNode.start_date)}
+              minDate={new Date(selectedNode.start_time_stamp)}
               maxDate={new Date()}
               activeStartDate={componentActiveStartDate}
               onActiveStartDateChange={
@@ -96,11 +96,9 @@ const DateWidget = ({ selectedNode, selectedDate, changeDate }) => {
           <div className="flex size-full flex-col justify-center">
             <div className="flex h-[65%] w-full border-b pb-5">
               <div className="flex w-1/6 items-center justify-center">
-                {
-                  (checkDate(new Date(selectedNode.start_date))) && (
-                    <ArrowButton direction="left" onClick={() => changeDay(-1)} />
-                  )
-                }
+                {(checkDate(new Date(selectedNode.start_time_stamp))) && (
+                  <ArrowButton direction="left" onClick={() => changeDay(-1)} />
+                )}
               </div>
 
               <div className="flex w-4/6 items-center justify-center">

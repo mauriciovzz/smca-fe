@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 import axios from 'src/api/axios';
 import { Button, TextInput } from 'src/components/inputs';
-import { MapBackground } from 'src/components/maps';
+import { BackgroundMap } from 'src/components/maps';
 import { EmailSent } from 'src/components/messages';
 import { Divider, Heading, LoaderSpinner } from 'src/components/ui';
 import useErrorHandler from 'src/hooks/useErrorHandler';
@@ -119,7 +119,7 @@ const Register = () => {
         {renderView()}
       </div>
 
-      <MapBackground />
+      <BackgroundMap />
     </>
   );
 };

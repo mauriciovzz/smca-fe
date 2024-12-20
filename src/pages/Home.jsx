@@ -16,11 +16,11 @@ const Home = () => {
 
   const getHomePageNodes = async () => {
     try {
-      const request = await axiosPrivate.get(
+      const response = await axiosPrivate.get(
         '/api/spaces/home-page-nodes',
       );
 
-      setNodesData(request.data);
+      setNodesData(response.data);
       setLoadingData(false);
     } catch (error) {
       errorHandler(error);
@@ -33,7 +33,7 @@ const Home = () => {
 
   return loadingData
     ? <LoaderSpinner />
-    : <ReadingsMap markersData={nodesData} />;
+    : <ReadingsMap markersData={nodesData} showLayerControl />;
 };
 
 export default Home;

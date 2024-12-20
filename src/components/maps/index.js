@@ -1,17 +1,15 @@
-import CoordinatesSelectionMap from './CoordinatesSelectionMap';
-import LocationInformationMap from './LocationInformationMap';
-import MapBackground from './MapBackground';
+import BackgroundMap from './BackgroundMap';
+import LocationMap from './LocationMap';
 import MapBase from './MapBase';
-import MarkerLocationMap from './MarkerLocationMap';
 import MarkersMap from './MarkersMap';
-import ReadingsMap from './ReadingsMap';
+import ReadingsMap from './ReadingsMap/ReadingsMap';
+import SelectionMap from './SelectionMap';
 
 export {
-  CoordinatesSelectionMap,
-  LocationInformationMap,
-  MapBackground,
+  BackgroundMap,
+  LocationMap,
   MapBase,
-  MarkerLocationMap,
   MarkersMap,
   ReadingsMap,
+  SelectionMap,
 };

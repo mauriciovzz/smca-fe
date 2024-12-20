@@ -20,17 +20,15 @@ const NodesOverview = ({ nodesData, spaceData }) => {
           <div className="flex justify-between">
             <Heading text="Nodos" />
 
-            {
-              (spaceData.is_admin) && (
-                <Link className="self-start" to="agregar">
-                  <img
-                    src={addIcon}
-                    alt="add icon"
-                    className="size-[25px] sm:size-[36px]"
-                  />
-                </Link>
-              )
-            }
+            {(spaceData.is_admin) && (
+              <Link className="self-start" to="agregar">
+                <img
+                  src={addIcon}
+                  alt="add icon"
+                  className="size-[25px] sm:size-[36px]"
+                />
+              </Link>
+            )}
           </div>
 
           <Divider />
@@ -86,45 +84,39 @@ const NodesOverview = ({ nodesData, spaceData }) => {
               </ul>
             </div>
 
-            {
-              (isScreenSmall) && (
-                <Button
-                  text="Buscar Ubicación en el Mapa"
-                  isTypeButton
-                  onClick={() => setIsMapOpen(true)}
-                  color="blue"
-                />
-              )
-            }
+            {(isScreenSmall) && (
+              <Button
+                text="Buscar Ubicación en el Mapa"
+                isTypeButton
+                onClick={() => setIsMapOpen(true)}
+                color="blue"
+              />
+            )}
           </div>
         </div>
       </div>
 
-      {
-        (!isScreenSmall) && (
+      {(!isScreenSmall) && (
+        <MarkersMap
+          markers={nodesData.filter((n) => n.location_id)}
+          markerColor={spaceData.color}
+          markersType="node"
+          onMarkerClick={(n) => navigate(`${n.node_id}`)}
+        />
+      )}
+
+      {(isScreenSmall) && (isMapOpen) && (
+        <div className="absolute size-full">
           <MarkersMap
             markers={nodesData.filter((n) => n.location_id)}
-            markersType="node"
             markerColor={spaceData.color}
+            markersType="node"
+            isScreenSmall={isScreenSmall}
             onMarkerClick={(n) => navigate(`${n.node_id}`)}
+            closeMarkersMap={() => setIsMapOpen(false)}
           />
-        )
-      }
-
-      {
-        (isScreenSmall) && (isMapOpen) && (
-          <div className="absolute size-full">
-            <MarkersMap
-              markers={nodesData.filter((n) => n.location_id)}
-              markersType="node"
-              markerColor={spaceData.color}
-              onMarkerClick={(n) => navigate(`${n.node_id}`)}
-              isScreenSmall={isScreenSmall}
-              closeMarkersMap={() => setIsMapOpen(false)}
-            />
-          </div>
-        )
-      }
+        </div>
+      )}
     </div>
   );
 };
