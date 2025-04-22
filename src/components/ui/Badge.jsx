@@ -25,7 +25,7 @@ const Badge = ({
         return 'bg-other';
 
       case 'active':
-        return 'bg-active';
+        return 'bg-[#1ED660]';
       case 'inactive':
         return 'bg-inactive';
 
@@ -83,7 +83,7 @@ const Badge = ({
       ${!height ? 'h-[24px]' : height} 
       ${!width ? 'w-[60px]' : width} 
       ${!rounded ? 'rounded-3xl' : rounded} 
-      flex items-center justify-center self-center rounded-3xl text-center text-sm font-medium text-white
+      flex items-center justify-center self-center rounded-3xl text-center text-sm font-semibold leading-none text-white
     `}
     >
       <div>

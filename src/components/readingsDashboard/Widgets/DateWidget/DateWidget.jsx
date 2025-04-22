@@ -12,24 +12,68 @@ import {
 const dayNames = ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'];
 const calendarNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
-const ArrowButton = ({ direction, onClick }) => (
-  <button
-    type="button"
-    onClick={onClick}
-    className="flex size-[30px] items-center justify-center rounded-lg hover:bg-graydetails"
-  >
-    <img
-      src={arrowIcon}
-      alt="arrow button"
-      className={`${(direction === 'right') && 'rotate-180'} size-[20px]`}
-    />
-  </button>
+const DayArrowButton = ({
+  selectedDate, comparingDate, direction, onClick,
+}) => (
+  <div className="flex w-1/6 items-center justify-center">
+    {(selectedDate.toDateString() !== comparingDate.toDateString()) && (
+      <button
+        type="button"
+        onClick={onClick}
+        className="flex size-[30px] items-center justify-center rounded-lg hover:bg-graydetails"
+      >
+        <img
+          src={arrowIcon}
+          alt="arrow button"
+          className={`${(direction === 'right') && 'rotate-180'} size-[20px]`}
+        />
+      </button>
+    )}
+  </div>
 );
 
-const DateWidget = ({ selectedNode, selectedDate, changeDate }) => {
-  const ref = useRef(null);
+const HourArrowButton = ({
+  selectedDate, comparingDate, selectedHour, direction, onClick,
+}) => {
+  const showButton = () => {
+    if (selectedDate.toDateString() === comparingDate.toDateString()) {
+      if (direction === 'left') {
+        if (comparingDate.getHours() + 1 === selectedHour)
+          return false;
+      } else if (comparingDate.getHours() === selectedHour)
+        return false;
+    }
+    return true;
+  };
+
+  return (
+    <div className="flex w-1/6 items-center justify-center">
+      {
+        (showButton()) && (
+          <button
+            type="button"
+            onClick={() => onClick()}
+            className="flex size-[30px] items-center justify-center rounded-lg hover:bg-graydetails"
+          >
+            <img
+              src={arrowIcon}
+              alt="arrow button"
+              className={`${(direction === 'right') && 'rotate-180'} size-[20px]`}
+            />
+          </button>
+        )
+      }
+    </div>
+  );
+};
+
+const DateWidget = ({
+  selectedDate, selectedHour, nodeStartDate, currentDate, changeDate,
+}) => {
   const [componentActiveStartDate, setComponentActiveStartDate] = useState(undefined);
-  const [dateView, seDateView] = useState(null);
+  const [dateView, setDateView] = useState(null);
+
+  const ref = useRef(null);
 
   useEffect(() => {
     const { offsetHeight } = ref.current;
@@ -37,41 +81,65 @@ const DateWidget = ({ selectedNode, selectedDate, changeDate }) => {
     root.style.setProperty('--calendar-height', `${offsetHeight}px`);
   }, []);
 
-  const formatTime = (datee) => {
-    let hours = datee.getHours();
-    const ampm = hours >= 12 ? 'PM' : 'AM';
+  // Date change
+  const calendarChange = (newDate) => {
+    const updatedDate = new Date(newDate);
+    const updatedHour = selectedHour;
 
-    hours %= 12;
-    hours = hours || 12;
-
-    return `${hours} ${ampm}`;
+    changeDate(updatedDate, updatedHour);
+    setDateView(null);
   };
-
-  const changeDay = (offset) => {
-    changeDate(new Date(new Date(selectedDate).setDate(selectedDate.getDate() + offset)));
-  };
-
-  const changeHour = (offset) => {
-    changeDate(undefined, new Date(selectedDate).setHours(selectedDate.getHours() + offset));
-  };
-
-  const checkDate = (currentDate) => selectedDate.toDateString() !== currentDate.toDateString();
-
-  const checkHour = (currentHour, limit) => currentHour !== limit;
 
   const onResetClick = () => {
-    const today = new Date();
+    const newDate = currentDate;
+    const newHour = newDate.getHours() === 0 ? 24 : newDate.getHours();
 
-    const beginOfMonth = new Date(
-      today.getFullYear(),
-      today.getMonth(),
-      1,
-    );
-
-    setComponentActiveStartDate(beginOfMonth);
-    changeDate(today, today);
+    changeDate(newDate, newHour);
   };
 
+  const nextHour = () => {
+    let newHour = selectedHour + 1;
+    const newDate = new Date(selectedDate);
+
+    if (newHour > 24) {
+      newHour = 1;
+      newDate.setDate(newDate.getDate() + 1);
+    }
+
+    changeDate(newDate, newHour);
+  };
+
+  const prevHour = () => {
+    let newHour = selectedHour - 1;
+    const newDate = new Date(selectedDate);
+
+    if (newHour < 1) {
+      newHour = 24;
+      newDate.setDate(newDate.getDate() - 1);
+    }
+
+    changeDate(newDate, newHour);
+  };
+
+  const nextDate = () => {
+    const newDate = new Date(selectedDate);
+    newDate.setDate(newDate.getDate() + 1);
+
+    const newHour = selectedHour;
+
+    changeDate(newDate, newHour);
+  };
+
+  const prevDate = () => {
+    const newDate = new Date(selectedDate);
+    newDate.setDate(newDate.getDate() - 1);
+
+    const newHour = selectedHour;
+
+    changeDate(newDate, newHour);
+  };
+
+  // render view
   const renderDateView = () => {
     switch (dateView) {
       case 'calendar':
@@ -79,9 +147,9 @@ const DateWidget = ({ selectedNode, selectedDate, changeDate }) => {
           <div className="size-full text-xs leading-none">
             <Calendar
               value={selectedDate}
-              onChange={(newDate) => changeDate(newDate)}
-              minDate={new Date(selectedNode.start_time_stamp)}
-              maxDate={new Date()}
+              onChange={calendarChange}
+              minDate={nodeStartDate}
+              maxDate={currentDate}
               activeStartDate={componentActiveStartDate}
               onActiveStartDateChange={
                 ({ activeStartDate }) => setComponentActiveStartDate(activeStartDate)
@@ -95,11 +163,13 @@ const DateWidget = ({ selectedNode, selectedDate, changeDate }) => {
         return (
           <div className="flex size-full flex-col justify-center">
             <div className="flex h-[65%] w-full border-b pb-5">
-              <div className="flex w-1/6 items-center justify-center">
-                {(checkDate(new Date(selectedNode.start_time_stamp))) && (
-                  <ArrowButton direction="left" onClick={() => changeDay(-1)} />
-                )}
-              </div>
+              <DayArrowButton
+                selectedDate={selectedDate}
+                comparingDate={nodeStartDate}
+                selectedHour={selectedHour}
+                direction="left"
+                onClick={() => prevDate()}
+              />
 
               <div className="flex w-4/6 items-center justify-center">
                 <div className="flex flex-col items-center">
@@ -115,37 +185,40 @@ const DateWidget = ({ selectedNode, selectedDate, changeDate }) => {
                 </div>
               </div>
 
-              <div className="flex w-1/6 items-center justify-center">
-                {
-                  (checkDate(new Date())) && (
-                    <ArrowButton direction="right" onClick={() => changeDay(1)} />
-                  )
-                }
-              </div>
+              <DayArrowButton
+                selectedDate={selectedDate}
+                comparingDate={currentDate}
+                selectedHour={selectedHour}
+                direction="right"
+                onClick={() => nextDate()}
+              />
             </div>
 
             <div className="flex h-[35%] w-full pt-5">
-              <div className="flex w-1/6 items-center justify-center">
-                {
-                  (checkHour(selectedDate.getHours(), 1)) && (
-                    <ArrowButton direction="left" onClick={() => changeHour(-1)} />
-                  )
-                }
-              </div>
+              <HourArrowButton
+                selectedDate={selectedDate}
+                comparingDate={nodeStartDate}
+                selectedHour={selectedHour}
+                direction="left"
+                onClick={() => prevHour()}
+              />
 
-              <div className="flex w-4/6 items-center justify-center">
+              <div className="flex w-4/6 flex-col items-center justify-center">
+                <div className="text-sm">
+                  Hora
+                </div>
                 <div>
-                  {formatTime(selectedDate)}
+                  {selectedHour}
                 </div>
               </div>
 
-              <div className="flex w-1/6 items-center justify-center">
-                {
-                  (checkHour(selectedDate.getHours(), 0)) && (
-                    <ArrowButton direction="right" onClick={() => changeHour(1)} />
-                  )
-                }
-              </div>
+              <HourArrowButton
+                selectedDate={selectedDate}
+                comparingDate={currentDate}
+                selectedHour={selectedHour}
+                direction="right"
+                onClick={() => nextHour()}
+              />
             </div>
           </div>
         );
@@ -162,7 +235,7 @@ const DateWidget = ({ selectedNode, selectedDate, changeDate }) => {
         <button
           type="button"
           className={`${(dateView === null) && 'bg-graydetails'} flex size-[35px] items-center justify-center rounded-lg hover:bg-graydetails`}
-          onClick={() => seDateView(null)}
+          onClick={() => setDateView(null)}
         >
           <img
             src={calendarDayIcon}
@@ -174,7 +247,7 @@ const DateWidget = ({ selectedNode, selectedDate, changeDate }) => {
         <button
           type="button"
           className={`${(dateView === 'calendar') && 'bg-graydetails'} flex size-[35px] items-center justify-center rounded-lg hover:bg-graydetails`}
-          onClick={() => seDateView('calendar')}
+          onClick={() => setDateView('calendar')}
         >
           <img
             src={calendarIcon}

@@ -2,7 +2,7 @@ import { React, useEffect, useState } from 'react';
 
 import { useOutletContext, useParams, useNavigate } from 'react-router-dom';
 
-import { checkCircleIcon, pasteIcon, uncheckCircleIcon } from 'src/assets';
+import { pasteIcon } from 'src/assets';
 import {
   AddNewItemButton, Button, ConfirmationDialog, TextInput, VariableListItem,
 } from 'src/components/inputs';
@@ -174,7 +174,7 @@ const ComponentManagement = () => {
                   />
 
                   <div className="flex w-full space-x-5">
-                    <div className="flex grow flex-col">
+                    <div className="flex w-2/5 flex-col sm:w-1/4">
                       <TextInput
                         id="type"
                         type="text"
@@ -186,12 +186,12 @@ const ComponentManagement = () => {
                       />
                     </div>
 
-                    <div className="flex w-[80px] flex-col">
-                      <Label text="Datasheet" />
-                      <div className="flex h-full items-center justify-between">
+                    <div className="flex w-3/5 flex-col sm:w-3/4">
+                      <Label text="Datasheet Link" />
+                      <div className="flex h-full items-center gap-2.5">
                         <button
                           type="button"
-                          className="flex"
+                          className="flex size-[38px] items-center justify-center rounded-lg hover:bg-graydetails"
                           onClick={() => copyClipboard()}
                         >
                           <img
@@ -201,15 +201,13 @@ const ComponentManagement = () => {
                           />
                         </button>
 
-                        <img
-                          className="size-[30px]"
-                          src={selectedComponent.datasheet_link !== datasheetLink
-                            ? checkCircleIcon
-                            : uncheckCircleIcon}
-                          alt={selectedComponent.datasheet_link !== datasheetLink
-                            ? 'cheked'
-                            : 'unchecked'}
-                        />
+                        <div className="flex-1 items-center justify-center rounded-lg">
+                          <input
+                            className="w-full rounded-lg border border-gray-300 bg-disabled px-2 py-1.5 focus:border-main focus:ring-main"
+                            value={datasheetLink}
+                            disabled
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>

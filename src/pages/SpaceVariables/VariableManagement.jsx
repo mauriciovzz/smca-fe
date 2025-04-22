@@ -28,6 +28,11 @@ const VariableManagement = () => {
   const [unit, setUnit] = useState(selectedVariable.unit);
   const [color, setColor] = useState(selectedVariable.color);
 
+  const systemVariables = [
+    'pm2.5', 'pm10', 'o3', 'no2', 'so2', 'co',
+    'temperatura', 'humedad', 'presión', 'precipitación', 'radiación solar',
+  ];
+
   const setData = () => {
     setIsEditable(false);
     setIsConDiaOpen(false);
@@ -145,7 +150,7 @@ const VariableManagement = () => {
       </div>
 
       {
-        (spaceData.is_admin) && (
+        (spaceData.is_admin) && (!systemVariables.includes(name)) && (
           <div className="flex w-full gap-2.5">
             {
               isEditable

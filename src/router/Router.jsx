@@ -13,6 +13,7 @@ import {
 } from 'src/pages/Authentication';
 import Home from 'src/pages/Home';
 import NotFound from 'src/pages/NotFound';
+import { ReadingsRoot } from 'src/pages/Readings';
 import Root from 'src/pages/Root';
 import {
   ComponentsRoot, ComponentCreation, ComponentManagement,
@@ -36,6 +37,7 @@ import {
   SelectedNodeManagementRoot, DownloadNodeConfigFile, UpdateNodeInfo, UpdateNodeComponents,
   UpdateNodeLocation, DeleteNode,
 } from 'src/pages/SpaceNodes/SelectedNodeManagement';
+import { SelectedSpaceReadingsRoot } from 'src/pages/SpaceReadings';
 import {
   SpacesCreation, SpacesInvitations, SpacesRoot,
 } from 'src/pages/Spaces';
@@ -62,6 +64,10 @@ const Router = () => {
             {
               index: true,
               element: <Home />,
+            },
+            {
+              path: 'lecturas',
+              element: <ReadingsRoot />,
             },
             {
               path: 'informacion',
@@ -145,7 +151,8 @@ const Router = () => {
                   element: <SelectedSpaceHome />,
                 },
                 {
-                  path: 'reportes',
+                  path: 'lecturas',
+                  element: <SelectedSpaceReadingsRoot />,
                 },
                 {
                   path: 'miembros',

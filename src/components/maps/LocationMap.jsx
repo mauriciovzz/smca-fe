@@ -146,7 +146,7 @@ const LocationMap = ({
       </div>
     )
     : (
-      <Map marker={markerColor} markerColor={markerColor} />
+      <Map marker={marker} markerColor={markerColor} />
     )
 );
 

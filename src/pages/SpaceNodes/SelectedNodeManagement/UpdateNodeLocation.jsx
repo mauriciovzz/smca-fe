@@ -26,8 +26,7 @@ const ChangeLocation = ({ setView }) => {
     spaceData, selectedNode, updateNodesData, locationsData, updateLocationsData,
   } = useOutletContext();
 
-  const freeLocations = locationsData
-    .filter((loc) => !loc.is_taken);
+  const freeLocations = locationsData.filter((loc) => !loc.is_taken);
 
   const [isMapOpen, setIsMapOpen] = useState(false);
   const [isLocCreOpen, setIsLocCreOpen] = useState(false);
@@ -209,7 +208,7 @@ const CurrentLocation = ({ setView }) => {
                   <div className="flex flex-col">
                     <div className="flex divide-x">
                       <InfoItem text="NOMBRE" width="w-2/3" value={selectedNode.location_name} />
-                      <InfoItem text="VISIBILIDAD" width="w-1/3 pl-2.5" value={selectedNode.is_location_visible ? 'publico' : 'privado'} />
+                      <InfoItem text="VISIBILIDAD" width="w-1/3 pl-2.5" value={selectedNode.is_location_visible ? 'público' : 'privado'} />
                     </div>
                     <Divider changePadding="p-1.5" />
 
@@ -221,7 +220,7 @@ const CurrentLocation = ({ setView }) => {
                   </div>
 
                   <LocationMap
-                    marker={{ lat: selectedNode.lat, long: selectedNode.long }}
+                    marker={selectedNode}
                     markerColor={spaceData.color}
                     onlyMap
                   />
@@ -230,7 +229,7 @@ const CurrentLocation = ({ setView }) => {
 
                   <ToggleSwitch
                     labelText="Visibilidad"
-                    selectedOption={selectedNode.is_location_visible}
+                    selectedOption={selectedNode.is_visible}
                     leftOption={{
                       title: 'Público',
                       value: true,

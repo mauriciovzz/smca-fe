@@ -17,7 +17,6 @@ const VariableCreation = ({ onClose }) => {
 
   const { spaceData, updateVariablesData } = useOutletContext();
 
-  const [variableType, setVariableType] = useState('enviromental');
   const [valueType, setValueType] = useState('numerical');
   const [name, setName] = useState('');
   const [unit, setUnit] = useState('');
@@ -30,7 +29,6 @@ const VariableCreation = ({ onClose }) => {
       const response = await axiosPrivate.post(
         `/api/spaces/${spaceData.space_id}/variables`,
         {
-          variableType,
           valueType,
           name,
           unit: (valueType === 'numerical') ? unit : null,
@@ -40,7 +38,6 @@ const VariableCreation = ({ onClose }) => {
 
       notificationHelper.success(response.data);
 
-      setVariableType('enviromental');
       setName('');
       setValueType('numerical');
       setUnit('');
@@ -63,23 +60,6 @@ const VariableCreation = ({ onClose }) => {
         <Divider />
 
         <form onSubmit={handleSubmit} id="form" className="space-y-5">
-          <ToggleSwitch
-            labelText="Tipo de Variable"
-            selectedOption={variableType}
-            leftOption={{
-              title: 'Ambiental',
-              value: 'enviromental',
-              onClick: () => setVariableType('enviromental'),
-              color: 'bg-main',
-            }}
-            rigthOption={{
-              title: 'Meteorológica',
-              value: 'meteorological',
-              onClick: () => setVariableType('meteorological'),
-              color: 'bg-main',
-            }}
-          />
-
           <ToggleSwitch
             labelText="Tipo de Valor"
             selectedOption={valueType}
@@ -123,15 +103,15 @@ const VariableCreation = ({ onClose }) => {
                 </div>
               )
             }
+          </div>
 
-            <div className="w-[40px]">
-              <ColorInput
-                id="color"
-                labelText="Color"
-                value={color}
-                setValue={setColor}
-              />
-            </div>
+          <div className="w-full">
+            <ColorInput
+              id="color"
+              labelText="Color"
+              value={color}
+              setValue={setColor}
+            />
           </div>
         </form>
       </div>

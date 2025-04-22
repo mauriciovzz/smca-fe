@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 
 import {
   variableIcon, closeIcon, locationIcon, mapIcon, componentIcon, menuIcon,
-  nodeIcon, reportsIcon, settingsIcon, usersIcon, spaceIcon,
+  nodeIcon, readingsIcon, settingsIcon, usersIcon, spaceIcon,
 } from 'src/assets';
 import { BlurEffect } from 'src/components/ui';
 
@@ -21,10 +21,10 @@ const BottomBar = ({ spaceId }) => {
       menuOrder: 'order-1',
     },
     {
-      title: 'Reportes',
-      route: `/espacios/${spaceId}/reportes`,
-      src: reportsIcon,
-      alt: 'reports',
+      title: 'Lecturas',
+      route: `/espacios/${spaceId}/lecturas`,
+      src: readingsIcon,
+      alt: 'readings',
       barOrder: 'order-2',
       menuOrder: 'order-2',
     },

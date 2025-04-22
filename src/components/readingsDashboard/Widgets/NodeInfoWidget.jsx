@@ -1,5 +1,5 @@
 import {
-  React, useState, useRef,
+  React, useState, useRef, useEffect,
 } from 'react';
 
 import { arrowIcon, componentIcon, nodeIcon } from 'src/assets';
@@ -85,11 +85,33 @@ const NodeInformationWidget = ({ selectedNode, nodeComponents, setIsModOpen }) =
     return `${(`0${startDate.getDate()}`).slice(-2)}-${(`0${startDate.getMonth() + 1}`).slice(-2)}-${(`0${startDate.getFullYear()}`).slice(-2)}`;
   };
 
-  // Component scroll
-  const centerRef = useRef(null);
-  let repeater;
-  const scroll = (o) => { centerRef.current.scrollLeft += o; };
-  const updateRepeater = (o) => { repeater = setInterval(scroll, 100, o); };
+  const scrollSpeed = 3;
+
+  const scrollRef = useRef(null);
+  const scrollDirection = useRef(null);
+  const animationRef = useRef(null);
+
+  const smoothScroll = () => {
+    if (scrollRef.current && scrollDirection.current) {
+      scrollRef.current.scrollLeft += scrollDirection.current === 'right' ? scrollSpeed : -scrollSpeed;
+      animationRef.current = requestAnimationFrame(smoothScroll);
+    }
+  };
+
+  const startScroll = (direction) => {
+    scrollDirection.current = direction;
+    animationRef.current = requestAnimationFrame(smoothScroll);
+  };
+
+  const stopScroll = () => {
+    scrollDirection.current = null;
+    cancelAnimationFrame(animationRef.current);
+  };
+
+  useEffect(
+    () => () => cancelAnimationFrame(animationRef.current), // Cleanup on unmount
+    [],
+  );
 
   const renderInfoView = () => {
     switch (infoView) {
@@ -99,8 +121,8 @@ const NodeInformationWidget = ({ selectedNode, nodeComponents, setIsModOpen }) =
             <div className="absolute flex size-full">
               <div
                 className="mr-2 hidden w-[31px] justify-center rounded-lg hover:bg-graydetails sm:flex"
-                onMouseEnter={() => updateRepeater(-20)}
-                onMouseLeave={() => clearInterval(repeater)}
+                onMouseEnter={() => startScroll('left')}
+                onMouseLeave={stopScroll}
               >
                 <img
                   src={arrowIcon}
@@ -109,7 +131,7 @@ const NodeInformationWidget = ({ selectedNode, nodeComponents, setIsModOpen }) =
                 />
               </div>
 
-              <div ref={centerRef} className="flex size-full space-x-2 overflow-auto scroll-smooth whitespace-nowrap pb-2 sm:hide-scrollbar sm:pb-0">
+              <div ref={scrollRef} className="flex size-full space-x-2 overflow-auto scroll-smooth whitespace-nowrap pb-2 sm:hide-scrollbar sm:pb-0">
                 {nodeComponents.filter((c) => c.type === 'board').map((c) => <ComponentItem component={c} key={`${c.component_id}`} />)}
                 {nodeComponents.filter((c) => c.type === 'sensor').map((c) => <ComponentItem component={c} key={`${c.component_id}`} />)}
                 {nodeComponents.filter((c) => c.type === 'rain_detector').map((c) => <ComponentItem component={c} key={`${c.component_id}`} />)}
@@ -119,8 +141,8 @@ const NodeInformationWidget = ({ selectedNode, nodeComponents, setIsModOpen }) =
 
               <div
                 className="ml-2 hidden w-[31px] justify-center rounded-lg hover:bg-graydetails sm:flex"
-                onMouseEnter={() => updateRepeater(20)}
-                onMouseLeave={() => clearInterval(repeater)}
+                onMouseEnter={() => startScroll('right')}
+                onMouseLeave={stopScroll}
               >
                 <img
                   src={arrowIcon}

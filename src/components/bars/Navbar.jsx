@@ -4,7 +4,7 @@ import { Link, NavLink } from 'react-router-dom';
 
 import {
   accountIcon, closeIcon, helpIcon, infoIcon, loginIcon,
-  logoutIcon, mapIcon, menuIcon, spaceIcon,
+  logoutIcon, mapIcon, menuIcon, spaceIcon, readingsIcon,
 } from 'src/assets';
 import { BlurEffect } from 'src/components/ui';
 import useAuth from 'src/hooks/useAuth';
@@ -150,6 +150,13 @@ const Navbar = () => {
       needsAuth: false,
     },
     {
+      title: 'Lecturas',
+      route: 'lecturas',
+      src: readingsIcon,
+      alt: 'readings',
+      needsAuth: false,
+    },
+    {
       title: 'Información',
       route: 'informacion',
       src: infoIcon,
@@ -218,7 +225,12 @@ const Navbar = () => {
             />
           </ul>
 
-          <ul className={`${isMenuOpen ? 'grid' : 'hidden'} ${auth?.accessToken ? 'grid-cols-3' : 'grid-cols-2'} h-[201px] w-full grid-rows-2 justify-items-center gap-5 pt-5 sm:hidden`}>
+          <ul className={`
+              ${isMenuOpen ? 'grid' : 'hidden'}
+              ${auth?.accessToken ? 'h-[301px] grid-rows-3 ' : 'h-[201px] grid-cols-2'}
+              w-full grid-cols-3 justify-items-center gap-5 pt-5 sm:hidden
+            `}
+          >
             <Menu
               navLinks={navLinks}
               hasAuth={auth?.accessToken}

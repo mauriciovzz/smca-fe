@@ -46,10 +46,24 @@ module.exports = {
 
         // COMPONENTS  ------------------------------
         board: '#005EAA',
-        rain: '#53789E',
         other: '#a1a1aa',
-        sensor: '#026159',
+        sensor: '#53789E',
         camera: '#7A8DA4',
+
+        // AQI
+        aqi1: '#00E400',
+        aqi2: '#FFFF00',
+        aqi3: '#FF7E00',
+        aqi4: '#FF0000',
+        aqi5: '#8F3F97',
+        aqi6: '#7E0023',
+
+        // UVI
+        uvi1: '#009900',
+        uvi2: '#FFFF00',
+        uvi3: '#FFA500',
+        uvi4: '#FF0000',
+        uvi5: '#8F3F97',
       },
       gridTemplateColumns: {
         layout: 'repeat(auto-fit, 230px);',

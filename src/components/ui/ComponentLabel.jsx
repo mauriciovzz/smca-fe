@@ -13,11 +13,6 @@ const ComponentLabel = ({ component }) => {
           color: 'text-sensor',
           text: 'SENSOR',
         };
-      case 'rain_detector':
-        return {
-          color: 'text-rain',
-          text: 'DETECTOR DE LLUVIA',
-        };
       case 'camera':
         return {
           color: 'text-camera',

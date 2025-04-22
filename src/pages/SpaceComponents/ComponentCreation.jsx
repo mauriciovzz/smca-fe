@@ -2,7 +2,7 @@ import { React, useState } from 'react';
 
 import { useOutletContext, useNavigate } from 'react-router-dom';
 
-import { checkCircleIcon, pasteIcon, uncheckCircleIcon } from 'src/assets';
+import { pasteIcon } from 'src/assets';
 import {
   AddNewItemButton, Button, TextInput, VariableListItem,
 } from 'src/components/inputs';
@@ -11,6 +11,13 @@ import useAxiosPrivate from 'src/hooks/useAxiosPrivate';
 import useErrorHandler from 'src/hooks/useErrorHandler';
 import VariableCreation from 'src/pages/SpaceVariables/VariableCreation';
 import notificationHelper from 'src/utils/notificationHelper';
+
+const componentTypes = [
+  { type: 'board', text: 'placa' },
+  { type: 'sensor', text: 'sensor' },
+  { type: 'camera', text: 'camara' },
+  { type: 'other', text: 'otro' },
+];
 
 const ComponentCreation = ({ onClose }) => {
   const axiosPrivate = useAxiosPrivate();
@@ -22,14 +29,6 @@ const ComponentCreation = ({ onClose }) => {
     updateComponentsData,
     variablesData, updateVariablesData,
   } = useOutletContext();
-
-  const componentTypes = [
-    { type: 'board', text: 'placa' },
-    { type: 'sensor', text: 'sensor' },
-    { type: 'rain_detector', text: 'detector de lluvia' },
-    { type: 'camera', text: 'camara' },
-    { type: 'other', text: 'otro' },
-  ];
 
   const [isVarCreOpen, setIsVarCreOpen] = useState(false);
 
@@ -111,7 +110,7 @@ const ComponentCreation = ({ onClose }) => {
             autoComplete="off"
           />
           <div className="flex w-full space-x-5">
-            <div className="flex grow flex-col">
+            <div className="flex w-2/5 flex-col sm:w-1/4">
               <Label text="Tipo" />
               <select
                 name="type"
@@ -125,12 +124,12 @@ const ComponentCreation = ({ onClose }) => {
               </select>
             </div>
 
-            <div className="flex w-[80px] flex-col">
-              <Label text="Datasheet" />
-              <div className="flex h-full items-center justify-between">
+            <div className="flex w-3/5 flex-col sm:w-3/4">
+              <Label text="Datasheet Link" />
+              <div className="flex h-full items-center gap-2.5">
                 <button
                   type="button"
-                  className="flex"
+                  className="flex size-[38px] items-center justify-center rounded-lg hover:bg-graydetails"
                   onClick={() => copyClipboard()}
                 >
                   <img
@@ -140,11 +139,13 @@ const ComponentCreation = ({ onClose }) => {
                   />
                 </button>
 
-                <img
-                  className="size-[30px]"
-                  src={datasheetLink ? checkCircleIcon : uncheckCircleIcon}
-                  alt={datasheetLink ? 'cheked' : 'unchecked'}
-                />
+                <div className="flex-1 items-center justify-center rounded-lg">
+                  <input
+                    className="w-full rounded-lg border border-gray-300 bg-disabled px-2 py-1.5 focus:border-main focus:ring-main"
+                    value={datasheetLink}
+                    disabled
+                  />
+                </div>
               </div>
             </div>
           </div>

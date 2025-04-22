@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 
 import {
   variableIcon, arrowIcon, locationIcon, mapIcon, componentIcon,
-  nodeIcon, reportsIcon, settingsIcon, usersIcon, spaceIcon,
+  nodeIcon, readingsIcon, settingsIcon, usersIcon, spaceIcon,
 } from 'src/assets';
 
 const NavLinkItem = ({ link, isMenuOpen }) => (
@@ -35,10 +35,10 @@ const SideBar = ({ spaceId }) => {
       alt: 'map',
     },
     {
-      title: 'Reportes',
-      route: `/espacios/${spaceId}/reportes`,
-      src: reportsIcon,
-      alt: 'reports',
+      title: 'Lecturas',
+      route: `/espacios/${spaceId}/lecturas`,
+      src: readingsIcon,
+      alt: 'readings',
     },
     {
       title: 'Miembros',

@@ -2,7 +2,7 @@ import BackgroundMap from './BackgroundMap';
 import LocationMap from './LocationMap';
 import MapBase from './MapBase';
 import MarkersMap from './MarkersMap';
-import ReadingsMap from './ReadingsMap/ReadingsMap';
+import ReadingsMap from './ReadingsMap';
 import SelectionMap from './SelectionMap';
 
 export {

@@ -1,13 +1,17 @@
-import { React, useState, useEffect } from 'react';
+import {
+  React, useState, useEffect, useRef,
+} from 'react';
 
 import { LoaderSpinner } from 'src/components/ui';
 import useAxiosPrivate from 'src/hooks/useAxiosPrivate';
 import useErrorHandler from 'src/hooks/useErrorHandler';
 import useScreenWidth from 'src/hooks/useScreenWidth';
 
+import CameraWidget from './Widgets/CameraWidget';
 import DateWidget from './Widgets/DateWidget/DateWidget';
+import FullScreenPhoto from './Widgets/FullScreenPhoto';
+import MeteorologicalWidget from './Widgets/MeteorologicalWidget';
 import NodeInfoWidget from './Widgets/NodeInfoWidget';
-// import PhotoWidget from './Widgets/PhotoWidget';
 import ReadingsWidget from './Widgets/ReadingsWidget';
 
 const ReadingsDashboard = ({ selectedNode, setIsModOpen }) => {
@@ -15,105 +19,127 @@ const ReadingsDashboard = ({ selectedNode, setIsModOpen }) => {
   const errorHandler = useErrorHandler();
   const isScreenSmall = useScreenWidth();
 
-  const [loadingData, setLoadingData] = useState(false);
+  const [loadingData, setLoadingData] = useState(true);
+  const [showCameraWidget, setShowCameraWidget] = useState(false);
+  const [openCurrentPhoto, setOpenCurrentPhoto] = useState(false);
 
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [dateReadings, setDateReadings] = useState([]);
-  // const [dayPhotos, setDayPhotos] = useState([]);
+  const nd = new Date();
+  const [selectedDate, setSelectedDate] = useState(nd);
+  const [selectedHour, setSelectedHour] = useState(nd.getHours() === 0 ? 24 : nd.getHours());
+
+  const lastDateRef = useRef(null);
+
   const [nodeComponents, setNodeComponents] = useState(null);
+  const [currentPhoto, setCurrentPhoto] = useState(null);
+  const [currentDateReadings, setCurrentDateReadings] = useState([]);
 
-  const parseDate = () => (
-    `${selectedDate.getFullYear()}-${selectedDate.getMonth() + 1}-${selectedDate.getDate()}`
-  );
+  // Date functions
+  const currentDate = new Date();
+  const nodeStartDate = new Date(selectedNode.start_time_stamp);
+
+  const formatDate = () => {
+    const day = String(selectedDate.getDate()).padStart(2, '0');
+    const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
+    const year = String(selectedDate.getFullYear()).slice(-2);
+
+    return `${day}-${month}-${year}`;
+  };
+
+  const getDateOnly = (date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
   const changeDate = (newDate, newHour) => {
-    const currentDate = newDate || selectedDate;
-    const currenTime = (newHour) ? new Date(newHour) : selectedDate;
+    const incomingDate = newDate;
+    let incomingHour = newHour;
 
-    setSelectedDate(
-      new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth(),
-        currentDate.getDate(),
-        currenTime.getHours(),
-      ),
-    );
-  };
-
-  const parseAverages = (v) => {
-    const newArray = [];
-
-    for (let i = 1; i <= 24; i += 1) {
-      const match = v.dateAverages.find(
-        (reading) => reading.end_hour === i,
-      );
-
-      if (i === 6 || i === 18) {
-        newArray.push(
-          {
-            time: (i === 6) ? 'sunrise' : 'sunset',
-            value: null,
-          },
-        );
-      }
-
-      newArray.push(
-        {
-          time: (i === 24) ? 0 : i,
-          value: (match) ? match.average : null,
-        },
-      );
+    if (incomingDate.toDateString() === nodeStartDate.toDateString()) {
+      if (incomingHour < nodeStartDate.getHours())
+        incomingHour = nodeStartDate.getHours() + 1;
     }
 
-    return newArray;
+    if (incomingDate.toDateString() === currentDate.toDateString()) {
+      if (incomingHour > currentDate.getHours())
+        incomingHour = currentDate.getHours();
+    }
+
+    setSelectedDate(incomingDate);
+    setSelectedHour(incomingHour);
   };
 
-  // const parsePhotos = (p) => {
-  //   const newArray = [];
+  // API calls
+  const getCurrentPhoto = async () => {
+    try {
+      const photo = await axiosPrivate.get(
+        `/api/photos/${selectedNode.space_id}/${selectedNode.node_id}/${selectedNode.location_id}/${formatDate()}/${selectedHour}`,
+        { responseType: 'blob' },
+      );
 
-  //   for (let i = 1; i <= 24; i += 1) {
-  //     const match = p.find(
-  //       (photoReference) => photoReference.end_hour === i,
-  //     );
+      const url = URL.createObjectURL(photo.data);
+      setCurrentPhoto(url);
+    } catch (error) {
+      if (error.status === 404)
+        setCurrentPhoto(null);
+      else
+        errorHandler(error);
+    }
+  };
 
-  //     newArray.push(
-  //       {
-  //         time: (i === 24) ? 0 : i,
-  //         photoPath: (match) ? match.photo_path : null,
-  //       },
-  //     );
-  //   }
+  const confirmCameraWidget = async (components) => {
+    if (components.some((c) => c.type === 'camera')) {
+      setShowCameraWidget(true);
+      getCurrentPhoto();
+    } else
+      try {
+        const hasPhotos = await axiosPrivate.get(
+          `/api/photos/${selectedNode.space_id}/${selectedNode.node_id}/${selectedNode.location_id}/${formatDate()}`,
+        );
 
-  //   return newArray;
-  // };
+        if (hasPhotos.data) {
+          setShowCameraWidget(true);
+          getCurrentPhoto();
+        } else {
+          setShowCameraWidget(false);
+        }
+      } catch (error) {
+        errorHandler(error);
+      }
+  };
 
-  const getData = async () => {
+  const getCurrentDateReadings = async () => {
+    const readings = await axiosPrivate.get(
+      `/api/readings/${selectedNode.space_id}/${selectedNode.node_id}/${selectedNode.location_id}/${formatDate()}`,
+    );
+    setCurrentDateReadings(readings.data);
+  };
+
+  const getComponents = async () => {
     try {
       const components = await axiosPrivate.get(
         `/api/spaces/${selectedNode.space_id}/nodes/${selectedNode.node_id}/components`,
       );
       setNodeComponents(components.data);
-
-      // const photos = await photosService.getPublicNodePhotos(
-      //   selectedNode.node_id,
-      //   selectedNode.location_id,
-      //   `${selectedDate.getFullYear()}-${selectedDate.getMonth() + 1}-${selectedDate.getDate()}`,
-      // );
-      // setDayPhotos(photos.length > 0 ? parsePhotos(photos) : []);
-
-      const readings = await axiosPrivate.get(
-        `/api/readings/node-readings/${selectedNode.node_id}/${parseDate()}`,
-      );
-      setDateReadings(readings.data.map((v) => ({ ...v, dateAverages: parseAverages(v) })));
-
-      setLoadingData(false);
+      confirmCameraWidget(components.data);
     } catch (error) {
       errorHandler(error);
     }
   };
 
   useEffect(() => {
-    getData();
+    getComponents();
+    getCurrentDateReadings();
+
+    lastDateRef.current = getDateOnly(selectedDate);
+
+    setLoadingData(false);
+  }, []);
+
+  useEffect(() => {
+    const curDate = getDateOnly(selectedDate);
+    const lastDate = lastDateRef.current;
+
+    if (!lastDate || curDate.getTime() !== lastDate.getTime()) {
+      confirmCameraWidget(nodeComponents);
+      getCurrentDateReadings();
+    }
   }, [selectedDate]);
 
   return (
@@ -126,10 +152,70 @@ const ReadingsDashboard = ({ selectedNode, setIsModOpen }) => {
               {
                 (isScreenSmall)
                   ? (
-                    <div className="hide-scrollbar flex w-full flex-col overflow-scroll scroll-smooth">
-                      <div className="inline-block space-y-4">
+                    <>
+                      <div className="hide-scrollbar flex w-full flex-col overflow-scroll scroll-smooth">
+                        <div className="inline-block space-y-4">
 
-                        <div className="relative h-[275px]">
+                          <div className="relative h-[275px]">
+                            <NodeInfoWidget
+                              selectedNode={selectedNode}
+                              nodeComponents={nodeComponents}
+                              setIsModOpen={setIsModOpen}
+                            />
+                          </div>
+
+                          <div className="sticky top-0 z-[100] flex h-fit ">
+                            <DateWidget
+                              selectedDate={selectedDate}
+                              selectedHour={selectedHour}
+                              nodeStartDate={nodeStartDate}
+                              currentDate={currentDate}
+                              changeDate={changeDate}
+                            />
+                          </div>
+
+                          {(showCameraWidget) && (
+                            <div className="relative h-[230px]">
+                              <CameraWidget
+                                currentPhoto={currentPhoto}
+                                photoName={`${selectedNode.node_id}_${selectedNode.location_id}_${formatDate()}_${selectedHour}.jpg`}
+                                setOpenCurrentPhoto={setOpenCurrentPhoto}
+                              />
+                            </div>
+                          )}
+
+                          <div className="relative h-[380px]">
+                            <MeteorologicalWidget
+                              dateReadings={currentDateReadings.filter((v) => v.variable_type === 'meteorological')}
+                              selectedDate={selectedDate}
+                              selectedHour={selectedHour}
+                              changeDate={changeDate}
+                            />
+                          </div>
+
+                          <div className="relative h-[330px]">
+                            {/* <ReadingsWidget
+                              type="enviromental"
+                              dateReadings={currentDateReadings.filter((v) => v.variable_type === 'enviromental')}
+                              selectedDate={selectedDate}
+                              changeDate={changeDate}
+                            /> */}
+                          </div>
+                        </div>
+                      </div>
+
+                      {openCurrentPhoto && (
+                        <FullScreenPhoto
+                          currentPhoto={currentPhoto}
+                          setOpenCurrentPhoto={setOpenCurrentPhoto}
+                        />
+                      )}
+                    </>
+                  )
+                  : (
+                    <>
+                      <div className="grid size-full grid-cols-10 grid-rows-3 gap-4">
+                        <div className="col-span-5 row-span-1">
                           <NodeInfoWidget
                             selectedNode={selectedNode}
                             nodeComponents={nodeComponents}
@@ -137,89 +223,52 @@ const ReadingsDashboard = ({ selectedNode, setIsModOpen }) => {
                           />
                         </div>
 
-                        <div className="sticky top-0 z-[100] flex h-fit ">
-                          <DateWidget
-                            selectedNode={selectedNode}
-                            selectedDate={selectedDate}
-                            changeDate={changeDate}
-                          />
-                        </div>
-
-                        {/* {(dayPhotos.length > 0) && (
-                          <div className="relative h-[230px]">
-                            <PhotoWidget
-                              dayPhotos={dayPhotos}
-                              selectedDate={selectedDate}
+                        {(showCameraWidget) && (
+                          <div className="col-span-2 row-span-1">
+                            <CameraWidget
+                              currentPhoto={currentPhoto}
+                              photoName={`${selectedNode.node_id}_${selectedNode.location_id}_${formatDate()}_${selectedHour}.jpg`}
+                              setOpenCurrentPhoto={setOpenCurrentPhoto}
                             />
                           </div>
-                        )} */}
+                        )}
 
-                        <div className="relative h-[330px]">
-                          <ReadingsWidget
-                            type="meteorological"
-                            dateReadings={dateReadings.filter((dr) => dr.type === 'meteorological')}
+                        <div className={`${(showCameraWidget) ? 'col-span-3' : 'col-span-5'} row-span-1`}>
+                          <DateWidget
                             selectedDate={selectedDate}
+                            selectedHour={selectedHour}
+                            nodeStartDate={nodeStartDate}
+                            currentDate={currentDate}
                             changeDate={changeDate}
                           />
                         </div>
 
-                        <div className="relative h-[330px]">
-                          <ReadingsWidget
+                        <div className="relative col-span-5 col-start-1 row-span-2">
+                          <MeteorologicalWidget
+                            dateReadings={currentDateReadings.filter((v) => v.variable_type === 'meteorological')}
+                            selectedDate={selectedDate}
+                            selectedHour={selectedHour}
+                            changeDate={changeDate}
+                          />
+                        </div>
+
+                        <div className="relative col-span-5 row-span-2">
+                          {/* <ReadingsWidget
                             type="enviromental"
-                            dateReadings={dateReadings.filter((dr) => dr.type === 'enviromental')}
+                            dateReadings={currentDateReadings.filter((v) => v.variable_type === 'enviromental')}
                             selectedDate={selectedDate}
                             changeDate={changeDate}
-                          />
+                          /> */}
                         </div>
                       </div>
-                    </div>
-                  )
-                  : (
-                    <div className="grid size-full grid-cols-10 grid-rows-3 gap-4">
-                      <div className="col-span-5 row-span-1">
-                        <NodeInfoWidget
-                          selectedNode={selectedNode}
-                          nodeComponents={nodeComponents}
-                          setIsModOpen={setIsModOpen}
-                        />
-                      </div>
 
-                      {/* {(dayPhotos.length > 0) && (
-                        <div className="col-span-2 row-span-1">
-                          <PhotoWidget
-                            dayPhotos={dayPhotos}
-                            selectedDate={selectedDate}
-                          />
-                        </div>
-                      )} */}
-
-                      {/* {`${(dayPhotos.length > 0) ? 'col-span-3' : 'col-span-5'} row-span-1`} */}
-                      <div className="col-span-5 row-span-1">
-                        <DateWidget
-                          selectedNode={selectedNode}
-                          selectedDate={selectedDate}
-                          changeDate={changeDate}
+                      {openCurrentPhoto && (
+                        <FullScreenPhoto
+                          currentPhoto={currentPhoto}
+                          setOpenCurrentPhoto={setOpenCurrentPhoto}
                         />
-                      </div>
-
-                      <div className="relative col-span-5 col-start-1 row-span-2">
-                        <ReadingsWidget
-                          type="meteorological"
-                          dateReadings={dateReadings.filter((dr) => dr.type === 'meteorological')}
-                          selectedDate={selectedDate}
-                          changeDate={changeDate}
-                        />
-                      </div>
-
-                      <div className="relative col-span-5 row-span-2">
-                        <ReadingsWidget
-                          type="enviromental"
-                          dateReadings={dateReadings.filter((dr) => dr.type === 'enviromental')}
-                          selectedDate={selectedDate}
-                          changeDate={changeDate}
-                        />
-                      </div>
-                    </div>
+                      )}
+                    </>
                   )
               }
             </div>

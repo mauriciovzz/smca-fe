@@ -1,7 +1,9 @@
 import { React, useState, useRef } from 'react';
 
 import { Moon } from 'lunarphase-js';
-import { AreaChart, Area, ResponsiveContainer } from 'recharts';
+import {
+  AreaChart, Area, ResponsiveContainer, YAxis,
+} from 'recharts';
 
 import { arrowIcon } from 'src/assets';
 import colorHelper from 'src/utils/colorHelper';
@@ -10,96 +12,120 @@ const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sab'];
 
 const Divider = () => <div className="ml-2 border-l" />;
 
-const ReadingsWidget = ({
-  type, dateReadings, selectedDate, changeDate,
+const MainTitle = ({ type }) => (
+  <div className="pb-2 sm:px-6">
+    <div className="text-2xl sm:text-4xl">
+      {(type === 'meteorological') ? 'Tiempo' : 'Contaminantes'}
+    </div>
+  </div>
+);
+
+const NoReadingsMessage = () => (
+  <div className="flex size-full flex-col">
+    <div className="border-t px-2 py-1 text-xs sm:px-7 sm:text-sm" />
+
+    <div className="flex size-full items-center justify-center">
+      <b className="w-2/3 text-center sm:w-full">
+        No existen lecturas realizadas en esta fecha
+      </b>
+    </div>
+  </div>
+);
+
+const VariableListScroll = ({
+  type, dateReadings, selectedVariable, setSelectedVariable,
 }) => {
-  const [selectedVariable, setSelectedVariable] = useState('Resumen');
-
-  // Graph scroll
-  const centerRefGraph = useRef(null);
-  let graphRepeater;
-  const graphScroll = (o) => { centerRefGraph.current.scrollLeft += o; };
-  const updateGraphRepeater = (o) => { graphRepeater = setInterval(graphScroll, 100, o); };
-
-  // Variable list scroll
+  // Scroll variables
   const centerRefVarList = useRef(null);
   let varListRepeater;
   const varListScroll = (o) => { centerRefVarList.current.scrollLeft += o; };
   const updateVarListRepeater = (o) => { varListRepeater = setInterval(varListScroll, 100, o); };
 
-  const getReadingValue = (variableName, hour) => {
-    const time = hour || selectedDate.getHours();
-    const inx = dateReadings.findIndex((v) => v.variable_name === variableName);
+  return (
+    <div className="flex w-full border-y py-1 text-sm">
+      <div
+        className="mr-1 hidden w-[31px] items-center justify-center rounded-lg hover:bg-graydetails sm:flex"
+        onMouseEnter={() => updateVarListRepeater(-20)}
+        onMouseLeave={() => clearInterval(varListRepeater)}
+      >
+        <img
+          src={arrowIcon}
+          alt="left var list scroll"
+          className=" size-[20px]"
+        />
+      </div>
 
-    return (inx !== -1)
-      ? dateReadings[inx].dayAverages.find((element) => (element.time === time)).value
-      : null;
-  };
+      <div ref={centerRefVarList} className="flex w-full overflow-auto scroll-smooth pb-1 sm:hide-scrollbar sm:pb-0">
+        <div className="flex items-center">
+          <button
+            className={`${(selectedVariable === 'Resumen') ? 'bg-graydetails' : 'hover:bg-graydetails'} whitespace-nowrap rounded-lg px-2 py-1`}
+            type="button"
+            onClick={() => setSelectedVariable('Resumen')}
+          >
+            Resumen
+          </button>
+        </div>
 
-  const getReadingTime = (date) => {
-    if (date === 'sunrise' || date === 'sunset')
-      return '';
+        {(type === 'enviromental') && (
+          <>
+            <Divider />
 
-    let hours = date;
-    const ampm = (hours >= 12 && hours !== 24) ? 'PM' : 'AM';
+            <div className="flex items-center">
+              <button
+                className={`${(selectedVariable === 'ICA') ? 'bg-graydetails' : 'hover:bg-graydetails'} ml-2 whitespace-nowrap rounded-lg px-2 py-1`}
+                type="button"
+                onClick={() => setSelectedVariable('ICA')}
+              >
+                ICA
+              </button>
+            </div>
+          </>
 
-    hours %= 12;
-    hours = hours || 12;
+        )}
 
-    return `${hours} ${ampm}`;
-  };
+        {
+        dateReadings.map(
+          (v) => (
+            <div
+              key={v.variable_id}
+              className="flex"
+            >
+              <Divider />
 
-  const checkForRainSensor = () => dateReadings.map((v) => v.variable_name).includes('lluvia');
-
-  const getWeatherIcon = (hour, data) => {
-    if (hour === 'sunrise')
-      return 'wi wi-sunrise text-yellow-400';
-    if (hour === 'sunset')
-      return 'wi wi-sunset text-orange-400';
-    if (data === null)
-      return 'wi wi-na text-gray-400';
-
-    if (hour > 5 && hour < 18) {
-      if (checkForRainSensor()) {
-        if (getReadingValue('lluvia', hour))
-          return 'wi wi-day-showers text-orange-700';
+              <button
+                className={`${(v.variable_name === selectedVariable) ? 'bg-graydetails' : 'hover:bg-graydetails'} ml-2 whitespace-nowrap rounded-lg px-2 py-1`}
+                type="button"
+                onClick={() => setSelectedVariable(v.variable_name)}
+              >
+                {(v.unit !== null) ? `${v.variable_name} (${v.unit})` : `${v.variable_name}`}
+              </button>
+            </div>
+          ),
+        )
       }
-      return 'wi wi-day-sunny text-yellow-400';
-    }
+      </div>
 
-    const phase = Moon.lunarPhase(selectedDate);
-    if (checkForRainSensor()) {
-      if (getReadingValue('lluvia', hour)) {
-        if (phase === 'New' || phase === 'Full')
-          return 'wi wi-night-showers text-sky-700';
-        return 'wi wi-night-alt-showers text-sky-700';
-      }
-    }
+      <div
+        className="ml-1 hidden w-[31px] items-center justify-center rounded-lg hover:bg-graydetails sm:flex"
+        onMouseEnter={() => updateVarListRepeater(20)}
+        onMouseLeave={() => clearInterval(varListRepeater)}
+      >
+        <img
+          src={arrowIcon}
+          alt="left var list scroll"
+          className=" size-[20px] rotate-180"
+        />
+      </div>
+    </div>
+  );
+};
 
-    switch (phase) {
-      case 'New':
-        return 'wi wi-moon-alt-new text-gray-400';
-      case 'Waxing Crescent':
-        return 'wi wi-moon-alt-waxing-crescent-4 text-gray-400';
-      case 'First Quarter':
-        return 'wi wi-moon-alt-first-quarter text-gray-400';
-      case 'Waxing Gibbous':
-        return 'wi wi-moon-alt-waxing-gibbous-2 text-gray-400';
-      case 'Full':
-        return 'wi wi-moon-alt-full text-gray-400';
-      case 'Waning Gibbous':
-        return 'wi wi-moon-alt-waning-gibbous-4 text-gray-400';
-      case 'Last Quarter':
-        return 'wi wi-moon-alt-third-quarter text-gray-400';
-      case 'Waning Crescent':
-        return 'wi wi-moon-alt-waning-crescent-4 text-gray-400';
-      default:
-        return 'wi wi-night-clear text-yellow-400';
-    }
-  };
-
+const OverviewTab = ({
+  type, selectedDate, dateReadings, getWeatherIcon, getReadingValue,
+}) => {
   const getGridSize = (index) => {
-    let varCount = dateReadings.filter((v) => v.variable_name !== 'lluvia').length;
+    let varCount = dateReadings.filter((v) => v.variable_name !== 'precipitación').length;
+
     if (type === 'meteorological')
       varCount += 1;
 
@@ -141,251 +167,289 @@ const ReadingsWidget = ({
   };
 
   return (
-    <div className="absolute flex size-full flex-col rounded-xl bg-white p-5 shadow">
-      <div className="pb-2 sm:px-6">
-        <div className="text-2xl sm:text-4xl">
-          {(type === 'meteorological') ? 'Tiempo' : 'Contaminantes'}
-        </div>
-      </div>
-
-      {
-        (dateReadings.length === 0)
-          ? (
-            <div className="flex size-full flex-col">
-              <div className="border-t px-2 py-1 text-xs sm:px-7 sm:text-sm" />
-
-              <div className="flex size-full items-center justify-center">
-                <b className="w-2/3 text-center sm:w-full">
-                  No existen lecturas realizadas en esta fecha
-                </b>
-              </div>
+    <div className="flex size-full pt-2 sm:px-6">
+      <div className="grid size-full grid-cols-12 grid-rows-6 gap-2 text-sm sm:text-base">
+        {
+          (type === 'meteorological') && (
+            <div className={`${getGridSize(1)} flex size-full items-center justify-center rounded-lg border`}>
+              <i className={`${getWeatherIcon(selectedDate.getHours())} self-center text-2xl sm:text-5xl`} />
             </div>
           )
-          : (
-            <>
-              <div className="flex w-full border-y py-1 text-sm">
-                <div
-                  className="mr-1 hidden w-[31px] items-center justify-center rounded-lg hover:bg-graydetails sm:flex"
-                  onMouseEnter={() => updateVarListRepeater(-20)}
-                  onMouseLeave={() => clearInterval(varListRepeater)}
-                >
-                  <img
-                    src={arrowIcon}
-                    alt="left var list scroll"
-                    className=" size-[20px]"
-                  />
-                </div>
+        }
 
-                <div ref={centerRefVarList} className="flex w-full overflow-auto scroll-smooth pb-1 sm:hide-scrollbar sm:pb-0">
-                  <div className="flex items-center">
-                    <button
-                      className={`${(selectedVariable === 'Resumen') ? 'bg-graydetails' : 'hover:bg-graydetails'} whitespace-nowrap rounded-lg px-2 py-1`}
-                      type="button"
-                      onClick={() => setSelectedVariable('Resumen')}
-                    >
-                      Resumen
-                    </button>
-                  </div>
-
-                  {
-                    dateReadings.filter((v) => v.variable_name !== 'lluvia').map(
-                      (v, index) => (
-                        <div
-                          key={v.name}
-                          className="flex"
-                        >
-                          <Divider />
-
-                          <button
-                            className={`${(index === selectedVariable) ? 'bg-graydetails' : 'hover:bg-graydetails'} ml-2 whitespace-nowrap rounded-lg px-2 py-1`}
-                            type="button"
-                            onClick={() => setSelectedVariable(index)}
-                          >
-                            {(v.unit !== null) ? `${v.variable_name} (${v.unit})` : `${v.variable_name}`}
-                          </button>
-                        </div>
-                      ),
-                    )
-                  }
-                </div>
-
-                <div
-                  className="ml-1 hidden w-[31px] items-center justify-center rounded-lg hover:bg-graydetails sm:flex"
-                  onMouseEnter={() => updateVarListRepeater(20)}
-                  onMouseLeave={() => clearInterval(varListRepeater)}
-                >
-                  <img
-                    src={arrowIcon}
-                    alt="left var list scroll"
-                    className=" size-[20px] rotate-180"
-                  />
-                </div>
+        {
+          dateReadings.filter((vtf) => vtf.variable_name !== 'precipitación').map((v, index) => (
+            <div key={v.variable_id} className={`${getGridSize((type === 'meteorological') ? index + 2 : index + 1)} flex size-full flex-col items-center justify-center rounded-lg border`}>
+              <div className="font-semibold">
+                {v.variable_name}
               </div>
-
-              {
-                (selectedVariable === 'Resumen')
-                  ? (
-                    <div className="flex size-full pt-2 sm:px-6">
-                      <div className="grid size-full grid-cols-12 grid-rows-6 gap-2 text-sm sm:text-base">
+              <div>
+                {
+                  (getReadingValue(v.variable_name) !== null)
+                    ? (
+                      <div className="flex">
+                        <div>
+                          {getReadingValue(v.variable_name)}
+                        </div>
                         {
-                          (type === 'meteorological') && (
-                            <div className={`${getGridSize(1)} flex size-full items-center justify-center rounded-lg border`}>
-                              <i className={`${getWeatherIcon(selectedDate.getHours())} self-center text-2xl sm:text-5xl`} />
+                          (v.unit !== null) && (
+                            <div>
+                              &nbsp;
+                              {v.unit}
                             </div>
                           )
                         }
+                      </div>
+                    )
+                    : (
+                      <i className={`${getWeatherIcon(null, null)} self-center text-gray-400`} />
+                    )
+                }
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  );
+};
 
-                        {
-                          dateReadings.filter((vtf) => vtf.variable_name !== 'lluvia').map((v, index) => (
-                            <div key={v.variable_id} className={`${getGridSize((type === 'meteorological') ? index + 2 : index + 1)} flex size-full flex-col items-center justify-center rounded-lg border`}>
-                              <div className="font-semibold">
-                                {v.variable_name}
-                              </div>
-                              <div>
-                                {
-                                  (getReadingValue(v.variable_name) !== null)
-                                    ? (
-                                      <div className="flex">
-                                        <div>
-                                          {getReadingValue(v.variable_name)}
-                                        </div>
-                                        {
-                                          (v.unit !== null) && (
-                                            <div>
-                                              &nbsp;
-                                              {v.unit}
-                                            </div>
-                                          )
-                                        }
-                                      </div>
-                                    )
-                                    : (
-                                      <i className={`${getWeatherIcon(null, null)} self-center text-gray-400`} />
-                                    )
-                                }
-                              </div>
-                            </div>
-                          ))
-                        }
+const VariableTab = ({
+  variableData, selectedDate, getWeatherIcon, changeDate,
+}) => {
+  // Scroll variables
+  const centerRefGraph = useRef(null);
+  let graphRepeater;
+  const graphScroll = (o) => { centerRefGraph.current.scrollLeft += o; };
+  const updateGraphRepeater = (o) => { graphRepeater = setInterval(graphScroll, 100, o); };
+
+  const getReadingTime = (date) => {
+    if (date === 'sunrise' || date === 'sunset')
+      return '';
+
+    let hours = date;
+    const ampm = (hours >= 12 && hours !== 24) ? 'PM' : 'AM';
+
+    hours %= 12;
+    hours = hours || 12;
+
+    return `${hours} ${ampm}`;
+  };
+
+  return (
+    <>
+      <div className="flex grow">
+        <img
+          src={arrowIcon}
+          alt="left graph scroll"
+          className="mr-1 hidden size-[28px] self-center rounded-lg hover:bg-graydetails sm:flex"
+          onMouseEnter={() => updateGraphRepeater(-20)}
+          onMouseLeave={() => clearInterval(graphRepeater)}
+        />
+
+        <div ref={centerRefGraph} className="flex overflow-auto scroll-smooth sm:hide-scrollbar ">
+          <div className="flex h-full flex-col">
+            <div className="flex grow">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart
+                  data={variableData.dateAverages}
+                  margin={{
+                    top: 10, right: 25, left: 25, bottom: 0,
+                  }}
+                >
+                  <Area
+                    type="monotone"
+                    dataKey="value"
+                    fill={variableData.color}
+                    stroke={colorHelper.getDarkerColor(
+                      variableData.color,
+                      0.09,
+                    )}
+                    dot={{
+                      stroke: colorHelper.getDarkerColor(
+                        variableData.color,
+                        0.09,
+                      ),
+                      strokeWidth: 2,
+                    }}
+                    connectNulls
+                  />
+                  <YAxis domain={[0, 100]} hide />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className="flex space-x-2 py-2 ">
+              {
+                variableData
+                  .dateAverages
+                  .map((average) => (
+                    <div
+                      key={average.hour}
+                      className={`${(average.hour === selectedDate.getHours()) && 'rounded-lg border font-semibold'} flex h-[60px] w-[50px] flex-col justify-center space-y-1`}
+                    >
+                      <div className="self-center whitespace-nowrap text-xs">
+                        {getReadingTime(average.hour)}
+                      </div>
+
+                      <i className={`${getWeatherIcon(average.hour, average.value)} self-center text-lg`} />
+
+                      <div className="h-[16px] self-center whitespace-nowrap text-xs">
+                        {`${(average.hour === 'sunrise' || average.hour === 'sunset' || average.value === null) ? '' : `${average.value}`}`}
                       </div>
                     </div>
-                  )
-                  : (
-                    <>
-                      <div className="flex grow">
-                        <img
-                          src={arrowIcon}
-                          alt="left graph scroll"
-                          className="mr-1 hidden size-[28px] self-center rounded-lg hover:bg-graydetails sm:flex"
-                          onMouseEnter={() => updateGraphRepeater(-20)}
-                          onMouseLeave={() => clearInterval(graphRepeater)}
-                        />
-
-                        <div ref={centerRefGraph} className="flex overflow-auto scroll-smooth sm:hide-scrollbar ">
-                          <div className="flex h-full flex-col">
-                            <div className="flex grow">
-                              <ResponsiveContainer width="100%" height="100%">
-                                <AreaChart
-                                  data={dateReadings[selectedVariable].dayAverages}
-                                  margin={{
-                                    top: 10, right: 25, left: 25, bottom: 0,
-                                  }}
-                                >
-                                  <Area
-                                    type="monotone"
-                                    dataKey="value"
-                                    fill={dateReadings[selectedVariable].color}
-                                    stroke={colorHelper.getDarkerColor(
-                                      dateReadings[selectedVariable].color,
-                                      0.09,
-                                    )}
-                                    dot={{
-                                      stroke: colorHelper.getDarkerColor(
-                                        dateReadings[selectedVariable].color,
-                                        0.09,
-                                      ),
-                                      strokeWidth: 2,
-                                    }}
-                                    connectNulls
-                                  />
-                                </AreaChart>
-                              </ResponsiveContainer>
-                            </div>
-
-                            <div className="flex space-x-2 py-2 ">
-                              {
-                                dateReadings[selectedVariable]
-                                  .dayAverages
-                                  .map((average) => (
-                                    <div
-                                      key={average.time}
-                                      className={`${(average.time === selectedDate.getHours()) && 'rounded-lg border font-semibold'} flex h-[60px] w-[50px] flex-col justify-center space-y-1`}
-                                    >
-                                      <div className="self-center whitespace-nowrap text-xs">
-                                        {getReadingTime(average.time)}
-                                      </div>
-
-                                      <i className={`${getWeatherIcon(average.time, average.value)} self-center text-lg`} />
-
-                                      <div className="h-[16px] self-center whitespace-nowrap text-xs">
-                                        {`${(average.time === 'sunrise' || average.time === 'sunset' || average.value === null) ? '' : `${average.value}`}`}
-                                      </div>
-                                    </div>
-                                  ))
-                              }
-                            </div>
-                          </div>
-                        </div>
-
-                        <img
-                          src={arrowIcon}
-                          alt="right graph scroll"
-                          className="ml-1 hidden size-[28px] rotate-180 self-center rounded-lg hover:bg-graydetails sm:flex"
-                          onMouseEnter={() => updateGraphRepeater(20)}
-                          onMouseLeave={() => clearInterval(graphRepeater)}
-                        />
-                      </div>
-
-                      <div className="grid grid-cols-7 gap-2 border-t pt-2">
-                        {
-                          dateReadings[selectedVariable].weekData.map((day) => (
-                            <button
-                              type="button"
-                              key={day.day}
-                              className="flex flex-col items-center justify-center rounded-lg p-1 hover:bg-graydetails"
-                              onClick={() => changeDate(new Date(day.weekDay))}
-                            >
-                              <div className="text-xs font-bold">
-                                {dayNames[day.day]}
-                              </div>
-                              {
-                                (day.max)
-                                  ? (
-                                    <div className="flex flex-col pt-1 text-xs sm:flex-row">
-                                      <div>
-                                        {day.max}
-                                      </div>
-                                      <div className="text-gray-400 sm:pl-1">
-                                        {day.min}
-                                      </div>
-                                    </div>
-                                  )
-                                  : (
-                                    <div className="flex size-full items-center justify-center">
-                                      <i className="wi wi-na text-base" />
-                                    </div>
-                                  )
-                              }
-                            </button>
-                          ))
-                        }
-                      </div>
-                    </>
-                  )
+                  ))
               }
-            </>
-          )
+            </div>
+          </div>
+        </div>
+
+        <img
+          src={arrowIcon}
+          alt="right graph scroll"
+          className="ml-1 hidden size-[28px] rotate-180 self-center rounded-lg hover:bg-graydetails sm:flex"
+          onMouseEnter={() => updateGraphRepeater(20)}
+          onMouseLeave={() => clearInterval(graphRepeater)}
+        />
+      </div>
+
+      <div className="grid grid-cols-7 gap-2 border-t pt-2">
+        {variableData.weekData.map((day) => (
+          <button
+            type="button"
+            key={day.day}
+            className="flex flex-col items-center justify-center rounded-lg p-1 hover:bg-graydetails"
+            onClick={() => changeDate(new Date(day.weekDay))}
+          >
+            <div className="text-xs font-bold">
+              {dayNames[day.day]}
+            </div>
+            {
+                  (day.max)
+                    ? (
+                      <div className="flex flex-col pt-1 text-xs sm:flex-row">
+                        <div>
+                          {day.max}
+                        </div>
+                        <div className="text-gray-400 sm:pl-1">
+                          {day.min}
+                        </div>
+                      </div>
+                    )
+                    : (
+                      <div className="flex size-full items-center justify-center">
+                        <i className="wi wi-na text-base" />
+                      </div>
+                    )
+                }
+          </button>
+        ))}
+      </div>
+    </>
+  );
+};
+
+const ReadingsWidget = ({
+  type, dateReadings, selectedDate, changeDate,
+}) => {
+  const [selectedVariable, setSelectedVariable] = useState('Resumen');
+
+  const getReadingValue = (variableName, hour) => {
+    const time = hour || selectedDate.getHours();
+    const inx = dateReadings.findIndex((v) => v.variable_name === variableName);
+
+    return (inx !== -1)
+      ? dateReadings[inx].dateAverages.find((element) => (element.hour === time)).value
+      : null;
+  };
+
+  const getWeatherIcon = (hour, data) => {
+    const checkForRainSensor = () => dateReadings.map((v) => v.variable_name).includes('lluvia');
+
+    if (hour === 'sunrise')
+      return 'wi wi-sunrise text-yellow-400';
+    if (hour === 'sunset')
+      return 'wi wi-sunset text-orange-400';
+    if (data === null)
+      return 'wi wi-na text-gray-400';
+
+    if (hour > 6 && hour < 19) {
+      if (checkForRainSensor()) {
+        if (getReadingValue('lluvia', hour))
+          return 'wi wi-day-showers text-orange-700';
       }
+      return 'wi wi-day-sunny text-yellow-400';
+    }
+
+    const phase = Moon.lunarPhase(selectedDate);
+    if (checkForRainSensor()) {
+      if (getReadingValue('lluvia', hour)) {
+        if (phase === 'New' || phase === 'Full')
+          return 'wi wi-night-showers text-sky-700';
+        return 'wi wi-night-alt-showers text-sky-700';
+      }
+    }
+
+    switch (phase) {
+      case 'New':
+        return 'wi wi-moon-alt-new text-gray-400';
+      case 'Waxing Crescent':
+        return 'wi wi-moon-alt-waxing-crescent-4 text-gray-400';
+      case 'First Quarter':
+        return 'wi wi-moon-alt-first-quarter text-gray-400';
+      case 'Waxing Gibbous':
+        return 'wi wi-moon-alt-waxing-gibbous-2 text-gray-400';
+      case 'Full':
+        return 'wi wi-moon-alt-full text-gray-400';
+      case 'Waning Gibbous':
+        return 'wi wi-moon-alt-waning-gibbous-4 text-gray-400';
+      case 'Last Quarter':
+        return 'wi wi-moon-alt-third-quarter text-gray-400';
+      case 'Waning Crescent':
+        return 'wi wi-moon-alt-waning-crescent-4 text-gray-400';
+      default:
+        return 'wi wi-night-clear text-yellow-400';
+    }
+  };
+
+  return (
+    <div className="absolute flex size-full flex-col rounded-xl bg-white p-5 shadow">
+      <MainTitle type={type} />
+
+      {(dateReadings.length !== 0)
+        ? (
+          <>
+            <VariableListScroll
+              type={type}
+              dateReadings={dateReadings}
+              selectedVariable={selectedVariable}
+              setSelectedVariable={setSelectedVariable}
+            />
+
+            {(selectedVariable === 'Resumen')
+              ? (
+                <OverviewTab
+                  type={type}
+                  selectedDate={selectedDate}
+                  dateReadings={dateReadings}
+                  getWeatherIcon={getWeatherIcon}
+                  getReadingValue={getReadingValue}
+                />
+              )
+              : (
+                <VariableTab
+                  variableData={dateReadings.find((v) => v.variable_name === selectedVariable)}
+                  selectedDate={selectedDate}
+                  getWeatherIcon={getWeatherIcon}
+                  getReadingValue={getReadingValue}
+                  changeDate={changeDate}
+                />
+              )}
+          </>
+        )
+        : (
+          <NoReadingsMessage />
+        )}
     </div>
   );
 };
