@@ -21,8 +21,8 @@ const BottomBar = ({ spaceId }) => {
       menuOrder: 'order-1',
     },
     {
-      title: 'Lecturas',
-      route: `/espacios/${spaceId}/lecturas`,
+      title: 'Reportes',
+      route: `/espacios/${spaceId}/reportes`,
       src: readingsIcon,
       alt: 'readings',
       barOrder: 'order-2',

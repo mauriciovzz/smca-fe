@@ -1,13 +1,9 @@
 import { React } from 'react';
 
-import L from 'leaflet';
 import {
   MapContainer, TileLayer, Marker, Popup, ZoomControl,
 } from 'react-leaflet';
 
-import {
-  indoorMarker, outdoorMarker, privateMarker, publicMarker, regularMarker,
-} from 'src/assets';
 import { Button } from 'src/components/inputs';
 import { Divider, Heading } from 'src/components/ui';
 
@@ -17,58 +13,29 @@ const mapZoom = 13;
 const southWestBound = [8.183530, -62.878919];
 const northEastBound = [8.398253, -62.539415];
 
-const createMarker = (marker, markersType, markerColor) => {
-  const MarkerConfig = () => {
-    const color = () => {
-      if (markerColor)
-        return markerColor;
-
-      if (markersType === 'node' && marker.is_visible)
-        return '#0284c7';
-
-      if (markersType === 'node' && marker.color)
-        return marker.color;
-
-      return '#0284c7';
-    };
-
-    switch (markersType) {
-      case 'location':
-        return (marker.is_visible) ? publicMarker(color()) : privateMarker(color());
-      case 'node':
-        return (marker.is_indoor) ? indoorMarker(color()) : outdoorMarker(color());
-      default: return regularMarker(color());
-    }
-  };
-
-  const icon = L.divIcon({
-    className: 'marker',
-    html: MarkerConfig(),
-    iconSize: [42, 60],
-    iconAnchor: [42 / 2, 60],
-    popupAnchor: [2, -62.5],
-  });
-
-  return icon;
-};
-
 const createMarkerPopUp = (markersType, marker) => {
   switch (markersType) {
     case 'location':
       return (
-        <>
-          <b>{marker.name}</b>
-          <br />
-          {marker.location}
-        </>
+        <Popup minWidth="250" minHeight="150" closeButton={false} autoClose={false}>
+          <div className="flex w-full flex-col gap-1 p-2.5">
+            <div className="flex flex-col leading-none">
+              <div className="text-sm font-bold">{marker.location_name}</div>
+              <div className="text-xs">{marker.location}</div>
+            </div>
+          </div>
+        </Popup>
       );
     case 'node':
       return (
-        <>
-          <b>{marker.node_name}</b>
-          <br />
-          {marker.location_name}
-        </>
+        <Popup minWidth="250" minHeight="150" closeButton={false} autoClose={false}>
+          <div className="flex w-full flex-col gap-1 p-2.5">
+            <div className="flex flex-col leading-none">
+              <div className="text-sm font-bold">{marker.node_name}</div>
+              <div className="text-xs">{marker.location_name}</div>
+            </div>
+          </div>
+        </Popup>
       );
     default:
       return null;
@@ -76,7 +43,7 @@ const createMarkerPopUp = (markersType, marker) => {
 };
 
 const MarkersMap = ({
-  markers, markerColor,
+  markers,
   markersType,
   isScreenSmall, onMarkerClick, closeMarkersMap,
 }) => (
@@ -111,7 +78,6 @@ const MarkersMap = ({
           {markers.map((marker) => (
             <Marker
               key={`${marker.lat}-${marker.long}`}
-              icon={createMarker(marker, markersType, markerColor)}
               position={[marker.lat, marker.long]}
               eventHandlers={{
                 click: () => onMarkerClick(marker),
@@ -119,9 +85,7 @@ const MarkersMap = ({
                 mouseout: (event) => event.target.closePopup(),
               }}
             >
-              <Popup minWidth="250" closeButton={false}>
-                {createMarkerPopUp(markersType, marker)}
-              </Popup>
+              {createMarkerPopUp(markersType, marker)}
             </Marker>
           ))}
         </MapContainer>

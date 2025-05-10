@@ -2,7 +2,9 @@ import {
   React, useState, useRef, useEffect,
 } from 'react';
 
-import { arrowIcon, componentIcon, nodeIcon } from 'src/assets';
+import {
+  arrowIcon, componentIcon, nodeIcon, refreshIcon,
+} from 'src/assets';
 import { Badge, ComponentLabel, Divider } from 'src/components/ui';
 
 const getTextWidth = (text) => {
@@ -76,7 +78,9 @@ const ComponentItem = ({ component }) => {
   );
 };
 
-const NodeInformationWidget = ({ selectedNode, nodeComponents, setIsModOpen }) => {
+const NodeInformationWidget = ({
+  selectedNode, nodeComponents, setIsModOpen, reload,
+}) => {
   const [infoView, setInfoView] = useState(null);
 
   const parseDate = () => {
@@ -186,7 +190,7 @@ const NodeInformationWidget = ({ selectedNode, nodeComponents, setIsModOpen }) =
       <div className="flex gap-1 border-b pb-2 sm:flex-col sm:justify-evenly sm:border-b-0 sm:border-r sm:pb-0 sm:pr-5">
         <button
           type="button"
-          className="flex h-[36px] w-1/3 items-center justify-center rounded-lg hover:bg-graydetails sm:size-[36px]"
+          className="flex h-[36px] w-1/4 items-center justify-center rounded-lg hover:bg-graydetails sm:size-[36px]"
           onClick={() => setIsModOpen(false)}
         >
           <img
@@ -198,9 +202,21 @@ const NodeInformationWidget = ({ selectedNode, nodeComponents, setIsModOpen }) =
 
         <button
           type="button"
+          className="flex h-[36px] w-1/4 items-center justify-center rounded-lg hover:bg-graydetails sm:size-[36px]"
+          onClick={() => reload()}
+        >
+          <img
+            src={refreshIcon}
+            alt="go back button"
+            className="size-[28px]"
+          />
+        </button>
+
+        <button
+          type="button"
           className={`
             ${(infoView === null) && 'bg-graydetails'} 
-            flex h-[36px] w-1/3 items-center justify-center rounded-lg hover:bg-graydetails sm:size-[36px]
+            flex h-[36px] w-1/4 items-center justify-center rounded-lg hover:bg-graydetails sm:size-[36px]
           `}
           onClick={() => setInfoView(null)}
         >
@@ -215,7 +231,7 @@ const NodeInformationWidget = ({ selectedNode, nodeComponents, setIsModOpen }) =
           type="button"
           className={`
             ${(infoView === 'componentsInfo') && 'bg-graydetails'} 
-            flex h-[36px] w-1/3 items-center justify-center rounded-lg hover:bg-graydetails sm:size-[36px]
+            flex h-[36px] w-1/4 items-center justify-center rounded-lg hover:bg-graydetails sm:size-[36px]
           `}
           onClick={() => setInfoView('componentsInfo')}
         >

@@ -61,7 +61,7 @@ const LocationsOverview = ({ locationsData, spaceData }) => {
                             <LocationLabel location={location} />
 
                             <div className="break-words text-left font-medium">
-                              {location.name}
+                              {location.location_name}
                             </div>
                             <div className="text-left text-xs font-medium text-gray-500">
                               {location.location}

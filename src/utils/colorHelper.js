@@ -26,6 +26,26 @@ const getDarkerColor = (hex, percentage) => {
   return rgbToHex(darkerR, darkerG, darkerB);
 };
 
+const getCircleColor = (colorCode) => {
+  const validCodes = [
+    'aqi1', 'aqi2', 'aqi3', 'aqi4', 'aqi5', 'aqi6',
+    'uvi1', 'uvi2', 'uvi3', 'uvi4', 'uvi5',
+    'black', 'main',
+  ];
+
+  if (validCodes.includes(colorCode)) {
+    return {
+      bgColor: `bg-${colorCode}/75`,
+      borderColor: `border-${colorCode}`,
+    };
+  }
+
+  return {
+    bgColor: 'bg-slate-100',
+    borderColor: 'border-slate-100',
+  };
+};
+
 const getAqiColor = (aqi) => {
   switch (true) {
     case (aqi >= 0 && aqi <= 50):
@@ -70,7 +90,7 @@ const getUvIndexColor = (value) => {
   if (value === null)
     return {
       color: 'black',
-      reading: '-',
+      value: '-',
     };
 
   const index = Math.round(value / 0.1);
@@ -78,39 +98,50 @@ const getUvIndexColor = (value) => {
   switch (true) {
     case (index < 3):
       return {
-        bgColor: 'bg-uvi1/75',
-        borderColor: 'border-uvi1',
-        index,
+        color: {
+          bgColor: 'bg-uvi1/75',
+          borderColor: 'border-uvi1',
+        },
+        value: index,
       };
     case (index < 6):
       return {
-        bgColor: 'bg-uvi2/75',
-        borderColor: 'border-uvi2',
-        index,
+        color: {
+          bgColor: 'bg-uvi2/75',
+          borderColor: 'border-uvi2',
+        },
+        value: index,
       };
     case (index < 8):
       return {
-        bgColor: 'bg-uvi3/75',
-        borderColor: 'border-uvi3',
-        index,
+        color: {
+          bgColor: 'bg-uvi3/75',
+          borderColor: 'border-uvi3',
+        },
+        value: index,
       };
     case (index < 11):
       return {
-        bgColor: 'bg-uvi4/75',
-        borderColor: 'border-uvi4',
-        index,
+        color: {
+          bgColor: 'bg-uvi4/75',
+          borderColor: 'border-uvi4',
+        },
+        value: index,
       };
     default:
       return {
-        bgColor: 'bg-uvi5/75',
-        borderColor: 'border-uvi5',
-        index: '+11',
+        color: {
+          bgColor: 'bg-uvi5/75',
+          borderColor: 'border-uvi5',
+        },
+        value: '+11',
       };
   }
 };
 
 export default {
   getDarkerColor,
+  getCircleColor,
   getAqiColor,
   getUvIndexColor,
 };

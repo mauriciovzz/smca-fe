@@ -153,7 +153,6 @@ const LocationCreation = ({ onClose }) => {
           coordinates={coordinates}
           setCoordenates={setCoordenates}
           recenter={recenter}
-          markerColor={spaceData.color}
         />
       )}
 
@@ -163,7 +162,6 @@ const LocationCreation = ({ onClose }) => {
             coordinates={coordinates}
             setCoordenates={setCoordenates}
             recenter={recenter}
-            markerColor={spaceData.color}
             isScreenSmall={isScreenSmall}
             closeSelectionMap={() => setIsMapOpen(false)}
           />

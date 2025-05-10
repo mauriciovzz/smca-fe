@@ -221,7 +221,6 @@ const CurrentLocation = ({ setView }) => {
 
                   <LocationMap
                     marker={selectedNode}
-                    markerColor={spaceData.color}
                     onlyMap
                   />
 

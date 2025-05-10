@@ -29,7 +29,7 @@ const LocationManagement = () => {
   const [isConDiaOpen, setIsConDiaOpen] = useState(false);
   const [isMapOpen, setIsMapOpen] = useState(false);
 
-  const [name, setName] = useState(selectedLocation.name);
+  const [name, setName] = useState(selectedLocation.location_name);
   const [location, setLocation] = useState(selectedLocation.location);
   const [isVisible, setIsVisible] = useState(selectedLocation.is_visible);
 
@@ -37,7 +37,7 @@ const LocationManagement = () => {
     setIsEditable(false);
     setIsConDiaOpen(false);
 
-    setName(selectedLocation.name);
+    setName(selectedLocation.location_name);
     setLocation(selectedLocation.location);
     setIsVisible(selectedLocation.is_visible);
   };
@@ -153,7 +153,6 @@ const LocationManagement = () => {
       {(!isScreenSmall) && (
         <LocationMap
           marker={selectedLocation}
-          markerColor={spaceData.color}
           longTitle
         />
       )}
@@ -162,7 +161,6 @@ const LocationManagement = () => {
         <div className="absolute size-full">
           <LocationMap
             marker={selectedLocation}
-            markerColor={spaceData.color}
             longTitle
             isScreenSmall={isScreenSmall}
             closeLocationMap={() => setIsMapOpen(false)}

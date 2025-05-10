@@ -3,11 +3,8 @@ import {
 } from 'react';
 
 import Calendar from 'react-calendar';
-import './Calendar.css';
 
-import {
-  calendarDayIcon, calendarIcon, arrowIcon, refresh,
-} from 'src/assets';
+import { calendarDayIcon, calendarIcon, arrowIcon } from 'src/assets';
 
 const dayNames = ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'];
 const calendarNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
@@ -88,13 +85,6 @@ const DateWidget = ({
 
     changeDate(updatedDate, updatedHour);
     setDateView(null);
-  };
-
-  const onResetClick = () => {
-    const newDate = currentDate;
-    const newHour = newDate.getHours() === 0 ? 24 : newDate.getHours();
-
-    changeDate(newDate, newHour);
   };
 
   const nextHour = () => {
@@ -252,18 +242,6 @@ const DateWidget = ({
           <img
             src={calendarIcon}
             alt="calendar button"
-            className="size-[28px]"
-          />
-        </button>
-
-        <button
-          type="button"
-          className="flex size-[35px] items-center justify-center rounded-lg hover:bg-graydetails"
-          onClick={() => onResetClick()}
-        >
-          <img
-            src={refresh}
-            alt="refresh button"
             className="size-[28px]"
           />
         </button>

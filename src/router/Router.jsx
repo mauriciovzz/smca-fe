@@ -6,14 +6,14 @@ import {
   AccountRoot, DeleteAccount, UpdateAccountEmail, UpdateAccountName, UpdateAccountPassword,
 } from 'src/pages/Account';
 import {
-  Faq, Information,
+  Faq, Articles,
 } from 'src/pages/AppInformation';
 import {
   Login, PasswordRecover, PasswordReset, Register, ResendVerificationLink, Verification,
 } from 'src/pages/Authentication';
 import Home from 'src/pages/Home';
 import NotFound from 'src/pages/NotFound';
-import { ReadingsRoot } from 'src/pages/Readings';
+import ReportsRoot from 'src/pages/Reports';
 import Root from 'src/pages/Root';
 import {
   ComponentsRoot, ComponentCreation, ComponentManagement,
@@ -37,7 +37,7 @@ import {
   SelectedNodeManagementRoot, DownloadNodeConfigFile, UpdateNodeInfo, UpdateNodeComponents,
   UpdateNodeLocation, DeleteNode,
 } from 'src/pages/SpaceNodes/SelectedNodeManagement';
-import { SelectedSpaceReadingsRoot } from 'src/pages/SpaceReadings';
+import { SelectedSpaceReportsRoot } from 'src/pages/SpaceReports';
 import {
   SpacesCreation, SpacesInvitations, SpacesRoot,
 } from 'src/pages/Spaces';
@@ -66,12 +66,12 @@ const Router = () => {
               element: <Home />,
             },
             {
-              path: 'lecturas',
-              element: <ReadingsRoot />,
+              path: 'reportes',
+              element: <ReportsRoot />,
             },
             {
-              path: 'informacion',
-              element: <Information />,
+              path: 'articulos',
+              element: <Articles />,
             },
             {
               path: 'faq',
@@ -151,8 +151,8 @@ const Router = () => {
                   element: <SelectedSpaceHome />,
                 },
                 {
-                  path: 'lecturas',
-                  element: <SelectedSpaceReadingsRoot />,
+                  path: 'reportes',
+                  element: <SelectedSpaceReportsRoot />,
                 },
                 {
                   path: 'miembros',

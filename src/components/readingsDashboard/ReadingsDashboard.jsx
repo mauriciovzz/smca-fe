@@ -8,11 +8,11 @@ import useErrorHandler from 'src/hooks/useErrorHandler';
 import useScreenWidth from 'src/hooks/useScreenWidth';
 
 import CameraWidget from './Widgets/CameraWidget';
-import DateWidget from './Widgets/DateWidget/DateWidget';
+import DateWidget from './Widgets/DateWidget';
+import EnvironmentalWidget from './Widgets/EnvironmentalWidget';
 import FullScreenPhoto from './Widgets/FullScreenPhoto';
 import MeteorologicalWidget from './Widgets/MeteorologicalWidget';
 import NodeInfoWidget from './Widgets/NodeInfoWidget';
-import ReadingsWidget from './Widgets/ReadingsWidget';
 
 const ReadingsDashboard = ({ selectedNode, setIsModOpen }) => {
   const axiosPrivate = useAxiosPrivate();
@@ -20,12 +20,13 @@ const ReadingsDashboard = ({ selectedNode, setIsModOpen }) => {
   const isScreenSmall = useScreenWidth();
 
   const [loadingData, setLoadingData] = useState(true);
+  const [reloadInfo, setReloadInfo] = useState(false);
   const [showCameraWidget, setShowCameraWidget] = useState(false);
   const [openCurrentPhoto, setOpenCurrentPhoto] = useState(false);
 
   const nd = new Date();
   const [selectedDate, setSelectedDate] = useState(nd);
-  const [selectedHour, setSelectedHour] = useState(nd.getHours() === 0 ? 24 : nd.getHours());
+  const [selectedHour, setSelectedHour] = useState(nd.getHours());
 
   const lastDateRef = useRef(null);
 
@@ -63,6 +64,10 @@ const ReadingsDashboard = ({ selectedNode, setIsModOpen }) => {
 
     setSelectedDate(incomingDate);
     setSelectedHour(incomingHour);
+  };
+
+  const reload = () => {
+    setReloadInfo((prev) => !prev);
   };
 
   // API calls
@@ -124,13 +129,17 @@ const ReadingsDashboard = ({ selectedNode, setIsModOpen }) => {
   };
 
   useEffect(() => {
+    const und = new Date();
+    setSelectedDate(und);
+    setSelectedHour(und.getHours());
+
     getComponents();
     getCurrentDateReadings();
 
     lastDateRef.current = getDateOnly(selectedDate);
 
     setLoadingData(false);
-  }, []);
+  }, [reloadInfo]);
 
   useEffect(() => {
     const curDate = getDateOnly(selectedDate);
@@ -141,6 +150,10 @@ const ReadingsDashboard = ({ selectedNode, setIsModOpen }) => {
       getCurrentDateReadings();
     }
   }, [selectedDate]);
+
+  useEffect(() => {
+    getCurrentPhoto();
+  }, [selectedHour]);
 
   return (
     <div className="absolute z-[100] size-full bg-white/25 p-5 backdrop-blur-sm">
@@ -161,6 +174,7 @@ const ReadingsDashboard = ({ selectedNode, setIsModOpen }) => {
                               selectedNode={selectedNode}
                               nodeComponents={nodeComponents}
                               setIsModOpen={setIsModOpen}
+                              reload={reload}
                             />
                           </div>
 
@@ -193,13 +207,14 @@ const ReadingsDashboard = ({ selectedNode, setIsModOpen }) => {
                             />
                           </div>
 
-                          <div className="relative h-[330px]">
-                            {/* <ReadingsWidget
-                              type="enviromental"
+                          <div className="relative h-[380px]">
+                            <EnvironmentalWidget
                               dateReadings={currentDateReadings.filter((v) => v.variable_type === 'enviromental')}
+                              rainReadings={currentDateReadings.find((v) => v.variable_name === 'precipitación')}
                               selectedDate={selectedDate}
+                              selectedHour={selectedHour}
                               changeDate={changeDate}
-                            /> */}
+                            />
                           </div>
                         </div>
                       </div>
@@ -220,6 +235,7 @@ const ReadingsDashboard = ({ selectedNode, setIsModOpen }) => {
                             selectedNode={selectedNode}
                             nodeComponents={nodeComponents}
                             setIsModOpen={setIsModOpen}
+                            reload={reload}
                           />
                         </div>
 
@@ -253,12 +269,13 @@ const ReadingsDashboard = ({ selectedNode, setIsModOpen }) => {
                         </div>
 
                         <div className="relative col-span-5 row-span-2">
-                          {/* <ReadingsWidget
-                            type="enviromental"
+                          <EnvironmentalWidget
                             dateReadings={currentDateReadings.filter((v) => v.variable_type === 'enviromental')}
+                            rainReadings={currentDateReadings.find((v) => v.variable_name === 'precipitación')}
                             selectedDate={selectedDate}
+                            selectedHour={selectedHour}
                             changeDate={changeDate}
-                          /> */}
+                          />
                         </div>
                       </div>
 

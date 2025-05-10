@@ -5,27 +5,32 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host",
-    "ngrok": "ngrok http --url=brave-buffalo-delicate.ngrok-free.app 5173",
+    "tunnel": "lt --p 5173 --subdomain smca",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint 'src/**/*.{js,jsx}'"
   },
   "dependencies": {
+    "@wojtekmaj/react-daterange-picker": "^6.0.0",
     "ag-grid-react": "^33.2.2",
     "axios": "^1.7.7",
+    "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
+    "flatpickr": "^4.6.13",
     "leaflet": "^1.9.4",
     "lunarphase-js": "^2.0.3",
     "react": "^18.3.1",
-    "react-calendar": "^5.0.0",
+    "react-calendar": "^5.1.0",
     "react-dom": "^18.3.1",
+    "react-flatpickr": "^4.0.8",
     "react-leaflet": "^4.2.1",
     "react-loader-spinner": "^6.1.6",
     "react-router-dom": "^6.23.0",
     "react-toastify": "^10.0.5",
     "recharts": "^2.12.6",
     "regenerator-runtime": "^0.14.1",
-    "weather-icons": "github:erikflowers/weather-icons"
+    "weather-icons": "github:erikflowers/weather-icons",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.9",

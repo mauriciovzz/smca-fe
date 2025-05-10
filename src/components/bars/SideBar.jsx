@@ -35,8 +35,8 @@ const SideBar = ({ spaceId }) => {
       alt: 'map',
     },
     {
-      title: 'Lecturas',
-      route: `/espacios/${spaceId}/lecturas`,
+      title: 'Reportes',
+      route: `/espacios/${spaceId}/reportes`,
       src: readingsIcon,
       alt: 'readings',
     },

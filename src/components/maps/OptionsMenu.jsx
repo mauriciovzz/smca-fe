@@ -134,16 +134,16 @@ const OptionButton = ({
   </button>
 );
 
-const AqiLeyend = ({ setIsLegendOpen }) => (
+const AqiLegend = ({ setIsLegendOpen }) => (
   <div className="flex h-[371px] flex-col">
     <div className="flex h-[324px] flex-col">
       <Label text="Indice de calidad aire" />
       <div className="grid h-full grid-cols-1 content-between">
         <LegendItem color="aqi1" upperText="Bueno" lowerText="(0-50)" />
         <LegendItem color="aqi2" upperText="Moderado" lowerText="(51-100)" />
-        <LegendItem color="aqi3" upperText="Insalubre para grupos sensibles (101-150)" lowerText="" />
-        <LegendItem color="aqi4" upperText="Insalubre" lowerText="(151-200)" />
-        <LegendItem color="aqi5" upperText="Muy insalubre" lowerText="(201-300)" />
+        <LegendItem color="aqi3" upperText="Dañino para grupos sensibles (101-150)" lowerText="" />
+        <LegendItem color="aqi4" upperText="Dañino" lowerText="(151-200)" />
+        <LegendItem color="aqi5" upperText="Muy dañino" lowerText="(201-300)" />
         <LegendItem color="aqi6" upperText="Peligroso" lowerText="(301-500)" />
         <LegendItem color="black" upperText="Sin datos" />
       </div>
@@ -160,7 +160,7 @@ const AqiLeyend = ({ setIsLegendOpen }) => (
   </div>
 );
 
-const ConcentrationsLeyend = ({ setIsLegendOpen, selectedVariable }) => (
+const ConcentrationsLegend = ({ setIsLegendOpen, selectedVariable }) => (
   <div className="flex h-[371px] flex-col">
     <div className="flex h-[324px] flex-col">
       <Label text="Nodos" />
@@ -198,7 +198,7 @@ const ConcentrationsLeyend = ({ setIsLegendOpen, selectedVariable }) => (
   </div>
 );
 
-const MeteorologyLeyend = ({ setIsLegendOpen }) => (
+const MeteorologyLegend = ({ setIsLegendOpen }) => (
   <div className="flex h-[371px] flex-col">
 
     <div className="flex h-[91px] flex-col">
@@ -239,7 +239,7 @@ const OptionsMenu = ({
   selectedNodeTypes, setSelectedNodeTypes,
 }) => {
   const [isOptionsMenuOpen, setOptionsMenuOpen] = useState(false);
-  const [isColorLegendOpen, setIsLegendOpen] = useState(false);
+  const [isLegendOpen, setIsLegendOpen] = useState(false);
 
   const getOptionsArray = () => {
     switch (viewType) {
@@ -268,19 +268,19 @@ const OptionsMenu = ({
   };
 
   const renderMenu = () => {
-    if (isColorLegendOpen) {
+    if (isLegendOpen) {
       switch (viewType) {
         case 'Concentraciones':
           return (
-            <ConcentrationsLeyend
+            <ConcentrationsLegend
               setIsLegendOpen={setIsLegendOpen}
               selectedVariable={selectedVariable}
             />
           );
         case 'Meteorología':
-          return <MeteorologyLeyend setIsLegendOpen={setIsLegendOpen} />;
+          return <MeteorologyLegend setIsLegendOpen={setIsLegendOpen} />;
         default:
-          return <AqiLeyend setIsLegendOpen={setIsLegendOpen} />;
+          return <AqiLegend setIsLegendOpen={setIsLegendOpen} />;
       }
     }
 
@@ -347,8 +347,8 @@ const OptionsMenu = ({
 
   return (isOptionsMenuOpen)
     ? (
-      <div className="absolute bottom-0 right-0 z-[1000] m-5 h-[458px] w-1/2 sm:w-[200px]">
-        <div className="flex size-full flex-col rounded-lg bg-white p-5 shadow sm:h-[458px] sm:w-[200px]">
+      <div className="absolute bottom-0 right-0 z-[1000] m-5 h-[505] w-1/2 sm:w-[200px]">
+        <div className="flex size-full flex-col rounded-lg bg-white p-5 shadow sm:h-[505] sm:w-[200px]">
           {renderMenu()}
 
           <Divider changePadding="p-1.5" />

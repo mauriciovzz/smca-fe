@@ -43,7 +43,7 @@ const MarkerPopUp = ({ marker }) => {
   );
 };
 
-const createCircle = ({ color, reading }) => {
+const createCircle = ({ color, value }) => {
   const { bgColor, borderColor } = color;
   const isDay = new Date().getHours() >= 6 && new Date().getHours() < 18;
 
@@ -54,13 +54,13 @@ const createCircle = ({ color, reading }) => {
                   />`;
 
   const circleInfo = () => {
-    switch (reading) {
+    switch (value) {
       case 'no_rain':
         return circleImage(isDay ? sunIcon : moonIcon);
       case 'rain':
         return circleImage(rainIcon);
       default:
-        return reading;
+        return value;
     }
   };
 
@@ -123,15 +123,15 @@ const MapMarkers = ({
         bgColor: 'bg-black/75',
         borderColor: 'border-black',
       },
-      reading: '-',
+      value: '-',
     };
 
-    const hasData = (reading) => ({
+    const hasData = (value) => ({
       color: {
         bgColor: 'bg-main/75',
         borderColor: 'border-main',
       },
-      reading,
+      value,
     });
 
     switch (viewType) {
@@ -149,14 +149,14 @@ const MapMarkers = ({
 
           return {
             color: colorHelper.getAqiColor(biggestAqi),
-            reading: biggestAqi,
+            value: biggestAqi,
           };
         }
 
         if (marker.current_readings[selectedVariable].aqi) {
           return {
             color: colorHelper.getAqiColor(marker.current_readings[selectedVariable].aqi),
-            reading: marker.current_readings[selectedVariable].aqi,
+            value: marker.current_readings[selectedVariable].aqi,
           };
         }
 
@@ -164,9 +164,7 @@ const MapMarkers = ({
       case 'Concentraciones':
         if (marker.current_readings[selectedVariable].con !== null)
           return hasData(marker.current_readings[selectedVariable].con);
-        return {
-          color: hasNoData,
-        };
+        return hasNoData;
       case 'Meteorología':
         if (marker.current_readings[selectedVariable] !== null)
           switch (selectedVariable) {
@@ -187,12 +185,12 @@ const MapMarkers = ({
                     bgColor: 'bg-main/75',
                     borderColor: 'border-main',
                   },
-                reading: (marker.current_readings[selectedVariable] === 0) ? 'no_rain' : 'rain',
+                value: (marker.current_readings[selectedVariable] === 0) ? 'no_rain' : 'rain',
               };
             case 'radiación solar':
               return colorHelper.getUvIndexColor(marker.current_readings[selectedVariable]);
             default:
-              return hasData(Math.round(marker.current_readings[selectedVariable]));
+              return hasData(marker.current_readings[selectedVariable]);
           }
         return hasNoData;
       default:

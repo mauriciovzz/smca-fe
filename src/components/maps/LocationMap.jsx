@@ -1,29 +1,15 @@
 import { React } from 'react';
 
-import L from 'leaflet';
 import {
   MapContainer, TileLayer, Marker, ZoomControl,
 } from 'react-leaflet';
 import { useMap } from 'react-leaflet/hooks';
 
-import { regularMarker } from 'src/assets';
 import { TextInput } from 'src/components/inputs';
 import { Divider, Heading } from 'src/components/ui';
 
 const southWestBound = [8.183530, -62.878919];
 const northEastBound = [8.398253, -62.539415];
-
-const createMarker = (markerColor) => {
-  const marker = L.divIcon({
-    className: 'marker',
-    html: regularMarker(markerColor || '#0284C7'),
-    iconSize: [42, 60],
-    iconAnchor: [42 / 2, 60],
-    popupAnchor: [2, -62.5],
-  });
-
-  return marker;
-};
 
 const Recenter = ({ position }) => {
   const map = useMap();
@@ -45,7 +31,7 @@ const getDate = (dateString) => {
   return `${(`0${dateObject.getDate()}`).slice(-2)}-${(`0${dateObject.getMonth() + 1}`).slice(-2)}-${(`0${dateObject.getFullYear()}`).slice(-2)}`;
 };
 
-const Map = ({ marker, markerColor }) => (
+const Map = ({ marker }) => (
   <div className="relative flex grow overflow-hidden rounded-lg shadow">
     <MapContainer
       center={[marker.lat, marker.long]}
@@ -63,7 +49,6 @@ const Map = ({ marker, markerColor }) => (
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       <Marker
-        icon={createMarker(null, null, markerColor)}
         position={[marker.lat, marker.long]}
       />
       <Recenter position={[marker.lat, marker.long]} />

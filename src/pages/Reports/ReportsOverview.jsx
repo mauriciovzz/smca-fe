@@ -1,24 +1,21 @@
 import { React, useState } from 'react';
 
-import { Link, useNavigate } from 'react-router-dom';
-
 import { privateLocationIcon, publicLocationIcon } from 'src/assets';
 import { Button } from 'src/components/inputs';
 import { MarkersMap } from 'src/components/maps';
 import { Divider, Heading, LocationLabel } from 'src/components/ui';
 import useScreenWidth from 'src/hooks/useScreenWidth';
 
-const LocationsOverview = ({ locationsData }) => {
+const ReportsOverview = ({ locationsData, selectLocation }) => {
   const [isMapOpen, setIsMapOpen] = useState(false);
   const isScreenSmall = useScreenWidth();
-  const navigate = useNavigate();
 
   return (
     <div className="relative grid size-full grid-cols-1 grid-rows-1 gap-5 sm:grid sm:grid-cols-2 sm:grid-rows-1">
       <div className="flex size-full flex-col rounded-lg bg-white p-5 shadow">
         <div className="flex grow flex-col">
           <div className="flex justify-between">
-            <Heading text="Ubicaciones Visibles" />
+            <Heading text="Ubicaciones Disponibles" />
           </div>
 
           <Divider />
@@ -33,9 +30,10 @@ const LocationsOverview = ({ locationsData }) => {
                         key={location.location_id}
                         className="h-fit w-full border-b bg-white p-5 shadow hover:bg-slate-100"
                       >
-                        <Link
+                        <button
+                          type="button"
                           className="flex h-fit w-full space-x-5"
-                          to={`${location.location_id}`}
+                          onClick={() => selectLocation(location)}
                         >
                           <div className="size-fit self-center">
                             <img
@@ -49,13 +47,13 @@ const LocationsOverview = ({ locationsData }) => {
                             <LocationLabel location={location} />
 
                             <div className="break-words text-left font-medium">
-                              {location.name}
+                              {location.location_name}
                             </div>
                             <div className="text-left text-xs font-medium text-gray-500">
                               {location.location}
                             </div>
                           </div>
-                        </Link>
+                        </button>
                       </li>
                     ))
                 }
@@ -77,9 +75,8 @@ const LocationsOverview = ({ locationsData }) => {
       {(!isScreenSmall) && (
         <MarkersMap
           markers={locationsData}
-          markerColor="blue"
           markersType="location"
-          onMarkerClick={(l) => navigate(`${l.location_id}`)}
+          onMarkerClick={(location) => selectLocation(location)}
         />
       )}
 
@@ -87,10 +84,9 @@ const LocationsOverview = ({ locationsData }) => {
         <div className="absolute size-full">
           <MarkersMap
             markers={locationsData}
-            markerColor="blue"
             markersType="location"
             isScreenSmall={isScreenSmall}
-            onMarkerClick={(location) => navigate(`${location.location_id}`)}
+            onMarkerClick={(location) => selectLocation(location)}
             closeMarkersMap={() => setIsMapOpen(false)}
           />
         </div>
@@ -99,4 +95,4 @@ const LocationsOverview = ({ locationsData }) => {
   );
 };
 
-export default LocationsOverview;
+export default ReportsOverview;

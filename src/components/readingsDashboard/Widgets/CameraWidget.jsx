@@ -9,12 +9,12 @@ const CameraWidget = ({ currentPhoto, photoName, setOpenCurrentPhoto }) => (
         ? (
           <>
             <img
-              className="size-full rounded-xl object-none object-center"
+              className="z-50 size-full rounded-xl object-none object-center"
               src={currentPhoto}
               alt="selected hour pic"
             />
 
-            <div className="absolute right-0 top-0 flex size-[35px] items-center justify-center rounded-bl-xl rounded-tr-xl bg-white">
+            <div className="absolute right-0 top-0 z-[60] flex size-[35px] items-center justify-center rounded-bl-xl rounded-tr-xl bg-white">
               <button
                 type="button"
                 className="flex size-[25px] items-center justify-center rounded-lg hover:bg-graydetails"
@@ -29,7 +29,7 @@ const CameraWidget = ({ currentPhoto, photoName, setOpenCurrentPhoto }) => (
             </div>
 
             <a
-              className="absolute bottom-0 right-0 flex size-[35px] items-center justify-center rounded-br-xl rounded-tl-xl bg-white"
+              className="absolute bottom-0 right-0 z-[60] flex size-[35px] items-center justify-center rounded-br-xl rounded-tl-xl bg-white"
               href={currentPhoto}
               download={photoName}
             >
@@ -56,4 +56,5 @@ const CameraWidget = ({ currentPhoto, photoName, setOpenCurrentPhoto }) => (
     </div>
   </div>
 );
+
 export default CameraWidget;

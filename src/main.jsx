@@ -12,6 +12,9 @@ import '../index.css';
 import 'weather-icons/css/weather-icons.css';
 import 'leaflet/dist/leaflet.css';
 import 'regenerator-runtime';
+import '@wojtekmaj/react-daterange-picker/dist/DateRangePicker.css';
+import '../customDateRangePicker.css';
+import '../customCalendar.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

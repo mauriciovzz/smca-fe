@@ -11,35 +11,35 @@ import {
   ReadingsWidgetTitle, VariableListScroll, NoReadingsMessage, Scroll,
 } from './WidgetsComponents';
 
-const layoutMap = {
-  1: [
-    { row: 'row-span-2', col: 'col-span-6' },
-  ],
-  2: [
-    { row: 'row-span-2', col: 'col-span-3' },
-    { row: 'row-span-2', col: 'col-span-3' },
-  ],
-  3: [
-    { row: 'row-span-1', col: 'col-span-6' },
-    { row: 'row-span-2', col: 'col-span-3' },
-    { row: 'row-span-2', col: 'col-span-3' },
-  ],
-  4: [
-    { row: 'row-span-1', col: 'col-span-3' },
-    { row: 'row-span-1', col: 'col-span-3' },
-    { row: 'row-span-2', col: 'col-span-3' },
-    { row: 'row-span-2', col: 'col-span-3' },
-  ],
-  5: [
-    { row: 'row-span-1', col: 'col-span-3' },
-    { row: 'row-span-1', col: 'col-span-3' },
-    { row: 'row-span-2', col: 'col-span-2' },
-    { row: 'row-span-2', col: 'col-span-2' },
-    { row: 'row-span-2', col: 'col-span-2' },
-  ],
-};
-
 const OverviewTab = ({ dateReadings, getSelectedHourValue }) => {
+  const layoutMap = {
+    1: [
+      { row: 'row-span-2', col: 'col-span-6' },
+    ],
+    2: [
+      { row: 'row-span-2', col: 'col-span-3' },
+      { row: 'row-span-2', col: 'col-span-3' },
+    ],
+    3: [
+      { row: 'row-span-1', col: 'col-span-6' },
+      { row: 'row-span-2', col: 'col-span-3' },
+      { row: 'row-span-2', col: 'col-span-3' },
+    ],
+    4: [
+      { row: 'row-span-1', col: 'col-span-3' },
+      { row: 'row-span-1', col: 'col-span-3' },
+      { row: 'row-span-2', col: 'col-span-3' },
+      { row: 'row-span-2', col: 'col-span-3' },
+    ],
+    5: [
+      { row: 'row-span-1', col: 'col-span-3' },
+      { row: 'row-span-1', col: 'col-span-3' },
+      { row: 'row-span-2', col: 'col-span-2' },
+      { row: 'row-span-2', col: 'col-span-2' },
+      { row: 'row-span-2', col: 'col-span-2' },
+    ],
+  };
+
   const getPrecipitationIcon = ({ value, hour, selectedDate }) => (
     <i className={`${weatherIconHelper.getPrecipitationIcon(value, hour, selectedDate)} self-center text-[42px] sm:text-[42px]`} />
   );
@@ -52,7 +52,7 @@ const OverviewTab = ({ dateReadings, getSelectedHourValue }) => {
         <div className="font-semibold">Indice UV</div>
         <div>
           {(uvIndex !== null)
-            ? (<div className={`${uvIndex.bgColor} w-[60px] rounded-xl text-center font-semibold text-black`}>{uvIndex.index}</div>)
+            ? (<div className={`${uvIndex.color.bgColor} w-[60px] rounded-xl text-center font-semibold text-black`}>{uvIndex.value}</div>)
             : (<i className="wi wi-na self-center text-xl text-gray-400" />)}
         </div>
       </>
@@ -218,7 +218,7 @@ const NumericalChart = ({
 
             {(day.max)
               ? (
-                <div className="flex flex-col pt-1 text-xs sm:flex-row">
+                <div className="flex flex-col items-center justify-center pt-1 text-xs sm:flex-row">
                   <div>
                     {day.max}
                   </div>
@@ -239,7 +239,7 @@ const NumericalChart = ({
   );
 };
 
-const PresentialChart = ({
+const PresipitationChart = ({
   variableData, selectedDate, selectedHour, rainData, changeDate,
 }) => {
   const checkRainData = () => {
@@ -288,7 +288,7 @@ const PresentialChart = ({
               .map((average) => (
                 <div
                   key={average.hour}
-                  className={`${(average.hour === selectedHour) && 'rounded-lg border font-semibold'} flex h-[60px] w-[50px] flex-col justify-center space-y-1`}
+                  className={`${(average.hour === selectedHour) && 'rounded-lg border font-semibold'} flex h-[60px] w-[50px] flex-col items-center justify-center space-y-1`}
                 >
                   {(average.hour === 'sunrise' || average.hour === 'sunset')
                     ? (
@@ -331,7 +331,9 @@ const PresentialChart = ({
               ? (
                 <div className="flex size-full items-center justify-center">
                   {(day.max > 0)
+                    // eslint-disable-next-line tailwindcss/no-custom-classname
                     ? <i className="wi wi-rain text-sky-700" />
+                    // eslint-disable-next-line tailwindcss/no-custom-classname
                     : <i className="wi wi-day-sunny text-yellow-400" />}
                 </div>
               )
@@ -348,11 +350,28 @@ const PresentialChart = ({
 };
 
 const CustomTooltip = ({ active, payload }) => {
+  const getUvIndexRangeName = (uvi) => {
+    if (uvi >= 0 && uvi <= 2) {
+      return 'Bajo';
+    } if (uvi >= 3 && uvi <= 5) {
+      return 'Moderado';
+    } if (uvi >= 6 && uvi <= 7) {
+      return 'Alto';
+    } if (uvi >= 8 && uvi <= 10) {
+      return 'Muy alto';
+    } if (uvi >= 11) {
+      return 'Extremo';
+    }
+    return 'Valor fuera de rango';
+  };
+
   if (active && payload && payload.length) {
     return (
       <div className="border bg-white p-1 text-xs">
-        <p>{`Hora : ${payload[0].payload.hour}`}</p>
-        <p>{`Indice : ${payload[0].payload.indice}`}</p>
+        <p>{`${payload[0].payload.hour}`}</p>
+        <div className="w-full border-b-2" />
+        <p>{`UVI : ${getUvIndexRangeName(payload[0].payload.indice)} `}</p>
+        <p>{`Valor : ${payload[0].payload.indice}`}</p>
         <p>{`Lectura : ${payload[0].payload.lectura}`}</p>
       </div>
     );
@@ -513,7 +532,7 @@ const UvChart = ({
 
             {(day.max)
               ? (
-                <div className="flex flex-col pt-1 text-xs sm:flex-row">
+                <div className="flex flex-col items-center justify-center pt-1 text-xs sm:flex-row">
                   <div>
                     {day.max}
                   </div>
@@ -564,7 +583,7 @@ const MeteorologicalWidget = ({
         );
       case ('precipitación'):
         return (
-          <PresentialChart
+          <PresipitationChart
             variableData={dateReadings.find((v) => v.variable_name === selectedVariable)}
             selectedDate={selectedDate}
             selectedHour={selectedHour}
@@ -595,21 +614,6 @@ const MeteorologicalWidget = ({
     }
   };
 
-  const sortDateReadings = () => {
-    const variablesOrder = ['precipitación', 'radiación solar', 'temperatura', 'humedad', 'presión'];
-
-    const variables = [];
-
-    for (let i = 0; i < variablesOrder.length; i += 1) {
-      const variable = dateReadings.find((v) => v.variable_name === variablesOrder[i]);
-
-      if (variable)
-        variables.push(variable);
-    }
-
-    return variables;
-  };
-
   return (
     <div className="absolute flex size-full flex-col rounded-xl bg-white p-5 shadow">
       <ReadingsWidgetTitle title="Tiempo" />
@@ -619,7 +623,7 @@ const MeteorologicalWidget = ({
           <>
             <VariableListScroll
               type="meteorological"
-              dateReadings={sortDateReadings()}
+              dateReadings={dateReadings}
               selectedVariable={selectedVariable}
               setSelectedVariable={setSelectedVariable}
             />

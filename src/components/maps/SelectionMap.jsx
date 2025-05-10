@@ -1,12 +1,10 @@
 import { React, useRef, useMemo } from 'react';
 
-import L from 'leaflet';
 import {
   MapContainer, TileLayer, Marker, ZoomControl,
 } from 'react-leaflet';
 import { useMap, useMapEvents } from 'react-leaflet/hooks';
 
-import { regularMarker } from 'src/assets';
 import { Button } from 'src/components/inputs';
 
 const mapCenter = [8.322376, -62.689662];
@@ -14,18 +12,6 @@ const mapZoom = 13;
 
 const southWestBound = [8.183530, -62.878919];
 const northEastBound = [8.398253, -62.539415];
-
-const createMarker = (markerColor) => {
-  const marker = L.divIcon({
-    className: 'marker',
-    html: regularMarker(markerColor || '#0284C7'),
-    iconSize: [42, 60],
-    iconAnchor: [42 / 2, 60],
-    popupAnchor: [2, -62.5],
-  });
-
-  return marker;
-};
 
 const getPos = (coordinate, type) => {
   if (type === 'lat') {
@@ -71,7 +57,6 @@ const MapEvents = ({ setCoordenates }) => {
 
 const SelectionMap = ({
   coordinates, setCoordenates, recenter,
-  markerColor,
   isScreenSmall, closeSelectionMap,
 }) => {
   const markerRef = useRef(null);
@@ -111,7 +96,6 @@ const SelectionMap = ({
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
           <Marker
-            icon={createMarker(markerColor)}
             draggable
             eventHandlers={eventHandlers}
             position={[coordinates.lat, coordinates.long]}

@@ -27,7 +27,6 @@ const SelectedNodeOverview = ({ spaceData, selectedNode, nodeComponentsData }) =
           <div className="absolute size-full">
             <LocationMap
               marker={selectedNode}
-              markerColor={spaceData.color}
               showLocationInfo
               isScreenSmall={isScreenSmall}
               closeLocationMap={() => setIsMapOpen(false)}
@@ -40,7 +39,6 @@ const SelectedNodeOverview = ({ spaceData, selectedNode, nodeComponentsData }) =
     return (
       <LocationMap
         marker={selectedNode}
-        markerColor={spaceData.color}
         showLocationInfo
       />
     );

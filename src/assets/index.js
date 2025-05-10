@@ -34,7 +34,7 @@ import privateLocationIcon from 'src/assets/icons/privateLocationIcon.svg';
 import publicLocationIcon from 'src/assets/icons/publicLocationIcon.svg';
 import rainIcon from 'src/assets/icons/rainIcon.svg';
 import readingsIcon from 'src/assets/icons/readingsIcon.svg';
-import refresh from 'src/assets/icons/refresh.svg';
+import refreshIcon from 'src/assets/icons/refreshIcon.svg';
 import settingsIcon from 'src/assets/icons/settingsIcon.svg';
 import spaceIcon from 'src/assets/icons/spaceIcon.svg';
 import successIcon from 'src/assets/icons/successIcon.svg';
@@ -42,11 +42,6 @@ import sunIcon from 'src/assets/icons/sunIcon.svg';
 import userIcon from 'src/assets/icons/userIcon.svg';
 import usersIcon from 'src/assets/icons/usersIcon.svg';
 import variableIcon from 'src/assets/icons/variableIcon.svg';
-import indoorMarker from 'src/assets/markers/indoorMarker';
-import outdoorMarker from 'src/assets/markers/outdoorMarker';
-import privateMarker from 'src/assets/markers/privateMarker';
-import publicMarker from 'src/assets/markers/publicMarker';
-import regularMarker from 'src/assets/markers/regularMarker';
 
 export {
   accountIcon,
@@ -66,7 +61,6 @@ export {
   helpIcon,
   imageIcon,
   indoorIcon,
-  indoorMarker,
   infoIcon,
   layersIcon,
   lessIcon,
@@ -80,17 +74,13 @@ export {
   moonIcon,
   nodeIcon,
   outdoorIcon,
-  outdoorMarker,
   pasteIcon,
   plusIcon,
   privateLocationIcon,
-  privateMarker,
   publicLocationIcon,
-  publicMarker,
   rainIcon,
   readingsIcon,
-  refresh,
-  regularMarker,
+  refreshIcon,
   settingsIcon,
   spaceIcon,
   successIcon,
