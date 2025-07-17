@@ -1,11 +1,11 @@
 import { React } from 'react';
 
 import {
-  SelectionBar, TextInput, ToggleNodeType, ToggleReadingInterval,
+  SelectionBar, TextInput, ToggleNodeType,
 } from 'src/components/inputs';
 
 const NodeInformation = ({
-  name, isIndoor, readingInterval, nextPage,
+  name, isIndoor, nextPage,
 }) => (
   <div className="flex size-full flex-col gap-2.5 bg-white sm:gap-5">
     <SelectionBar
@@ -25,11 +25,6 @@ const NodeInformation = ({
       <ToggleNodeType
         selectedType={isIndoor.isIndoor}
         selectType={isIndoor.setIsIndoor}
-      />
-
-      <ToggleReadingInterval
-        selectedOption={readingInterval.readingInterval}
-        setSelectedOption={readingInterval.setReadingInterval}
       />
     </div>
   </div>

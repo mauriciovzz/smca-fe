@@ -84,7 +84,7 @@ const LocationsRoot = () => {
   const getNodesData = async () => {
     try {
       const response = await axiosPrivate.get(
-        `/api/spaces/${spaceData.space_id}/nodes`,
+        `/api/spaces/${spaceData.space_id}/nodes-info`,
       );
 
       setNodesData(response.data);

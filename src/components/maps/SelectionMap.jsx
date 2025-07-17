@@ -1,11 +1,11 @@
 import { React, useRef, useMemo } from 'react';
 
-import {
-  MapContainer, TileLayer, Marker, ZoomControl,
-} from 'react-leaflet';
+import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import { useMap, useMapEvents } from 'react-leaflet/hooks';
 
 import { Button } from 'src/components/inputs';
+
+import ZoomControl from './ZoomControl';
 
 const mapCenter = [8.322376, -62.689662];
 const mapZoom = 13;
@@ -101,10 +101,14 @@ const SelectionMap = ({
             position={[coordinates.lat, coordinates.long]}
             ref={markerRef}
           />
+
           <Recenter recenter={recenter} />
+
           <MapEvents setCoordenates={setCoordenates} />
-          {!isScreenSmall && <ZoomControl position="bottomright" />}
-        </MapContainer>
+
+          <ZoomControl rightPosition />
+
+          </MapContainer>
       </div>
 
       {(isScreenSmall) && (
@@ -113,7 +117,7 @@ const SelectionMap = ({
             text="Regresar"
             isTypeButton
             onClick={() => closeSelectionMap()}
-            color="blue"
+            color="green"
           />
         </div>
       )}

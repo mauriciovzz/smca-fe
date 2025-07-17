@@ -76,10 +76,10 @@ const LocationsOverview = ({ locationsData, spaceData }) => {
 
             {(isScreenSmall) && (
               <Button
-                text="Buscar Ubicación en el Mapa"
+                text="Ver en Mapa"
                 isTypeButton
                 onClick={() => setIsMapOpen(true)}
-                color="blue"
+                color="green"
               />
             )}
           </div>

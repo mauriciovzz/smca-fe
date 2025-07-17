@@ -81,7 +81,7 @@ const ChangeLocation = ({ setView }) => {
                   >
                     <div className="flex size-full flex-col">
                       <div className="font-medium">
-                        {loc.name}
+                        {loc.location_name}
                       </div>
                       <div className="text-xs">
                         {loc.location}
@@ -116,10 +116,10 @@ const ChangeLocation = ({ setView }) => {
 
         <div className="flex flex-col gap-2.5">
           <Button
-            text="Buscar Ubicación en el Mapa"
+            text="Ver en Mapa"
             isTypeButton
             onClick={() => setIsMapOpen(true)}
-            color="gray"
+            color="green"
           />
 
           <div className="flex gap-2.5">
@@ -130,7 +130,7 @@ const ChangeLocation = ({ setView }) => {
               color="red"
             />
             <Button
-              text="Guardar Ubicación"
+              text="Guardar"
               isTypeButton
               onClick={() => handleLocationUpdate(true)}
               color="blue"
@@ -233,29 +233,23 @@ const CurrentLocation = ({ setView }) => {
                       title: 'Público',
                       value: true,
                       color: 'bg-main',
+                      onClick: () => handleVisibilityUpdate(),
                     }}
                     rigthOption={{
                       title: 'Privado',
                       value: false,
                       color: 'bg-main',
+                      onClick: () => handleVisibilityUpdate(),
                     }}
                   />
                 </div>
 
-                <div className="flex gap-2.5">
-                  <Button
-                    text="Act. Visibilidad"
-                    isTypeButton
-                    onClick={() => handleVisibilityUpdate()}
-                    color="blue"
-                  />
-                  <Button
-                    text="Actualizar"
-                    isTypeButton
-                    onClick={() => setView('ChangeLocation')}
-                    color="gray"
-                  />
-                </div>
+                <Button
+                  text="Actualizar"
+                  isTypeButton
+                  onClick={() => setView('ChangeLocation')}
+                  color="gray"
+                />
               </div>
             )
             : (

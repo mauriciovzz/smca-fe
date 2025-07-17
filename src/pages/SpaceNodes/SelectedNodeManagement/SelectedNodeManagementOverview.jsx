@@ -51,10 +51,6 @@ const SelectedNodeManagementOverview = () => {
 
       <div className="flex grow flex-col divide-y">
         <OverviewNavLink
-          title="Descargar Configuración"
-          to="descargar-configuracion"
-        />
-        <OverviewNavLink
           title="Actualizar Información"
           to="informacion"
         />

@@ -1,7 +1,15 @@
 import React from 'react';
 
-const SelectedSpaceReportsRoot = () => (
-  <div>SelectedSpaceReportsRoot</div>
-);
+import { useParams } from 'react-router-dom';
+
+import ReportsRoot from 'src/pages/Reports';
+
+const SelectedSpaceReportsRoot = () => {
+  const { spaceId } = useParams();
+
+  return (
+    <ReportsRoot spaceId={spaceId} />
+  );
+};
 
 export default SelectedSpaceReportsRoot;

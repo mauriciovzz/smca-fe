@@ -1,12 +1,12 @@
 import { React } from 'react';
 
-import {
-  MapContainer, TileLayer, Marker, ZoomControl,
-} from 'react-leaflet';
+import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import { useMap } from 'react-leaflet/hooks';
 
 import { TextInput } from 'src/components/inputs';
 import { Divider, Heading } from 'src/components/ui';
+
+import ZoomControl from './ZoomControl';
 
 const southWestBound = [8.183530, -62.878919];
 const northEastBound = [8.398253, -62.539415];
@@ -52,7 +52,8 @@ const Map = ({ marker }) => (
         position={[marker.lat, marker.long]}
       />
       <Recenter position={[marker.lat, marker.long]} />
-      <ZoomControl position="bottomright" />
+
+      <ZoomControl rightPosition />
     </MapContainer>
   </div>
 );

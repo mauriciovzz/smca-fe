@@ -4,8 +4,12 @@ import { useMap } from 'react-leaflet';
 
 import { plusIcon, lessIcon } from 'src/assets';
 
-const ZoomControl = () => {
+const ZoomControl = ({ spaceMap, isScreenSmall, rightPosition }) => {
   const map = useMap();
+
+  const handlePosition = () => ((spaceMap && isScreenSmall) ? 'bottom-[80px]' : 'bottom-0');
+
+  const handleSide = () => ((rightPosition) ? 'right-0' : 'left-0');
 
   const handleZoomIn = () => {
     map.setZoom(map.getZoom() + 1);
@@ -16,7 +20,7 @@ const ZoomControl = () => {
   };
 
   return (
-    <div className="absolute bottom-0 left-0 z-[1000] m-5 h-[50px] w-[25px] rounded-lg bg-white shadow">
+    <div className={`${handlePosition()} ${handleSide()} absolute z-[1000] m-5 h-[50px] w-[25px] rounded-lg bg-white shadow`}>
       <button
         type="button"
         className="flex size-[25px] cursor-pointer items-center justify-center rounded-t-lg border-b hover:bg-graydetails"

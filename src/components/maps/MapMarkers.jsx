@@ -106,6 +106,7 @@ const CustomMarker = ({ marker, onMarkerClick, markerData }) => {
 const MapMarkers = ({
   markersData, viewType, selectedVariable, selectedNodeTypes, onMarkerClick,
 }) => {
+  console.log(markersData)
   const getMarkers = () => {
     switch (selectedNodeTypes) {
       case 'indoor':

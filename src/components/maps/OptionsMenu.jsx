@@ -237,9 +237,12 @@ const OptionsMenu = ({
   viewType, setViewType,
   selectedVariable, setSelectedVariable,
   selectedNodeTypes, setSelectedNodeTypes,
+  spaceMap, isScreenSmall,
 }) => {
   const [isOptionsMenuOpen, setOptionsMenuOpen] = useState(false);
   const [isLegendOpen, setIsLegendOpen] = useState(false);
+
+  const handlePosition = () => ((spaceMap && isScreenSmall) ? 'bottom-[80px]' : 'bottom-0');
 
   const getOptionsArray = () => {
     switch (viewType) {
@@ -347,7 +350,7 @@ const OptionsMenu = ({
 
   return (isOptionsMenuOpen)
     ? (
-      <div className="absolute bottom-0 right-0 z-[1000] m-5 h-[505] w-1/2 sm:w-[200px]">
+      <div className={`${handlePosition()} absolute bottom-0 right-0 z-[1000] m-5 h-[505] w-1/2 sm:w-[200px]`}>
         <div className="flex size-full flex-col rounded-lg bg-white p-5 shadow sm:h-[505] sm:w-[200px]">
           {renderMenu()}
 
@@ -366,7 +369,7 @@ const OptionsMenu = ({
     : (
       <button
         type="button"
-        className="absolute bottom-0 right-0 z-[1000] m-5 flex size-[50px] cursor-pointer items-center justify-center rounded-lg bg-white shadow hover:bg-graydetails"
+        className={`${handlePosition()} absolute right-0 z-[1000] m-5 flex size-[50px] cursor-pointer items-center justify-center rounded-lg bg-white shadow hover:bg-graydetails`}
         onClick={() => setOptionsMenuOpen(true)}
       >
         <img

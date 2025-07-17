@@ -1,11 +1,13 @@
 import { React } from 'react';
 
 import {
-  MapContainer, TileLayer, Marker, Popup, ZoomControl,
+  MapContainer, TileLayer, Marker, Popup,
 } from 'react-leaflet';
 
 import { Button } from 'src/components/inputs';
 import { Divider, Heading } from 'src/components/ui';
+
+import ZoomControl from './ZoomControl';
 
 const mapCenter = [8.322376, -62.689662];
 const mapZoom = 13;
@@ -73,7 +75,7 @@ const MarkersMap = ({
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
 
-          <ZoomControl position="bottomright" />
+          <ZoomControl rightPosition />
 
           {markers.map((marker) => (
             <Marker
@@ -97,7 +99,7 @@ const MarkersMap = ({
             text="Regresar"
             isTypeButton
             onClick={() => closeMarkersMap()}
-            color="blue"
+            color="green"
           />
         </div>
       )}

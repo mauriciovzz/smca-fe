@@ -4,7 +4,7 @@ import { Button, ComponentListItem, SelectionBar } from 'src/components/inputs';
 import { Divider, Heading } from 'src/components/ui';
 
 const NewNodeOverview = ({
-  name, readingInterval, isIndoor, location, components,
+  name, isIndoor, location, components,
   handleNodeCreation, previousPage, isScreenSmall,
   nodeCreated,
 }) => (
@@ -14,41 +14,32 @@ const NewNodeOverview = ({
         ? (<SelectionBar text="Confirmar Nodo" leftAction={previousPage} />)
         : (
           <>
-            <Heading text="Confirmar Nodo" />
-            <Divider />
+            <Heading text="Nuevo Nodo" />
+            <Divider changeBottomPadding="p-0" />
           </>
         )
     }
 
     <div className="flex size-full flex-col gap-2.5 sm:gap-5">
       <div className="flex grow flex-col">
-        <div className="flex divide-x">
-          <div className="flex w-1/2 flex-col justify-between px-2.5">
+        <div className={`${isScreenSmall ? 'h-[20px]' : 'h-[43px]'} flex divide-x border-b`}>
+          <div className="flex w-1/2 items-center justify-between px-2.5">
             <span className="text-xs font-bold">NOMBRE</span>
             <span className="text-sm font-light">{name || 'no ingresado'}</span>
           </div>
 
-          <div className="flex w-1/2 flex-col px-2.5">
-            <div className="flex w-full justify-between">
-              <span className="flex items-center text-xs font-bold">TIPO</span>
-              <span className="flex items-center text-sm font-light">{isIndoor ? 'indoor' : 'outdoor'}</span>
-            </div>
-
-            <div className="flex w-full justify-between">
-              <span className="flex items-center text-xs font-bold">INTERVALO</span>
-              <span className="flex items-center text-sm font-light">{`${readingInterval}m`}</span>
-            </div>
+          <div className="flex w-1/2 items-center justify-between px-2.5">
+            <span className="flex text-xs font-bold">TIPO</span>
+            <span className="flex text-sm font-light">{isIndoor ? 'indoor' : 'outdoor'}</span>
           </div>
         </div>
 
-        <Divider changePadding={isScreenSmall ? 'p-[5px]' : 'p-[10px]'} />
-
-        <div className="flex w-full flex-col px-2.5">
+        <div className="flex w-full flex-col px-2.5 pt-2.5">
           <span className="text-xs font-bold">UBICACION</span>
-          <span className="text-sm font-light">{location ? location.name : 'Ubicacion no seleccionada'}</span>
+          <span className="text-sm font-light">{location ? location.location_name : 'Ubicacion no seleccionada'}</span>
         </div>
 
-        <Divider changePadding={isScreenSmall ? 'p-[5px]' : 'p-[10px]'} />
+        <Divider changePadding={isScreenSmall ? 'p-[10px]' : 'p-[5px]'} />
 
         <div className="relative flex grow flex-col">
           <ul className="small-scrollbar absolute flex size-full flex-col overflow-hidden overflow-y-scroll rounded-lg border bg-background">

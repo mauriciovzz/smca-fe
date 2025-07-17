@@ -69,7 +69,7 @@ const NodesOverview = ({ nodesData, spaceData }) => {
 
                                   <div className="text-left text-xs text-gray-500">
                                     <span className="font-medium text-black">
-                                      {node.is_location_visible ? 'público' : 'privado'}
+                                      {node.is_visible ? 'público' : 'privado'}
                                     </span>
                                     {` | ${node.location_name}`}
                                   </div>
@@ -86,10 +86,10 @@ const NodesOverview = ({ nodesData, spaceData }) => {
 
             {(isScreenSmall) && (
               <Button
-                text="Buscar Ubicación en el Mapa"
+                text="Ver en Mapa"
                 isTypeButton
                 onClick={() => setIsMapOpen(true)}
-                color="blue"
+                color="green"
               />
             )}
           </div>

@@ -38,7 +38,7 @@ const NodeCreationSuccessMessage = ({ onClose }) => (
       <p className="py-2.5 text-justify text-sm text-gray-500">
         {`
           Para acceder a la información necesaria para la codificacion del nodo,
-          dirígete al apartado 'Descargar Configuración', en la sección 'Modificar' .
+          dirígete al apartado 'Descargar Configuración'.
         `}
       </p>
     </div>
@@ -70,7 +70,6 @@ const NodeCreationRoot = () => {
   const [nodeCreated, setNodeCreated] = useState(false);
 
   const [name, setName] = useState('');
-  const [readingInterval, setReadingInterval] = useState(15);
   const [isIndoor, setIsIndoor] = useState(true);
   const [location, setLocation] = useState(null);
   const [components, setComponents] = useState([]);
@@ -231,7 +230,7 @@ const NodeCreationRoot = () => {
         {
           name,
           isIndoor,
-          readingInterval,
+          readingInterval: 10,
           locationId: location,
           components: nodeComponents,
         },
@@ -279,7 +278,7 @@ const NodeCreationRoot = () => {
         return (
           <NewNodeOverview
             name={name}
-            readingInterval={readingInterval}
+            readingInterval={10}
             isIndoor={isIndoor}
             location={locationsData.find((l) => l.location_id === location)}
             components={components.reduce(componentsOverviewReducer, [])}
@@ -318,19 +317,8 @@ const NodeCreationRoot = () => {
             spaceComponentsData={componentsData.filter((c) => c.type === 'camera')}
             selectedComponents={components}
             selectComponent={(selection) => handleComponentSelection(selection)}
-            previousPage={() => setView('RainDetectorSelection')}
-            nextPage={() => setView('OtherSelection')}
-          />
-        );
-      case 'RainDetectorSelection':
-        return (
-          <EnterNodeComponents
-            text="Selecionar Detector de Lluvia"
-            spaceComponentsData={componentsData.filter((c) => c.type === 'rain_detector')}
-            selectedComponents={components}
-            selectComponent={(selection) => handleComponentSelection(selection)}
             previousPage={() => setView('SensorSelection')}
-            nextPage={() => setView('CameraSelection')}
+            nextPage={() => setView('OtherSelection')}
           />
         );
       case 'SensorSelection':
@@ -342,7 +330,7 @@ const NodeCreationRoot = () => {
             selectComponent={(selection) => handleComponentSelection(selection)}
             isSensorSelector
             previousPage={() => setView('BoardSelection')}
-            nextPage={() => setView('RainDetectorSelection')}
+            nextPage={() => setView('CameraSelection')}
           />
         );
       case 'BoardSelection':
@@ -361,7 +349,6 @@ const NodeCreationRoot = () => {
           <EnterNodeInformation
             name={{ name, setName }}
             isIndoor={{ isIndoor, setIsIndoor }}
-            readingInterval={{ readingInterval, setReadingInterval }}
             nextPage={() => setView('BoardSelection')}
           />
         );
@@ -387,7 +374,7 @@ const NodeCreationRoot = () => {
       <div className="hidden size-full bg-background sm:flex">
         <NewNodeOverview
           name={name}
-          readingInterval={readingInterval}
+          readingInterval={10}
           isIndoor={isIndoor}
           location={locationsData.find((l) => l.location_id === location)}
           components={components.reduce(componentsOverviewReducer, [])}

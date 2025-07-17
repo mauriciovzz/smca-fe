@@ -9,6 +9,8 @@ const Button = ({
         return disabled ? 'bg-sky-700' : 'bg-sky-600 hover:bg-sky-700';
       case 'red':
         return disabled ? 'bg-red-700' : 'bg-red-600 hover:bg-red-700';
+      case 'green':
+        return disabled ? 'bg-green-700' : 'bg-green-600 hover:bg-green-700';
       case 'gray':
         return disabled ? 'bg-gray-500' : 'bg-gray-400 hover:bg-gray-500';
       default:

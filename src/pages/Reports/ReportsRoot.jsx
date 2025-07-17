@@ -8,7 +8,7 @@ import useErrorHandler from 'src/hooks/useErrorHandler';
 import ReportCreation from './ReportCreation';
 import ReportsOverview from './ReportsOverview';
 
-const ReportsRoot = () => {
+const ReportsRoot = ({ spaceId }) => {
   const axiosPrivate = useAxiosPrivate();
   const errorHandler = useErrorHandler();
   const { auth } = useAuth();
@@ -21,11 +21,20 @@ const ReportsRoot = () => {
 
   const getLocationsData = async () => {
     try {
-      const response = await axiosPrivate.get(
-        '/api/readings/locations-with-readings',
-      );
+      if (spaceId) {
+        const response = await axiosPrivate.get(
+          `/api/readings/space-locations-with-readings/${spaceId}`,
+        );
 
-      setLocationsData(response.data);
+        setLocationsData(response.data);
+      } else {
+        const response = await axiosPrivate.get(
+          '/api/readings/locations-with-readings',
+        );
+
+        setLocationsData(response.data);
+      }
+
       setLoadingData(false);
     } catch (error) {
       errorHandler(error);
@@ -66,7 +75,7 @@ const ReportsRoot = () => {
   };
 
   return (
-    <div className="flex grow flex-col px-5 pb-5">
+    <div className={`${!spaceId && 'px-5 pb-5'} flex grow flex-col`}>
       <div className="flex grow bg-background">
         {
           loadingData

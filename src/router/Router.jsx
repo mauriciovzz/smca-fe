@@ -34,8 +34,7 @@ import {
   SelectedNodeRoot,
 } from 'src/pages/SpaceNodes/SelectedNode';
 import {
-  SelectedNodeManagementRoot, DownloadNodeConfigFile, UpdateNodeInfo, UpdateNodeComponents,
-  UpdateNodeLocation, DeleteNode,
+  SelectedNodeManagementRoot, UpdateNodeInfo, UpdateNodeComponents, UpdateNodeLocation, DeleteNode,
 } from 'src/pages/SpaceNodes/SelectedNodeManagement';
 import { SelectedSpaceReportsRoot } from 'src/pages/SpaceReports';
 import {
@@ -184,10 +183,6 @@ const Router = () => {
                       path: ':nodeId/ajustes',
                       element: <SelectedNodeManagementRoot />,
                       children: [
-                        {
-                          path: 'descargar-configuracion',
-                          element: <DownloadNodeConfigFile />,
-                        },
                         {
                           path: 'informacion',
                           element: <UpdateNodeInfo />,

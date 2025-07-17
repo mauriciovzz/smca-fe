@@ -40,7 +40,7 @@ const EnterNodeLocation = ({
                 >
                   <div className="flex size-full flex-col">
                     <div className="font-medium">
-                      {location.name}
+                      {location.location_name}
                     </div>
                     <div className="text-xs">
                       {location.location}
@@ -70,10 +70,10 @@ const EnterNodeLocation = ({
         </div>
 
         <Button
-          text="Buscar Ubicación en el Mapa"
+          text="Ver en Mapa"
           isTypeButton
           onClick={() => setIsMapOpen(true)}
-          color="blue"
+          color="green"
         />
       </div>
 

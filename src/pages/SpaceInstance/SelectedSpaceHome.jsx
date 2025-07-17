@@ -35,7 +35,7 @@ const SelectedSpaceHome = () => {
 
   return loadingData
     ? <LoaderSpinner />
-    : <ReadingsMap markersData={nodesData.filter((n) => n.location_id)} />;
+    : <ReadingsMap markersData={nodesData.filter((n) => n.location_id)} spaceMap />;
 };
 
 export default SelectedSpaceHome;

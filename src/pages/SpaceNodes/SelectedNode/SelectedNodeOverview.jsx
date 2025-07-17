@@ -7,6 +7,8 @@ import { LocationMap } from 'src/components/maps';
 import { Divider, Heading } from 'src/components/ui';
 import useScreenWidth from 'src/hooks/useScreenWidth';
 
+import DownloadNodeConfigFile from './DownloadNodeConfigFile';
+
 const InfoItem = ({ text, value, padding }) => (
   <div className={`${padding} flex w-full flex-col`}>
     <span className="text-xs font-bold">{text}</span>
@@ -19,9 +21,21 @@ const SelectedNodeOverview = ({ spaceData, selectedNode, nodeComponentsData }) =
   const navigate = useNavigate();
 
   const [isMapOpen, setIsMapOpen] = useState(false);
+  const [isConfigDownOpen, setIsConfigDownOpen] = useState(false);
 
-  const renderMap = () => {
+  const renderOtherInfo = () => {
     if (isScreenSmall) {
+      if (isConfigDownOpen) {
+        return (
+          <div className="absolute size-full">
+            <DownloadNodeConfigFile
+              spaceData={spaceData}
+              selectedNode={selectedNode}
+              onClick={() => setIsConfigDownOpen(false)}
+            />
+          </div>
+        );
+      }
       if (isMapOpen) {
         return (
           <div className="absolute size-full">
@@ -34,8 +48,20 @@ const SelectedNodeOverview = ({ spaceData, selectedNode, nodeComponentsData }) =
           </div>
         );
       }
+
       return null;
     }
+
+    if (isConfigDownOpen) {
+      return (
+        <DownloadNodeConfigFile
+          spaceData={spaceData}
+          selectedNode={selectedNode}
+          onClick={() => setIsConfigDownOpen(false)}
+        />
+      );
+    }
+
     return (
       <LocationMap
         marker={selectedNode}
@@ -76,29 +102,48 @@ const SelectedNodeOverview = ({ spaceData, selectedNode, nodeComponentsData }) =
           </div>
         </div>
 
-        <div className="flex gap-2.5">
-          {(spaceData.is_admin) && (
-            <Button
-              text="Modificar"
-              isTypeButton
-              onClick={() => navigate('ajustes')}
-              color="blue"
-            />
-          )}
+        <div className="flex flex-col gap-2.5">
+          <div className="flex gap-2.5">
+            {(spaceData.is_admin) && (
+              <Button
+                text="Modificar"
+                isTypeButton
+                onClick={() => navigate('ajustes')}
+                color="blue"
+              />
+            )}
 
-          {(isScreenSmall) && (
+            {(isScreenSmall) && (
+              <Button
+                text="Ver en mapa"
+                isTypeButton
+                onClick={() => setIsMapOpen(true)}
+                color="green"
+              />
+            )}
+
+            {!(isScreenSmall) && (spaceData.is_admin) && (
+              <Button
+                text="Descargar configuración"
+                isTypeButton
+                onClick={() => setIsConfigDownOpen(true)}
+                color="gray"
+              />
+            )}
+          </div>
+
+          {(isScreenSmall) && (spaceData.is_admin) && (
             <Button
-              text="Ver en Mapa"
+              text="Descargar configuración"
               isTypeButton
-              onClick={() => setIsMapOpen(true)}
+              onClick={() => setIsConfigDownOpen(true)}
               color="gray"
             />
           )}
-
         </div>
       </div>
 
-      {renderMap()}
+      {renderOtherInfo()}
     </div>
   );
 };

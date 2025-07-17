@@ -74,7 +74,7 @@ const NewComponentsOverview = ({
           color="red"
         />
         <Button
-          text="Actualizar Componentes"
+          text="Actualizar"
           isTypeButton
           onClick={() => handleComponentsUpdate()}
           color="blue"
@@ -349,17 +349,6 @@ const UpdateNodeComponents = () => {
             nextPage={() => setView('OtherSelection')}
           />
         );
-      case 'RainDetectorSelection':
-        return (
-          <EnterNodeComponents
-            text="Selecionar Detector de Lluvia"
-            spaceComponentsData={componentsData.filter((c) => c.type === 'rain_detector')}
-            selectedComponents={nodeComponentsData}
-            selectComponent={(selection) => handleComponentSelection(selection)}
-            previousPage={() => setView('SensorSelection')}
-            nextPage={() => setView('CameraSelection')}
-          />
-        );
       case 'SensorSelection':
         return (
           <EnterNodeComponents
@@ -369,7 +358,7 @@ const UpdateNodeComponents = () => {
             selectComponent={(selection) => handleComponentSelection(selection)}
             isSensorSelector
             previousPage={() => setView('BoardSelection')}
-            nextPage={() => setView('RainDetectorSelection')}
+            nextPage={() => setView('CameraSelection')}
           />
         );
       case 'BoardSelection':

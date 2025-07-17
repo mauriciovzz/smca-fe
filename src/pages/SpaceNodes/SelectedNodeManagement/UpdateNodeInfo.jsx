@@ -4,7 +4,6 @@ import { useOutletContext, useNavigate } from 'react-router-dom';
 
 import {
   Button, TextInput, ToggleSwitch, ToggleNodeType,
-  ToggleReadingInterval,
 } from 'src/components/inputs';
 import { Divider, Heading } from 'src/components/ui';
 import useAxiosPrivate from 'src/hooks/useAxiosPrivate';
@@ -20,7 +19,6 @@ const UpdateName = () => {
 
   const [name, setName] = useState(selectedNode.node_name);
   const [isIndoor, setIsIndoor] = useState(selectedNode.is_indoor);
-  const [readingInterval, setReadingInterval] = useState(selectedNode.reading_interval);
   const [isActive, setIsActive] = useState(selectedNode.is_active);
 
   const handleNodeUpdate = async () => {
@@ -30,7 +28,7 @@ const UpdateName = () => {
         {
           name,
           isIndoor,
-          readingInterval,
+          readingInterval: 10,
           isActive,
         },
       );
@@ -64,11 +62,6 @@ const UpdateName = () => {
         <ToggleNodeType
           selectedType={isIndoor}
           selectType={setIsIndoor}
-        />
-
-        <ToggleReadingInterval
-          selectedOption={readingInterval}
-          setSelectedOption={setReadingInterval}
         />
 
         <ToggleSwitch

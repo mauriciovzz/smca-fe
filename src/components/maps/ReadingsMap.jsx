@@ -3,6 +3,7 @@ import { React, useState } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 
 import ReadingsDashboard from 'src/components/readingsDashboard';
+import useScreenWidth from 'src/hooks/useScreenWidth';
 
 import MapMarkers from './MapMarkers';
 import OptionsMenu from './OptionsMenu';
@@ -14,7 +15,9 @@ const mapZoom = 13;
 const southWestBound = [8.183530, -62.878919];
 const northEastBound = [8.398253, -62.539415];
 
-const ReadingsMap = ({ markersData }) => {
+const ReadingsMap = ({ markersData, spaceMap }) => {
+  const isScreenSmall = useScreenWidth();
+
   const [isModOpen, setIsModOpen] = useState(false);
   const [selectedNode, setSelectedNode] = useState({});
 
@@ -45,7 +48,7 @@ const ReadingsMap = ({ markersData }) => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        <ZoomControl />
+        <ZoomControl spaceMap={spaceMap} isScreenSmall={isScreenSmall} />
 
         <OptionsMenu
           viewType={viewType}
@@ -54,6 +57,8 @@ const ReadingsMap = ({ markersData }) => {
           setSelectedVariable={setSelectedVariable}
           selectedNodeTypes={selectedNodeTypes}
           setSelectedNodeTypes={setSelectedNodeTypes}
+          spaceMap={spaceMap}
+          isScreenSmall={isScreenSmall}
         />
 
         <MapMarkers

@@ -1,20 +1,15 @@
 import { React } from 'react';
 
 import { saveAs } from 'file-saver';
-import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import { Button } from 'src/components/inputs';
 import { Divider, Heading } from 'src/components/ui';
 import useAxiosPrivate from 'src/hooks/useAxiosPrivate';
 import useErrorHandler from 'src/hooks/useErrorHandler';
 
-const DownloadNodeConfigFile = () => {
+const DownloadNodeConfigFile = ({ spaceData, selectedNode, onClick }) => {
   const axiosPrivate = useAxiosPrivate();
   const errorHandler = useErrorHandler();
-
-  const navigate = useNavigate();
-
-  const { spaceData, selectedNode } = useOutletContext();
 
   const RequestNodeCodeInfo = async () => {
     try {
@@ -38,12 +33,12 @@ const DownloadNodeConfigFile = () => {
   };
 
   return (
-    <div className="flex grow flex-col space-y-5 rounded-lg bg-white p-5 shadow">
+    <div className="flex size-full flex-col space-y-5 rounded-lg bg-white p-5 shadow">
       <div className="flex grow flex-col">
         <Heading
           text="Archivo del Nodo"
           hasButton
-          onButtonClick={() => navigate('..')}
+          onButtonClick={() => onClick()}
         />
 
         <Divider />
